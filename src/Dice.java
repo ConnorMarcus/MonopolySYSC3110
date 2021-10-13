@@ -1,3 +1,4 @@
+// Written by George Pantazopoulos
 public class Dice {
     private int dice1;
     private int dice2;
