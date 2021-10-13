@@ -10,14 +10,8 @@ public class Dice {
     }
 
     public int rollDice() {
-        while(this.dice1 == 0) {
-            this.dice1 = (int)(Math.random() * 7.0D);
-        }
-
-        while(this.dice2 == 0) {
-            this.dice2 = (int)(Math.random() * 7.0D);
-        }
-
+        this.dice1 = 1 + (int)(Math.random() * 6);
+        this.dice2 = 1 + (int)(Math.random() * 6);
         this.totalRoll += this.dice1 + this.dice2;
         if (this.dice1 == this.dice2) {
             System.out.println("You rolled a " + this.dice1 + " and a " + this.dice2 + "!");
@@ -29,22 +23,20 @@ public class Dice {
                 this.totalRoll = 0;
                 return 0;
             }
-
             System.out.println("Doubles! Roll again");
-            this.dice1 = 0;
-            this.dice2 = 0;
+            this.doubleCount += 1;
             this.rollDice();
-        } else {
+        }
+        else {
             System.out.println("You rolled a " + this.dice1 + " and a " + this.dice2 + "!");
             System.out.println("Your total roll is: " + this.totalRoll);
             this.turnOver = true;
         }
-
         if (this.turnOver) {
             this.rollSum = this.totalRoll;
             this.totalRoll = 0;
+            this.doubleCount = 0;
         }
-
         return this.rollSum;
     }
 }
