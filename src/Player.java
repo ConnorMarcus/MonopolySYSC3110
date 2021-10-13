@@ -77,7 +77,7 @@ public class Player {
      */
     public boolean removeMoney(int money) {
         if (this.money - money <= 0) {
-            this.money = -1;
+            this.money = 0;
             System.out.println(this.identifier + " has gone bankrupt, thanks for playing!");
             return false;
         }
