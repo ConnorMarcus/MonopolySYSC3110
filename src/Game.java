@@ -34,13 +34,13 @@ public class Game {
         CreatePlayers(numPlayers);
 
         turn = 0;
-        //Running Loop
+        //Game Loop
         while (true) {
-            PrintTurn(turn+1);
+            PrintTurn(((this.turn) % this.playerList.size()) + 1);
             System.out.println("Please choose what you want to do (type help for all commands): ");
             String command = in.nextLine();
             while (!commands.executeCommand(command)) {
-                System.out.println("Please choose what you want to do: ");
+                System.out.println("Please choose what you want to do (type help for all commands): ");
                 command = in.nextLine();
             }
             turn = (turn+1) % (numPlayers);
@@ -75,7 +75,7 @@ public class Game {
     }
 
     private boolean TakeTurn() {
-        Player turnPlayer = this.playerList.get(turn);
+        Player turnPlayer = this.playerList.get(this.turn);
         if (turnPlayer.isTookTurn()) {
             System.out.println("You have already taken your turn!");
         }
@@ -92,9 +92,10 @@ public class Game {
     }
 
     private boolean PassTurn() {
-        Player turnPlayer = this.playerList.get(turn);
+        Player turnPlayer = this.playerList.get(this.turn);
         if (turnPlayer.isTookTurn()) {
-            System.out.println("Player " + (turn%this.playerList.size())+1 + " has finished their turn!");
+            System.out.println("Player " + turnPlayer.getIdentifier() + " has finished their turn!");
+            turnPlayer.setTookTurn(false);
             return true;
         }
         else {
@@ -105,7 +106,7 @@ public class Game {
 
     private boolean Info() {
         for (Player player : playerList) {
-            System.out.println("Player " + player.getIdentifier() + ":\nCurrent position: " + board.getProperty(player.getPosition()) + "\nMoney: " + player.getMoney() + "\nProperties: " +  player.getPropertyString());
+            System.out.println("\nPlayer " + player.getIdentifier() + ":\nCurrent position: " + board.getProperty(player.getPosition()) + "\nMoney: " + player.getMoney() + "\nProperties: " +  player.getPropertyString());
         }
         return false;
     }
@@ -120,9 +121,9 @@ public class Game {
             Scanner in = new Scanner(System.in);
             System.out.println("What property would you like to buy a house/hotel on (type a number):");
             int count = 0;
-            Map<Integer, NormalProperty>  propertyMap = new HashMap<>();
+            Map<Integer, PropertyStreet>  propertyMap = new HashMap<>();
             for (String colour : groups) {
-                for (NormalProperty p : this.board.getPropertyGroup(colour)) {
+                for (PropertyStreet p : this.board.getPropertyGroup(colour)) {
                     count += 1;
                     propertyMap.put(count, p);
                     System.out.println(count + " - " + p);
@@ -143,7 +144,7 @@ public class Game {
                 }
             }
 
-            NormalProperty selectedProperty = propertyMap.get(choice);
+            PropertyStreet selectedProperty = propertyMap.get(choice);
             //selectedProperty.buyHouse();
             //System.out.println("There are now currently " + selectedProperty.getNumHouses() + " on property " + selectedProperty.getName());
         }
