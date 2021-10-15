@@ -1,3 +1,8 @@
+/**
+ * Property Interface
+ *
+ * @author Vahid Foroughi
+ */
 public abstract class Property {
     private String name;
     private int price;
@@ -7,13 +12,11 @@ public abstract class Property {
         this.price = price;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getName() {return name;}
+    public int getPrice() {return price;}
 
-    public void setPrice(int price) {
-        this.price = price;
-    }
+    public void setName(String name) {this.name = name;}
+    public void setPrice(int price) {this.price = price;}
 
     @Override
     public String toString() {

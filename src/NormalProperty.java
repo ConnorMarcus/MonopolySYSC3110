@@ -1,3 +1,10 @@
+/**
+ * Normal Properties (houses) class
+ *
+ * @author Vahid Foroughi
+
+ */
+
 public class NormalProperty extends Property{
     private String colour;
 
