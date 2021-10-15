@@ -1,7 +1,6 @@
 //Written by: Noah Hammoud
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The Player object for monopoly
@@ -106,6 +105,35 @@ public class Player {
      */
     public boolean ownsProperty(Property p) {
         return this.properties.contains(p);
+    }
+
+    public Set<String> getPropertyGroups(MonopolyBoard board) {
+        Set<String> propertyGroups = new HashSet<>();
+        for (Property p : this.properties) {
+            if (p instanceof NormalProperty && !propertyGroups.contains(((NormalProperty) p).getColour())) {
+                String colour = ((NormalProperty) p).getColour();
+                propertyGroups.add(colour);
+                for (NormalProperty p2 : board.getPropertyGroup(colour)) {
+                    if (!this.properties.contains(p2)) {
+                        propertyGroups.remove(colour);
+                        break;
+                    }
+                }
+            }
+        }
+        return propertyGroups;
+    }
+
+    /**
+     * Gets a string of all the properties that the player owns
+     * @return a String containing the players properties separated by a comma
+     */
+    public String getPropertyString() {
+        String propertyString = "";
+        for (Property p : this.properties) {
+            propertyString += p + ", ";
+        }
+        return propertyString.replaceAll(", $", ""); //removes trailing comma
     }
 
     /**

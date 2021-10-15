@@ -15,7 +15,10 @@ public class CommandList {
      * @param commands the Map of commands
      */
     public CommandList(Map<String, Callable> commands) {
-        this.commands = commands;
+        //Ensures that all command Strings are Uppercase
+        for (String command : commands.keySet()) {
+            this.commands.put(command.toUpperCase(), commands.get(command));
+        }
     }
 
 
@@ -23,6 +26,7 @@ public class CommandList {
         if (this.commands.containsKey(commandString.toUpperCase())) {
             return (boolean) this.commands.get(commandString.toUpperCase()).call();
         }
+        System.out.println("Invalid Command");
         return false;
     }
 
