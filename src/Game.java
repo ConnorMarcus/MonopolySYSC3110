@@ -11,7 +11,7 @@ public class Game {
         this.board = new MonopolyBoard();
         this.playerList = new ArrayList<>();
         this.dice = new Dice(2);
-        this.commands = new CommandList(new HashMap<>(Map.of("HELP", this::PrintCommands, "ROLL", this::TakeTurn, "PASS", this::PassTurn, "INFO", this::Info, "QUIT", this::Quit, "BUY", this::Buy)));
+        this.commands = new CommandList(new HashMap<>(Map.of("HELP", this::PrintCommands, "ROLL", this::TakeTurn, "PASS", this::PassTurn, "INFO", this::Info, "QUIT", this::Quit)));
     }
 
     public void Play() throws Exception {
@@ -58,10 +58,10 @@ public class Game {
     }
 
     private boolean PrintCommands() {
-        System.out.println("List of all Available Commands: roll, pass, buy, info, help, quit");
+        System.out.println("List of all Available Commands: roll, pass, info, help, quit");
         System.out.println("roll: rolls the dice when it is your turn");
         System.out.println("pass: pass your turn once you have rolled the dice");
-        System.out.println("buy: buy a house/hotel when you have a full set of properties");
+        //System.out.println("buy: buy a house/hotel when you have a full set of properties");
         System.out.println("info: get information about all the players, their position, and their properties");
         System.out.println("help: get information about all the available commands");
         System.out.println("quit: quit the game (all progress will be lost)");
@@ -111,6 +111,7 @@ public class Game {
         return false;
     }
 
+    //Not needed until Milestone 3
     private boolean Buy() {
         Player turnPlayer = this.playerList.get(turn);
         Set<String> groups = turnPlayer.getPropertyGroups(this.board);
