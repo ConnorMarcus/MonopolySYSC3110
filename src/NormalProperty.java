@@ -5,4 +5,8 @@ public class NormalProperty extends Property{
         super(name, price);
         this.colour = colour;
     }
+
+    public String getColour() {
+        return this.colour;
+    }
 }
