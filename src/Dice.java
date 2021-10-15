@@ -1,13 +1,24 @@
 // Written by George Pantazopoulos
 public class Dice {
-    private int dice1;
-    private int dice2;
-    private int doubleCount = 0;
-    private int totalRoll = 0;
-    private int rollSum = 0;
-    private boolean turnOver = false;
+//    private int dice1;
+//    private int dice2;
+//    private int doubleCount = 0;
+//    private int totalRoll = 0;
+//    private int rollSum = 0;
+//    private boolean turnOver = false;
+    int numDice;
 
+    public Dice(int numDice) {
+        if (numDice <= 0) {
+            throw new IllegalArgumentException("Number of dice must be > 0");
+        }
+        this.numDice = numDice;
+    }
 
+    /**
+     * Rolls all of the dice
+     * @return the sum of all the dice rolls
+     */
     public int rollDice() {
 //        this.dice1 = 1 + (int)(Math.random() * 6);
 //        this.dice2 = 1 + (int)(Math.random() * 6);
@@ -37,6 +48,10 @@ public class Dice {
 //            this.doubleCount = 0;
 //        }
 //        return this.rollSum;
-        return (1 + (int)(Math.random() * 6)) + (1 + (int)(Math.random() * 6));
+        int sum = 0;
+        for (int i=0; i<this.numDice; i++) {
+            sum += 1 + (int)(Math.random() * 6);
+        }
+        return sum;
     }
 }

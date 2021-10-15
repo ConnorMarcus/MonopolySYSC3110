@@ -10,7 +10,7 @@ public class Game {
     public Game() {
         this.board = new MonopolyBoard();
         this.playerList = new ArrayList<>();
-        this.dice = new Dice();
+        this.dice = new Dice(2);
         this.commands = new CommandList(new HashMap<>(Map.of("HELP", this::PrintCommands, "ROLL", this::TakeTurn, "PASS", this::PassTurn, "INFO", this::Info, "QUIT", this::Quit, "BUY", this::Buy)));
     }
 
