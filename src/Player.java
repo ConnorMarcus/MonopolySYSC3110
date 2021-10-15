@@ -11,6 +11,7 @@ public class Player {
     private int money;
     private int position;
     private Set<Property> properties;
+    private boolean tookTurn;
 
 
     /**
@@ -22,6 +23,7 @@ public class Player {
         this.money = 1500;
         this.position = 0;
         this.properties = new HashSet<>();
+        this.tookTurn = false;
     }
 
 
@@ -104,5 +106,21 @@ public class Player {
      */
     public boolean ownsProperty(Property p) {
         return this.properties.contains(p);
+    }
+
+    /**
+     * Checks if a player took their turn
+     * @return true if a player took their turn, and false otherwise
+     */
+    public boolean isTookTurn() {
+        return this.tookTurn;
+    }
+
+    /**
+     * Sets whether a player took their turn
+     * @param tookTurn the boolean value to be set
+     */
+    public void setTookTurn(boolean tookTurn) {
+        this.tookTurn = tookTurn;
     }
 }

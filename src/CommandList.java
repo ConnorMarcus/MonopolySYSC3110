@@ -1,35 +1,29 @@
 //Written by: Connor Marcus
 
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /**
  * Class to encapsulate all the possible text based commands for the Monopoly game
  */
 public class CommandList {
-    private Map<String, Runnable> commands;
+    private Map<String, Callable> commands;
 
     /**
      * Default constructor; initializes default Map of commands
      *
      * @param commands the Map of commands
      */
-    public CommandList(Map<String, Runnable> commands) {
+    public CommandList(Map<String, Callable> commands) {
         this.commands = commands;
     }
 
 
-    /**
-     * Executes the command given the command string
-     *
-     * @param commandString the string form of the command
-     */
-    public void executeCommand(String commandString) {
+    public boolean executeCommand(String commandString) throws Exception {
         if (this.commands.containsKey(commandString.toUpperCase())) {
-            this.commands.get(commandString.toUpperCase()).run();
+            return (boolean) this.commands.get(commandString.toUpperCase()).call();
         }
-        else {
-            System.out.println("Invalid Command!");
-        }
+        return false;
     }
 
 }
