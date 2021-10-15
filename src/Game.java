@@ -11,7 +11,7 @@ public class Game {
         this.board = new MonopolyBoard();
         this.playerList = new ArrayList<>();
         this.dice = new Dice();
-        this.commands = new CommandList(new HashMap<>(Map.of("HELP", this::PrintCommands, "ROLL", this::TakeTurn, "PASS", this::PassTurn, "INFO", this::Info, "QUIT", this::Quit)));
+        this.commands = new CommandList(new HashMap<>(Map.of("HELP", this::PrintCommands, "ROLL", this::TakeTurn, "PASS", this::PassTurn, "INFO", this::Info, "QUIT", this::Quit, "BUY", this::Buy)));
     }
 
     public void Play() throws Exception {
@@ -40,7 +40,6 @@ public class Game {
             System.out.println("Please choose what you want to do (type help for all commands): ");
             String command = in.nextLine();
             while (!commands.executeCommand(command)) {
-                //System.out.println("Invalid command!");
                 System.out.println("Please choose what you want to do: ");
                 command = in.nextLine();
             }
@@ -113,9 +112,41 @@ public class Game {
 
     private boolean Buy() {
         Player turnPlayer = this.playerList.get(turn);
-        //if (turnPlayer.ownsPropertySet())
-        Scanner in = new Scanner(System.in);
-        System.out.println();
+        Set<String> groups = turnPlayer.getPropertyGroups(this.board);
+        if (groups.size() == 0) {
+            System.out.println("You currently have no property sets so you cannot buy houses/hotels!");
+        }
+        else {
+            Scanner in = new Scanner(System.in);
+            System.out.println("What property would you like to buy a house/hotel on (type a number):");
+            int count = 0;
+            Map<Integer, NormalProperty>  propertyMap = new HashMap<>();
+            for (String colour : groups) {
+                for (NormalProperty p : this.board.getPropertyGroup(colour)) {
+                    count += 1;
+                    propertyMap.put(count, p);
+                    System.out.println(count + " - " + p);
+                }
+            }
+
+            int choice = 0;
+            while (choice <= 0 || choice > propertyMap.size()) {
+                try {
+                    choice = Integer.parseInt(in.nextLine());
+                }
+                catch (Exception e) {
+                    System.out.println("Invalid Input!");
+                    continue;
+                }
+                if (choice <= 0 || choice > propertyMap.size()) {
+                    System.out.println("That is not a valid choice!");
+                }
+            }
+
+            NormalProperty selectedProperty = propertyMap.get(choice);
+            //selectedProperty.buyHouse();
+            //System.out.println("There are now currently " + selectedProperty.getNumHouses() + " on property " + selectedProperty.getName());
+        }
         return false;
     }
 

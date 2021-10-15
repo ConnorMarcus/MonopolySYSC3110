@@ -107,6 +107,11 @@ public class Player {
         return this.properties.contains(p);
     }
 
+    /**
+     * Gets a set of all the colours that player owns a full group of
+     * @param board the Monopoly board that is being used
+     * @return a set of all the player's property groups
+     */
     public Set<String> getPropertyGroups(MonopolyBoard board) {
         Set<String> propertyGroups = new HashSet<>();
         for (Property p : this.properties) {

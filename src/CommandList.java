@@ -1,5 +1,6 @@
 //Written by: Connor Marcus
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -15,6 +16,7 @@ public class CommandList {
      * @param commands the Map of commands
      */
     public CommandList(Map<String, Callable> commands) {
+        this.commands = new HashMap<>();
         //Ensures that all command Strings are Uppercase
         for (String command : commands.keySet()) {
             this.commands.put(command.toUpperCase(), commands.get(command));
