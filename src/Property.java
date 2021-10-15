@@ -1,9 +1,9 @@
 /**
- * Property Interface
+ * Property class
  *
  * @author Vahid Foroughi
  */
-public abstract class Property {
+public class Property {
     private String name;
     private int price;
 
