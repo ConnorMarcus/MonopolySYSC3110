@@ -3,10 +3,10 @@
  * This includes Railroads, Jail, JailVisit, Taxes, Go,
  * Free parking, Water works, Electric Company
  */
-public class SpecialProperty extends Property {
+public class PropertyWithActions extends Property {
     private String action;
 
-    public SpecialProperty(String action, String name, int price){
+    public PropertyWithActions(String action, String name, int price){
         super(name, price);
         this.action = action;
     }

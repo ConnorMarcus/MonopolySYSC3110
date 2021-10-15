@@ -5,10 +5,10 @@
 
  */
 
-public class NormalProperty extends Property{
+public class PropertyStreet extends Property{
     private String colour;
 
-    public NormalProperty(String colour, String name, int price) {
+    public PropertyStreet(String colour, String name, int price) {
         super(name, price);
         this.colour = colour;
     }

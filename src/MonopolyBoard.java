@@ -6,18 +6,18 @@ public class MonopolyBoard {
     private List<Property> properties;
 
     private enum PropertyGroups {
-        BROWNPROPERTIES(Arrays.asList(new NormalProperty("brown", "Mediterranean Avenue", 60), new NormalProperty("brown", "Baltic Avenue", 60))),
-        LIGHTBLUEPROPERTIES(Arrays.asList(new NormalProperty("light blue", "Oriental Avenue", 100), new NormalProperty("light blue", "Vermont Avenue", 100), new NormalProperty("light blue", "Connecticut Avenue", 120))),
-        PINKPROPERTIES(Arrays.asList(new NormalProperty("pink", "St. Charles Place", 140), new NormalProperty("pink", "States Avenue", 140), new NormalProperty("pink", "Virginia Avenue", 160))),
-        ORANGEPROPERTIES(Arrays.asList(new NormalProperty("orange", "St. James Place", 180), new NormalProperty("orange", "Tennessee Avenue", 180), new NormalProperty("orange", "New York Avenue", 200))),
-        REDPROPERTIES(Arrays.asList(new NormalProperty("red", "Kentucky Avenue", 220), new NormalProperty("red", "Indiana Avenue", 220), new NormalProperty("red", "Illinois Avenue", 240))),
-        YELLOWPROPERTIES(Arrays.asList(new NormalProperty("yellow", "Atlantic Avenue", 260), new NormalProperty("yellow", "Ventnor Avenue", 260), new NormalProperty("yellow", "Marvin Gardens", 280))),
-        GREENPROPERTIES(Arrays.asList(new NormalProperty("green", "Pacific Avenue", 300), new NormalProperty("green", "North Carolina Avenue", 300), new NormalProperty("green", "Pennsylvania Avenue", 320))),
-        DARKBLUEPROPERTIES(Arrays.asList(new NormalProperty("dark blue", "Park Place", 350), new NormalProperty("dark blue", "Boardwalk", 400)));
+        BROWNPROPERTIES(Arrays.asList(new PropertyStreet("brown", "Mediterranean Avenue", 60), new PropertyStreet("brown", "Baltic Avenue", 60))),
+        LIGHTBLUEPROPERTIES(Arrays.asList(new PropertyStreet("light blue", "Oriental Avenue", 100), new PropertyStreet("light blue", "Vermont Avenue", 100), new PropertyStreet("light blue", "Connecticut Avenue", 120))),
+        PINKPROPERTIES(Arrays.asList(new PropertyStreet("pink", "St. Charles Place", 140), new PropertyStreet("pink", "States Avenue", 140), new PropertyStreet("pink", "Virginia Avenue", 160))),
+        ORANGEPROPERTIES(Arrays.asList(new PropertyStreet("orange", "St. James Place", 180), new PropertyStreet("orange", "Tennessee Avenue", 180), new PropertyStreet("orange", "New York Avenue", 200))),
+        REDPROPERTIES(Arrays.asList(new PropertyStreet("red", "Kentucky Avenue", 220), new PropertyStreet("red", "Indiana Avenue", 220), new PropertyStreet("red", "Illinois Avenue", 240))),
+        YELLOWPROPERTIES(Arrays.asList(new PropertyStreet("yellow", "Atlantic Avenue", 260), new PropertyStreet("yellow", "Ventnor Avenue", 260), new PropertyStreet("yellow", "Marvin Gardens", 280))),
+        GREENPROPERTIES(Arrays.asList(new PropertyStreet("green", "Pacific Avenue", 300), new PropertyStreet("green", "North Carolina Avenue", 300), new PropertyStreet("green", "Pennsylvania Avenue", 320))),
+        DARKBLUEPROPERTIES(Arrays.asList(new PropertyStreet("dark blue", "Park Place", 350), new PropertyStreet("dark blue", "Boardwalk", 400)));
 
-        private List<NormalProperty> propertySet;
+        private List<PropertyStreet> propertySet;
 
-        PropertyGroups(List<NormalProperty> propertySet) {
+        PropertyGroups(List<PropertyStreet> propertySet) {
             this.propertySet = propertySet;
         }
     }
@@ -46,7 +46,7 @@ public class MonopolyBoard {
         this.properties.add(PropertyGroups.DARKBLUEPROPERTIES.propertySet.get(1)); //BoardWalk
     }
 
-    public List<NormalProperty> getPropertyGroup(String colour) {
+    public List<PropertyStreet> getPropertyGroup(String colour) {
         return PropertyGroups.valueOf(colour.replaceAll("\\s+","").toUpperCase() + "PROPERTIES").propertySet;
     }
 

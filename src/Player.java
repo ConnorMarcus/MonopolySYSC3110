@@ -110,10 +110,10 @@ public class Player {
     public Set<String> getPropertyGroups(MonopolyBoard board) {
         Set<String> propertyGroups = new HashSet<>();
         for (Property p : this.properties) {
-            if (p instanceof NormalProperty && !propertyGroups.contains(((NormalProperty) p).getColour())) {
-                String colour = ((NormalProperty) p).getColour();
+            if (p instanceof PropertyStreet && !propertyGroups.contains(((PropertyStreet) p).getColour())) {
+                String colour = ((PropertyStreet) p).getColour();
                 propertyGroups.add(colour);
-                for (NormalProperty p2 : board.getPropertyGroup(colour)) {
+                for (PropertyStreet p2 : board.getPropertyGroup(colour)) {
                     if (!this.properties.contains(p2)) {
                         propertyGroups.remove(colour);
                         break;
