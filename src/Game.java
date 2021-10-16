@@ -61,7 +61,6 @@ public class Game {
         System.out.println("List of all Available Commands: roll, pass, info, help, quit");
         System.out.println("roll: rolls the dice when it is your turn");
         System.out.println("pass: pass your turn once you have rolled the dice");
-        System.out.println("buy: buy a property");
         System.out.println("info: get information about all the players, their position, and their properties");
         System.out.println("help: get information about all the available commands");
         System.out.println("quit: quit the game (all progress will be lost)");
