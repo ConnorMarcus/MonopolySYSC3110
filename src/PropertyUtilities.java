@@ -7,6 +7,11 @@
 public class PropertyUtilities extends Property{
 
     public PropertyUtilities(String name, int price){
-        super(name, price);
+        super(name);
+    }
+
+    @Override
+    public void Landed(Player owner, Player landedPlayer) {
+
     }
 }

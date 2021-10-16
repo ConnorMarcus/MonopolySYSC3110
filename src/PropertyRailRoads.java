@@ -6,6 +6,11 @@
 public class PropertyRailRoads extends Property{
 
     public PropertyRailRoads(String name, int price){
-        super(name, price);
+        super(name);
+    }
+
+    @Override
+    public void Landed(Player owner, Player landedPlayer) {
+
     }
 }

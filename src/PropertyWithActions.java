@@ -7,7 +7,7 @@ public class PropertyWithActions extends Property {
     private String action;
 
     public PropertyWithActions(String action, String name, int price){
-        super(name, price);
+        super(name);
         this.action = action;
     }
 
@@ -26,5 +26,10 @@ public class PropertyWithActions extends Property {
      */
     public int superTax(){
         return 100;
+    }
+
+    @Override
+    public void Landed(Player owner, Player landedPlayer) {
+
     }
 }

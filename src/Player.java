@@ -20,7 +20,7 @@ public class Player {
      */
     public Player(String identifier) {
         this.identifier = identifier;
-        this.money = 1500;
+        this.money = 150;
         this.position = 0;
         this.properties = new HashSet<>();
         this.tookTurn = false;
@@ -104,9 +104,9 @@ public class Player {
     /**
      * purchases property.
      * @param p, the Property object that the Player wants to purchase.
-     * @param cost, the int cost of the Property.
      */
-    public boolean purchaseProperty(Property p, int cost) {
+    public boolean purchaseProperty(PropertyStreet p) {
+        int cost = p.getPrice();
         if (this.canPay(cost)) {
             this.removeMoney(cost);
             System.out.println("You have purchased " + p.getName() + " for $" + p.getPrice() + "!");
@@ -196,5 +196,15 @@ public class Player {
      */
     public void setTookTurn(boolean tookTurn) {
         this.tookTurn = tookTurn;
+    }
+
+    /**
+     * Overrides the equals method from the Object class
+     * @param o The object that is being compared
+     * @return true if the object is a player and the identifier of the player is the same, and false otherwise
+     */
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Player) && (((Player) o).identifier.equals(this.identifier));
     }
 }

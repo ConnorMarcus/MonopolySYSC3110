@@ -87,8 +87,7 @@ public class Game {
             System.out.println("You have landed on " + propertyLandedOn + "!");
             Player owner = ownedProperty(propertyLandedOn);
             propertyLandedOn.Landed(owner, turnPlayer);
-            //If player is bankrupt after paying rent
-            if (turnPlayer.getIsBankrupt()) bankrupt(turnPlayer);
+            if (turnPlayer.getIsBankrupt()) bankrupt(turnPlayer); // Checks if player is bankrupt after paying rent
             turnPlayer.setTookTurn(true);
         }
         return false;
@@ -114,28 +113,6 @@ public class Game {
         return false;
     }
 
-    /*
-    private void buyHandler(Property property) {
-        String answer = "";
-        Scanner in = new Scanner(System.in);
-        System.out.println("Would you like to buy " + property.getName() + " for $" + property.getPrice() + "? (y/n)");
-        answer = in.nextLine().toLowerCase();
-        while (!(answer.equals("y")) && !(answer.equals("n"))) {
-            System.out.println("Please enter y or n");
-            System.out.println("Would you like to buy " + property.getName() + " for $" + property.getPrice() + "? (y/n)");
-            answer = in.nextLine().toLowerCase();
-        }
-        if (answer.equals("y")) {
-            this.Buy(property);
-        }
-    }
-
-     */
-
-    private void Buy(Property property) {
-        Player turnPlayer = this.playerList.get(turn);
-        turnPlayer.purchaseProperty(property, property.getPrice());
-    }
 
     //Checks if any player owns the property
     private Player ownedProperty(Property property) {
