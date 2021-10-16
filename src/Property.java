@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 /**
  * Property class
  *
@@ -21,13 +23,29 @@ public class Property {
     }
 
     public void Landed(Player owner, Player renter) {
-        int rent = (int)(this.price * 0.1);
-        rent = renter.payRent(rent);
-        owner.addMoney(rent);
-        System.out.println(owner.getIdentifier() + " owns this property you must pay them $" + rent);
+        if(owner !=null) {
+            int rent = (int)(this.price * 0.1);
+            rent = renter.payRent(rent);
+            owner.addMoney(rent);
+            System.out.println(owner.getIdentifier() + " owns this property you must pay them $" + rent);
+        }else{
+            buyHandler(renter);
+        }
     }
-    public void Landed(Player landedOnProperty){
+    private void buyHandler(Player turnPlayer) {
+        String answer = "";
+        Scanner in = new Scanner(System.in);
+        System.out.println("Would you like to buy " + this.getName() + " for $" + this.getPrice() + "? (y/n)");
+        answer = in.nextLine().toLowerCase();
+        while (!(answer.equals("y")) && !(answer.equals("n"))) {
+            System.out.println("Please enter y or n");
+            System.out.println("Would you like to buy " + this.getName() + " for $" + this.getPrice() + "? (y/n)");
+            answer = in.nextLine().toLowerCase();
+        }
+        if (answer.equals("y")) {
+            turnPlayer.purchaseProperty(this, this.getPrice());
+        }
+    }
 
-    }
 
 }

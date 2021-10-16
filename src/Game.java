@@ -86,14 +86,9 @@ public class Game {
             Property propertyLandedOn = this.board.getProperty(newPosition);
             System.out.println("You have landed on " + propertyLandedOn + "!");
             Player owner = ownedProperty(propertyLandedOn);
-            if (owner != null) {
-                propertyLandedOn.Landed(owner, turnPlayer);
-                //If player is bankrupt after paying rent
-                if (turnPlayer.getIsBankrupt()) bankrupt(turnPlayer);
-            }
-            else {
-                buyHandler(propertyLandedOn);
-            }
+            propertyLandedOn.Landed(owner, turnPlayer);
+            //If player is bankrupt after paying rent
+            if (turnPlayer.getIsBankrupt()) bankrupt(turnPlayer);
             turnPlayer.setTookTurn(true);
         }
         return false;
@@ -119,6 +114,7 @@ public class Game {
         return false;
     }
 
+    /*
     private void buyHandler(Property property) {
         String answer = "";
         Scanner in = new Scanner(System.in);
@@ -133,6 +129,8 @@ public class Game {
             this.Buy(property);
         }
     }
+
+     */
 
     private void Buy(Property property) {
         Player turnPlayer = this.playerList.get(turn);
