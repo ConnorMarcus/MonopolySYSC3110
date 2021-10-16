@@ -134,10 +134,9 @@ public class Game {
         }
     }
 
-    private boolean Buy(Property property) {
+    private void Buy(Property property) {
         Player turnPlayer = this.playerList.get(turn);
         turnPlayer.purchaseProperty(property, property.getPrice());
-        return false;
     }
 
     //Checks if any player owns the property
@@ -153,7 +152,7 @@ public class Game {
         this.playerList.remove(p);
 
         if (this.playerList.size() == 1) {
-            System.out.println(this.playerList.get(0).getIdentifier() + " wins!");
+            System.out.println("Player " + this.playerList.get(0).getIdentifier() + " wins!");
             System.exit(0);
         }
     }
