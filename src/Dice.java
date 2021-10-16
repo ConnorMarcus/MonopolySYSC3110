@@ -1,3 +1,6 @@
+import java.util.Date;
+import java.util.Random;
+
 // Written by George Pantazopoulos
 public class Dice {
 //    private int dice1;
@@ -6,7 +9,7 @@ public class Dice {
 //    private int totalRoll = 0;
 //    private int rollSum = 0;
 //    private boolean turnOver = false;
-    int numDice;
+    private int numDice;
 
     public Dice(int numDice) {
         if (numDice <= 0) {
@@ -49,8 +52,9 @@ public class Dice {
 //        }
 //        return this.rollSum;
         int sum = 0;
+        Random r = new Random();
         for (int i=0; i<this.numDice; i++) {
-            sum += 1 + (int)(Math.random() * 6);
+            sum += r.nextInt(6) + 1;
         }
         return sum;
     }

@@ -26,7 +26,7 @@ public class CommandList {
 
     public boolean executeCommand(String commandString) throws Exception {
         if (this.commands.containsKey(commandString.toUpperCase())) {
-            return (boolean) this.commands.get(commandString.toUpperCase()).call();
+            return (boolean) this.commands.get(commandString.toUpperCase()).call(); //Callable must return boolean value
         }
         System.out.println("Invalid Command");
         return false;
