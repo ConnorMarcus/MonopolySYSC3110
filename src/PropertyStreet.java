@@ -16,5 +16,4 @@ public class PropertyStreet extends Property{
     public String getColour() {
         return this.colour;
     }
-
 }

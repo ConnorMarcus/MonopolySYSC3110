@@ -15,9 +15,6 @@ public class Property {
     public String getName() {return name;}
     public int getPrice() {return price;}
 
-    public void setName(String name) {this.name = name;}
-    public void setPrice(int price) {this.price = price;}
-
     @Override
     public String toString() {
         return this.name;
@@ -28,6 +25,9 @@ public class Property {
         rent = renter.payRent(rent);
         owner.addMoney(rent);
         System.out.println(owner.getIdentifier() + " owns this property you must pay them $" + rent);
+    }
+    public void Landed(Player landedOnProperty){
+
     }
 
 }
