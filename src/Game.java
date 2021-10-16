@@ -18,7 +18,7 @@ public class Game {
         Scanner in = new Scanner(System.in);
         System.out.println("Welcome To Monopoly!");
         int numPlayers = 0;
-        while(numPlayers <= 0) {
+        while(numPlayers <= 1) {
             System.out.println("How many players would like to play: ");
             try {
                 numPlayers = Integer.parseInt(in.nextLine());
@@ -27,8 +27,8 @@ public class Game {
                 System.out.println("Invalid Input!");
                 continue;
             }
-            if(numPlayers <= 0) {
-                System.out.println("The number of players must be greater than zero!");
+            if(numPlayers <= 1) {
+                System.out.println("The number of players must be greater than one!");
             }
         }
         CreatePlayers(numPlayers);
@@ -61,7 +61,7 @@ public class Game {
         System.out.println("List of all Available Commands: roll, pass, info, help, quit");
         System.out.println("roll: rolls the dice when it is your turn");
         System.out.println("pass: pass your turn once you have rolled the dice");
-        //System.out.println("buy: buy a house/hotel when you have a full set of properties");
+        System.out.println("buy: buy a property");
         System.out.println("info: get information about all the players, their position, and their properties");
         System.out.println("help: get information about all the available commands");
         System.out.println("quit: quit the game (all progress will be lost)");
@@ -84,8 +84,17 @@ public class Game {
             System.out.println("You have rolled a " + roll + "!");
             int newPosition = turnPlayer.getPosition() + roll;
             turnPlayer.setPosition(newPosition);
-            System.out.println("You have landed on " + this.board.getProperty(newPosition) + "!");
-            //board.getProperty(newPosition).Landed(turnPlayer);
+            Property propertyLandedOn = this.board.getProperty(newPosition);
+            System.out.println("You have landed on " + propertyLandedOn + "!");
+            Player owner = this.ownedProperty(propertyLandedOn);
+            if (owner != null) {
+                propertyLandedOn.Landed(owner, turnPlayer);
+                //If player is bankrupt after paying rent
+                if (turnPlayer.getIsBankrupt()) this.bankrupt(turnPlayer);
+            }
+            else {
+                buyHandler(propertyLandedOn);
+            }
             turnPlayer.setTookTurn(true);
         }
         return false;
@@ -111,8 +120,48 @@ public class Game {
         return false;
     }
 
+    private void buyHandler(Property property) {
+        String answer = "";
+        Scanner in = new Scanner(System.in);
+        System.out.println("Would you like to buy " + property.getName() + " for $" + property.getPrice() + "? (y/n)");
+        answer = in.nextLine().toLowerCase();
+        while (!(answer.equals("y")) && !(answer.equals("n"))) {
+            System.out.println("Please enter y or n");
+            System.out.println("Would you like to buy " + property.getName() + " for $" + property.getPrice() + "? (y/n)");
+            answer = in.nextLine().toLowerCase();
+        }
+        if (answer.equals("y")) {
+            this.Buy(property);
+        }
+    }
+
+    private boolean Buy(Property property) {
+        Player turnPlayer = this.playerList.get(turn);
+        turnPlayer.purchaseProperty(property, property.getPrice());
+        return false;
+    }
+
+    //Checks if any player owns the property
+    private Player ownedProperty(Property property) {
+        for (Player owner: this.playerList) {
+            if (owner.ownsProperty(property)) return owner;
+        }
+        return null;
+    }
+
+    private void bankrupt(Player p) {
+        System.out.println("You can not pay your debts and have gone bankrupt thanks for playing!");
+        this.playerList.remove(p);
+
+        if (this.playerList.size() == 1) {
+            System.out.println(this.playerList.get(0).getIdentifier() + " wins!");
+            System.exit(0);
+        }
+    }
+
+
     //Not needed until Milestone 3
-    private boolean Buy() {
+    private boolean Upgrade() {
         Player turnPlayer = this.playerList.get(turn);
         Set<String> groups = turnPlayer.getPropertyGroups(this.board);
         if (groups.size() == 0) {

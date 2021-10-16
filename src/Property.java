@@ -22,4 +22,12 @@ public class Property {
     public String toString() {
         return this.name;
     }
+
+    public void Landed(Player owner, Player renter) {
+        int rent = (int)(this.price * 0.1);
+        rent = renter.payRent(rent);
+        owner.addMoney(rent);
+        System.out.println(owner + " owns this property you must pay them " + rent);
+    }
+
 }

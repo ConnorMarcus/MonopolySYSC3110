@@ -11,6 +11,7 @@ public class Player {
     private int position;
     private Set<Property> properties;
     private boolean tookTurn;
+    private boolean isBankrupt;
 
 
     /**
@@ -23,6 +24,7 @@ public class Player {
         this.position = 0;
         this.properties = new HashSet<>();
         this.tookTurn = false;
+        this.isBankrupt = false;
     }
 
 
@@ -54,6 +56,15 @@ public class Player {
 
 
     /**
+     * Gets isBankrupt.
+     * @return boolean, isBankrupt value.
+     */
+    public boolean getIsBankrupt() {
+        return this.isBankrupt;
+    }
+
+
+    /**
      * Sets Players Position.
      * @param pos, int position.
      */
@@ -74,16 +85,19 @@ public class Player {
     /**
      * Removes money from Player.
      * @param money, int amount of money being removed.
-     * @return boolean, true if player is not bankrupt.
      */
-    public boolean removeMoney(int money) {
-        if (this.money - money <= 0) {
-            this.money = 0;
-            System.out.println(this.identifier + " has gone bankrupt, thanks for playing!");
-            return false;
-        }
-        this.money -= money;
-        return true;
+    private void removeMoney(int money) {
+            this.money -= money;
+    }
+
+
+    /**
+     * Checks if player can pay amount of money.
+     * @param money, int amount of money to pay.
+     * @return boolean, true if player can pay.
+     */
+    private boolean canPay(int money) {
+        return this.money - money >= 0;
     }
 
 
@@ -92,9 +106,36 @@ public class Player {
      * @param p, the Property object that the Player wants to purchase.
      * @param cost, the int cost of the Property.
      */
-    public void purchaseProperty(Property p, int cost) {
-        if (this.removeMoney(cost)) this.properties.add(p);
-        else System.out.println(this.identifier + " failed to purchase the property");
+    public boolean purchaseProperty(Property p, int cost) {
+        if (this.canPay(cost)) {
+            this.removeMoney(cost);
+            System.out.println("You have purchased " + p.getName() + " for $" + p.getPrice() + "!");
+            this.properties.add(p);
+            return true;
+        }
+        else {
+            System.out.println("You do not have enough money to buy this property!");
+            return false;
+        }
+    }
+
+
+    /**
+     * Pays rent.
+     * @param cost, int amount of money to pay.
+     * @return int, amount of money actual payed. (If player does not have enough pay all of money).
+     */
+    public int payRent(int cost) {
+        if (canPay(cost)) {
+            this.removeMoney(cost);
+            return cost;
+        }
+        else {
+            int remainingMoney = this.money;
+            this.removeMoney(this.money);
+            this.isBankrupt = true;
+            return remainingMoney;
+        }
     }
 
 
