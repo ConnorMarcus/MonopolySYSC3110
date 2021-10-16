@@ -86,11 +86,11 @@ public class Game {
             turnPlayer.setPosition(newPosition);
             Property propertyLandedOn = this.board.getProperty(newPosition);
             System.out.println("You have landed on " + propertyLandedOn + "!");
-            Player owner = this.ownedProperty(propertyLandedOn);
+            Player owner = ownedProperty(propertyLandedOn);
             if (owner != null) {
                 propertyLandedOn.Landed(owner, turnPlayer);
                 //If player is bankrupt after paying rent
-                if (turnPlayer.getIsBankrupt()) this.bankrupt(turnPlayer);
+                if (turnPlayer.getIsBankrupt()) bankrupt(turnPlayer);
             }
             else {
                 buyHandler(propertyLandedOn);
