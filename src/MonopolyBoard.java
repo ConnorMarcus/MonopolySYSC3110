@@ -54,4 +54,8 @@ public class MonopolyBoard {
         return this.properties.get(index);
     }
 
+    public int getNumProperties() {
+        return this.properties.size();
+    }
+
 }

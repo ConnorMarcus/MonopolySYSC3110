@@ -81,7 +81,7 @@ public class Game {
         else {
             int roll = dice.rollDice();
             System.out.println("You have rolled a " + roll + "!");
-            int newPosition = turnPlayer.getPosition() + roll;
+            int newPosition = (turnPlayer.getPosition() + roll) % this.board.getNumProperties();
             turnPlayer.setPosition(newPosition);
             Property propertyLandedOn = this.board.getProperty(newPosition);
             System.out.println("You have landed on " + propertyLandedOn + "!");
