@@ -160,4 +160,9 @@ public class Game {
         return false;
     }
 
+    public static void main(String[] args) throws Exception {
+        Game g = new Game();
+        g.Play();
+    }
+
 }
