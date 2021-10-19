@@ -6,7 +6,7 @@ import java.util.*;
  * The Player object for monopoly
  */
 public class Player {
-    private final String identifier;
+    private final String IDENTIFIER;
     private int money;
     private int position;
     private Set<Property> properties;
@@ -19,7 +19,7 @@ public class Player {
      * @param identifier, String identifier of the Player.
      */
     public Player(String identifier) {
-        this.identifier = identifier;
+        this.IDENTIFIER = identifier;
         this.money = 1500;
         this.position = 0;
         this.properties = new HashSet<>();
@@ -33,7 +33,7 @@ public class Player {
      * @return the String identifier.
      */
     public String getIdentifier() {
-        return this.identifier;
+        return this.IDENTIFIER;
     }
 
 
@@ -205,6 +205,6 @@ public class Player {
      */
     @Override
     public boolean equals(Object o) {
-        return (o instanceof Player) && (((Player) o).identifier.equals(this.identifier));
+        return (o instanceof Player) && (((Player) o).IDENTIFIER.equals(this.IDENTIFIER));
     }
 }
