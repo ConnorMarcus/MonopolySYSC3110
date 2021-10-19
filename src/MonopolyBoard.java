@@ -23,26 +23,25 @@ public class MonopolyBoard {
     }
 
     public MonopolyBoard() {
-        //for now there are no utility properties to keep the board as a square
         this.properties = new ArrayList<>();
-        //this.properties.add(GO Property (+$200, free space for now));
+        this.properties.add(new PropertyFreeSpace("GO"));
         this.properties.addAll(PropertyGroups.BROWNPROPERTIES.propertySet);
-        //this.properties.add(Income Tax Property (-$200));
-        //this.properties.add(new RailRoadProperty("Reading Railroad")); //price constant among all railroads so don't need to pass the price (use a constant for the price in the class)
+        this.properties.add(new PropertyFreeSpace("Income Tax"));
+        this.properties.add(new PropertyFreeSpace("Reading Railroad")); //price constant among all railroads so don't need to pass the price (use a constant for the price in the class)
         this.properties.addAll(PropertyGroups.LIGHTBLUEPROPERTIES.propertySet);
-        //this.properties.add(Jail (Free space for now));
+        this.properties.add(new PropertyFreeSpace("Jail"));
         this.properties.addAll(PropertyGroups.PINKPROPERTIES.propertySet);
-        //this.properties.add(new RailRoadProperty("Pennsylvania Railroad"));
+        this.properties.add(new PropertyFreeSpace("Pennsylvania Railroad"));
         this.properties.addAll(PropertyGroups.ORANGEPROPERTIES.propertySet);
-        //this.properties.add(Free Parking (Free space for now));
+        this.properties.add(new PropertyFreeSpace("Free Parking"));
         this.properties.addAll(PropertyGroups.REDPROPERTIES.propertySet);
-        //this.properties.add(new RailRoadProperty("B&O Railroad"));
+        this.properties.add(new PropertyFreeSpace("B&O Railroad"));
         this.properties.addAll(PropertyGroups.YELLOWPROPERTIES.propertySet);
-        //this.properties.add(Go To Jail (Free space for now));
+        this.properties.add(new PropertyFreeSpace("Go To Jail"));
         this.properties.addAll(PropertyGroups.GREENPROPERTIES.propertySet);
-        //this.properties.add(new RailRoadProperty("Short Line"));
+        this.properties.add(new PropertyFreeSpace("Short Line"));
         this.properties.add(PropertyGroups.DARKBLUEPROPERTIES.propertySet.get(0)); //Park Place
-        //this.properties.add(Luxury Tax Property (-$100));
+        this.properties.add(new PropertyFreeSpace("Luxury Tax"));
         this.properties.add(PropertyGroups.DARKBLUEPROPERTIES.propertySet.get(1)); //BoardWalk
     }
 

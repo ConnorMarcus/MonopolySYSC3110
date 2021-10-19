@@ -5,7 +5,7 @@
  */
 public abstract class Property {
     private String name;
-    public abstract void Landed(Player owner, Player landedPlayer);
+    public abstract void Landed(Player landedPlayer);
 
     public Property(String name) {
         this.name = name;

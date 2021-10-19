@@ -20,7 +20,7 @@ public class Player {
      */
     public Player(String identifier) {
         this.identifier = identifier;
-        this.money = 150;
+        this.money = 1500;
         this.position = 0;
         this.properties = new HashSet<>();
         this.tookTurn = false;

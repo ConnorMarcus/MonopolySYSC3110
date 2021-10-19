@@ -1,11 +1,10 @@
-//Written by: Connor Marcus
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
  * Class to encapsulate all the possible text based commands for the Monopoly game
+ * @author Connor Marcus
  */
 public class CommandList {
     private Map<String, Callable> commands;
@@ -24,6 +23,13 @@ public class CommandList {
     }
 
 
+    /**
+     * Executes a command from the CommandList given the string form of the command.
+     *
+     * @param commandString the command to execute
+     * @return true if the command causes a player's turn to end, and false otherwise
+     * @throws Exception the exception that may be raised by the Callable
+     */
     public boolean executeCommand(String commandString) throws Exception {
         if (this.commands.containsKey(commandString.toUpperCase())) {
             return (boolean) this.commands.get(commandString.toUpperCase()).call(); //Callable must return boolean value

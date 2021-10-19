@@ -11,7 +11,7 @@ public class PropertyUtilities extends Property{
     }
 
     @Override
-    public void Landed(Player owner, Player landedPlayer) {
+    public void Landed(Player landedPlayer) {
 
     }
 }

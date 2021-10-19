@@ -10,7 +10,7 @@ public class PropertyRailRoads extends Property{
     }
 
     @Override
-    public void Landed(Player owner, Player landedPlayer) {
+    public void Landed(Player landedPlayer) {
 
     }
 }

@@ -29,7 +29,7 @@ public class PropertyWithActions extends Property {
     }
 
     @Override
-    public void Landed(Player owner, Player landedPlayer) {
+    public void Landed(Player landedPlayer) {
 
     }
 }

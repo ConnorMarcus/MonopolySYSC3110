@@ -11,6 +11,7 @@ public class PropertyStreet extends Property{
     private String colour;
     private int price;
     private final double RENTRATE = 0.1;
+    private Player owner;
 
     public PropertyStreet(String colour, String name, int price) {
         super(name);
@@ -26,7 +27,8 @@ public class PropertyStreet extends Property{
         return this.price;
     }
 
-    public void Landed(Player owner, Player landedPlayer) {
+    @Override
+    public void Landed(Player landedPlayer) {
         if(owner != null && landedPlayer != owner) {
             int rent = (int)(this.price * RENTRATE);
             rent = landedPlayer.payRent(rent);
@@ -53,6 +55,7 @@ public class PropertyStreet extends Property{
             }
             if (answer.equals("y")) {
                 landedPlayer.purchaseProperty(this);
+                owner = landedPlayer;
             }
         }
         else {

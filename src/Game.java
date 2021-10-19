@@ -36,7 +36,7 @@ public class Game {
         turn = 0;
         //Game Loop
         while (true) {
-            PrintTurn(((this.turn) % this.playerList.size()) + 1);
+            System.out.println("It is Player " + (turn+1) + "'s turn.");
             System.out.println("Please choose what you want to do (type help for all commands): ");
             String command = in.nextLine();
             while (!commands.executeCommand(command)) {
@@ -51,10 +51,6 @@ public class Game {
         for (int i = 0; i<numPlayers; i++) {
             playerList.add(new Player(String.valueOf(i+1)));
         }
-    }
-
-    private void PrintTurn(int playerNumber) {
-        System.out.println("It is Player " + playerNumber + "'s turn.");
     }
 
     private boolean PrintCommands() {
@@ -85,8 +81,7 @@ public class Game {
             turnPlayer.setPosition(newPosition);
             Property propertyLandedOn = this.board.getProperty(newPosition);
             System.out.println("You have landed on " + propertyLandedOn + "!");
-            Player owner = ownedProperty(propertyLandedOn);
-            propertyLandedOn.Landed(owner, turnPlayer);
+            propertyLandedOn.Landed(turnPlayer);
             if (turnPlayer.getIsBankrupt()) bankrupt(turnPlayer); // Checks if player is bankrupt after paying rent
             turnPlayer.setTookTurn(true);
         }
@@ -111,15 +106,6 @@ public class Game {
             System.out.println("\nPlayer " + player.getIdentifier() + ":\nCurrent position: " + board.getProperty(player.getPosition()) + "\nMoney: " + player.getMoney() + "\nProperties: " +  player.getPropertyString());
         }
         return false;
-    }
-
-
-    //Checks if any player owns the property
-    private Player ownedProperty(Property property) {
-        for (Player owner: this.playerList) {
-            if (owner.ownsProperty(property)) return owner;
-        }
-        return null;
     }
 
     private void bankrupt(Player p) {
