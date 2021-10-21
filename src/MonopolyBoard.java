@@ -2,6 +2,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Class to represent a class Monopoly Board with all the colour groups.
+ * @author Connor Marcus
+ * @author George Pantazopoulos
+ */
 public class MonopolyBoard {
     private List<Property> properties;
 

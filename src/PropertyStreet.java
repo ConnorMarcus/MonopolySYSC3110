@@ -6,7 +6,6 @@ import java.util.Scanner;
  * @author Vahid Foroughi
 
  */
-
 public class PropertyStreet extends Property{
     private String colour;
     private int price;

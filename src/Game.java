@@ -1,5 +1,10 @@
 import java.util.*;
 
+/**
+ * Class to handle the logic of the Monopoly Game
+ * @author Connor Marcus
+ * @author Noah Hammoud
+ */
 public class Game {
     private MonopolyBoard board;
     private List<Player> playerList;

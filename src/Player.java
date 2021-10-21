@@ -1,9 +1,8 @@
-//Written by: Noah Hammoud
-
 import java.util.*;
 
 /**
  * The Player object for monopoly
+ * @author Noah Hammoud
  */
 public class Player {
     private final String IDENTIFIER;
