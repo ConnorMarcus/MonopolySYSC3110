@@ -3,14 +3,16 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
- * Class to encapsulate all the possible text based commands for the Monopoly game
+ * Class to encapsulate all the possible text based commands for the Monopoly game.
+ *
  * @author Connor Marcus
  */
 public class CommandList {
     private Map<String, Callable> commands;
 
+
     /**
-     * Default constructor; initializes default Map of commands
+     * Default constructor; initializes default Map of commands.
      *
      * @param commands the Map of commands
      */

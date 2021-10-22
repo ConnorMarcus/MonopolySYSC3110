@@ -2,6 +2,7 @@ import java.util.*;
 
 /**
  * The Player object for monopoly
+ *
  * @author Noah Hammoud
  */
 public class Player {
@@ -15,7 +16,8 @@ public class Player {
 
     /**
      * The constructor for Player.
-     * @param identifier, String identifier of the Player.
+     *
+     * @param identifier String identifier of the Player
      */
     public Player(String identifier) {
         this.IDENTIFIER = identifier;
@@ -29,7 +31,8 @@ public class Player {
 
     /**
      * Gets the identifier of the Player.
-     * @return the String identifier.
+     *
+     * @return the String identifier
      */
     public String getIdentifier() {
         return this.IDENTIFIER;
@@ -38,7 +41,8 @@ public class Player {
 
     /**
      * Gets the Players money.
-     * @return the int amount.
+     *
+     * @return the int amount
      */
     public int getMoney() {
         return this.money;
@@ -47,7 +51,8 @@ public class Player {
 
     /**
      * Gets the Players current position.
-     * @return the int position.
+     *
+     * @return the int position
      */
     public int getPosition() {
         return this.position;
@@ -56,7 +61,8 @@ public class Player {
 
     /**
      * Gets isBankrupt.
-     * @return boolean, isBankrupt value.
+     *
+     * @return boolean, isBankrupt value
      */
     public boolean getIsBankrupt() {
         return this.isBankrupt;
@@ -65,7 +71,8 @@ public class Player {
 
     /**
      * Sets Players Position.
-     * @param pos, int position.
+     *
+     * @param pos int position of Player
      */
     public void setPosition(int pos) {
         this.position = pos;
@@ -74,7 +81,8 @@ public class Player {
 
     /**
      * Adds money to Player.
-     * @param money, int amount of money being added.
+     *
+     * @param money int amount of money being added
      */
     public void addMoney(int money) {
         this.money += money;
@@ -83,7 +91,8 @@ public class Player {
 
     /**
      * Removes money from Player.
-     * @param money, int amount of money being removed.
+     *
+     * @param money int amount of money being removed
      */
     private void removeMoney(int money) {
             this.money -= money;
@@ -92,8 +101,9 @@ public class Player {
 
     /**
      * Checks if player can pay amount of money.
-     * @param money, int amount of money to pay.
-     * @return boolean, true if player can pay.
+     *
+     * @param money int amount of money to pay
+     * @return boolean, true if player can pay
      */
     private boolean canPay(int money) {
         return this.money - money >= 0;
@@ -102,7 +112,8 @@ public class Player {
 
     /**
      * purchases property.
-     * @param p, the Property object that the Player wants to purchase.
+     *
+     * @param p the Property object that the Player wants to purchase
      */
     public boolean purchaseProperty(PropertyStreet p) {
         int cost = p.getPrice();
@@ -110,6 +121,7 @@ public class Player {
             this.removeMoney(cost);
             System.out.println("You have purchased " + p.getName() + " for $" + p.getPrice() + "!");
             this.properties.add(p);
+            p.setOwner(this);
             return true;
         }
         else {
@@ -121,8 +133,9 @@ public class Player {
 
     /**
      * Pays rent.
-     * @param cost, int amount of money to pay.
-     * @return int, amount of money actual payed. (If player does not have enough pay all of money).
+     *
+     * @param cost int amount of money to pay
+     * @return int amount of money actual payed. (If player does not have enough pay all of money)
      */
     public int payRent(int cost) {
         if (canPay(cost)) {
@@ -140,15 +153,18 @@ public class Player {
 
     /**
      * Checks if Player owns property.
-     * @param p, the Property object that is being checked.
-     * @return boolean, true if Player owns property.
+     *
+     * @param p the Property object that is being checked
+     * @return boolean true if Player owns property
      */
     public boolean ownsProperty(Property p) {
         return this.properties.contains(p);
     }
 
+
     /**
-     * Gets a set of all the colours that player owns a full group of
+     * Gets a set of all the colours that player owns a full group of.
+     *
      * @param board the Monopoly board that is being used
      * @return a set of all the player's property groups
      */
@@ -169,8 +185,10 @@ public class Player {
         return propertyGroups;
     }
 
+
     /**
-     * Gets a string of all the properties that the player owns
+     * Gets a string of all the properties that the player owns.
+     *
      * @return a String containing the players properties separated by a comma
      */
     public String getPropertyString() {
@@ -182,23 +200,28 @@ public class Player {
     }
 
     /**
-     * Checks if a player took their turn
+     * Checks if a player took their turn.
+     *
      * @return true if a player took their turn, and false otherwise
      */
     public boolean isTookTurn() {
         return this.tookTurn;
     }
 
+
     /**
-     * Sets whether a player took their turn
+     * Sets whether a player took their turn.
+     *
      * @param tookTurn the boolean value to be set
      */
     public void setTookTurn(boolean tookTurn) {
         this.tookTurn = tookTurn;
     }
 
+
     /**
-     * Overrides the equals method from the Object class
+     * Overrides the equals method from the Object class.
+     *
      * @param o The object that is being compared
      * @return true if the object is a player and the identifier of the player is the same, and false otherwise
      */

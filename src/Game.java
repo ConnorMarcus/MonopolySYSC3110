@@ -1,7 +1,8 @@
 import java.util.*;
 
 /**
- * Class to handle the logic of the Monopoly Game
+ * Class to handle the logic of the Monopoly Game.
+ *
  * @author Connor Marcus
  * @author Noah Hammoud
  */
@@ -12,6 +13,10 @@ public class Game {
     private int turn;
     private CommandList commands;
 
+
+    /**
+     * Constructor for Game object.
+     */
     public Game() {
         this.board = new MonopolyBoard();
         this.playerList = new ArrayList<>();
@@ -19,6 +24,12 @@ public class Game {
         this.commands = new CommandList(new HashMap<>(Map.of("HELP", this::PrintCommands, "ROLL", this::TakeTurn, "PASS", this::PassTurn, "INFO", this::Info, "QUIT", this::Quit)));
     }
 
+
+    /**
+     * Game loop for text based game.
+     *
+     * @throws Exception invalid input
+     */
     public void Play() throws Exception {
         Scanner in = new Scanner(System.in);
         System.out.println("Welcome To Monopoly!");
@@ -52,12 +63,24 @@ public class Game {
         }
     }
 
+
+    /**
+     * Creates the Player objects that are playing.
+     *
+     * @param numPlayers int number of Players playing.
+     */
     private void CreatePlayers(int numPlayers) {
         for (int i = 0; i<numPlayers; i++) {
             playerList.add(new Player(String.valueOf(i+1)));
         }
     }
 
+
+    /**
+     * Prints the list of available commands to the players.
+     *
+     * @return boolean use not to change players turn.
+     */
     private boolean PrintCommands() {
         System.out.println("List of all Available Commands: roll, pass, info, help, quit");
         System.out.println("roll: rolls the dice when it is your turn");
@@ -68,12 +91,24 @@ public class Game {
         return false;
     }
 
+
+    /**
+     * Handler for quit command (ends the game).
+     *
+     * @return boolean quit command.
+     */
     private Boolean Quit() {
         System.out.println("Thank you for playing!");
         System.exit(0);
         return true; //Must have a return value to use function as a Callable
     }
 
+
+    /**
+     * Rolls dice to advance Player.
+     *
+     * @return boolean use not to change players turn.
+     */
     private boolean TakeTurn() {
         Player turnPlayer = this.playerList.get(this.turn);
         if (turnPlayer.isTookTurn()) {
@@ -93,6 +128,12 @@ public class Game {
         return false;
     }
 
+
+    /**
+     * Passes Players turn after Player use pass command.
+     *
+     * @return boolean use to change turn.
+     */
     private boolean PassTurn() {
         Player turnPlayer = this.playerList.get(this.turn);
         if (turnPlayer.isTookTurn()) {
@@ -106,6 +147,12 @@ public class Game {
         }
     }
 
+
+    /**
+     * Prints the Players info (name, money, position and Properties owned).
+     *
+     * @return boolean use not to change players turn.
+     */
     private boolean Info() {
         for (Player player : playerList) {
             System.out.println("\nPlayer " + player.getIdentifier() + ":\nCurrent position: " + board.getProperty(player.getPosition()) + "\nMoney: " + player.getMoney() + "\nProperties: " +  player.getPropertyString());
@@ -113,6 +160,12 @@ public class Game {
         return false;
     }
 
+
+    /**
+     * Removes bankrupted Player from game and checks if their is a winner (One player remaining).
+     *
+     * @param p Player that has gone Bankrupt
+     */
     private void bankrupt(Player p) {
         System.out.println("You can not pay your debts and have gone bankrupt thanks for playing!");
         this.playerList.remove(p);
@@ -125,6 +178,11 @@ public class Game {
 
 
     //Not needed until Milestone 3
+    /**
+     * Check if Player can upgrade to a house or hotel.
+     *
+     * @return boolean use not to change players turn.
+     */
     private boolean Upgrade() {
         Player turnPlayer = this.playerList.get(turn);
         Set<String> groups = turnPlayer.getPropertyGroups(this.board);
@@ -165,6 +223,12 @@ public class Game {
         return false;
     }
 
+    /**
+     * Main method to run game.
+     *
+     * @param args String[] input for main method
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
         Game g = new Game();
         g.Play();

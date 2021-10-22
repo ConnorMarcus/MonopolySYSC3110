@@ -12,20 +12,56 @@ public class PropertyStreet extends Property{
     private final double RENTRATE = 0.1;
     private Player owner;
 
+
+    /**
+     * Constructor for PropertyStreet object.
+     *
+     * @param colour String colour of PropertyStreet
+     * @param name String name of PropertyStreet
+     * @param price int price of PropertyStreet
+     */
     public PropertyStreet(String colour, String name, int price) {
         super(name);
         this.colour = colour;
         this.price = price;
     }
 
+
+    /**
+     * Gets PropertyStreets colour.
+     *
+     * @return String colour of property
+     */
     public String getColour() {
         return this.colour;
     }
 
+
+    /**
+     * Gets price of PropertyStreet.
+     *
+     * @return int price of PropertyStreet
+     */
     public int getPrice() {
         return this.price;
     }
 
+
+    /**
+     * Sets owner of PropertyStreet after it is purchased.
+     *
+     * @param owner Player who owns PropertyStreet
+     */
+    public void setOwner(Player owner) {
+        this.owner = owner;
+    }
+
+
+    /**
+     * Handlers player that landed on PropertyStreet (Player can buy if available or must pay rent to owner).
+     *
+     * @param landedPlayer the Player object that landed on the property
+     */
     @Override
     public void Landed(Player landedPlayer) {
         if(owner != null && landedPlayer != owner) {
@@ -41,6 +77,13 @@ public class PropertyStreet extends Property{
             buyHandler(landedPlayer);
         }
     }
+
+
+    /**
+     * Offers the Player to buy the PropertyStreet.
+     *
+     * @param landedPlayer Player object that landed on PropertyStreet
+     */
     private void buyHandler(Player landedPlayer) {
         String answer = "";
         Scanner in = new Scanner(System.in);
@@ -62,6 +105,12 @@ public class PropertyStreet extends Property{
         }
     }
 
+
+    /**
+     * String representation of PropertyStreet object.
+     *
+     * @return String representation of PropertyStreet.
+     */
     @Override
     public String toString() {
         return String.format("%s (%s)", super.getName(), this.colour);

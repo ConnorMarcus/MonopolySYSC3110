@@ -4,12 +4,17 @@ import java.util.List;
 
 /**
  * Class to represent a class Monopoly Board with all the colour groups.
+ *
  * @author Connor Marcus
  * @author George Pantazopoulos
  */
 public class MonopolyBoard {
     private List<Property> properties;
 
+
+    /**
+     * Enum for each different PropertyGroup.
+     */
     private enum PropertyGroups {
         BROWNPROPERTIES(Arrays.asList(new PropertyStreet("brown", "Mediterranean Avenue", 60), new PropertyStreet("brown", "Baltic Avenue", 60))),
         LIGHTBLUEPROPERTIES(Arrays.asList(new PropertyStreet("light blue", "Oriental Avenue", 100), new PropertyStreet("light blue", "Vermont Avenue", 100), new PropertyStreet("light blue", "Connecticut Avenue", 120))),
@@ -22,11 +27,21 @@ public class MonopolyBoard {
 
         private List<PropertyStreet> propertySet;
 
+
+        /**
+         * Constructor for PropertyGroups.
+         *
+         * @param propertySet
+         */
         PropertyGroups(List<PropertyStreet> propertySet) {
             this.propertySet = propertySet;
         }
     }
 
+
+    /**
+     * Constructor for MonopolyBoard.
+     */
     public MonopolyBoard() {
         this.properties = new ArrayList<>();
         this.properties.add(new PropertyFreeSpace("GO"));
@@ -50,14 +65,34 @@ public class MonopolyBoard {
         this.properties.add(PropertyGroups.DARKBLUEPROPERTIES.propertySet.get(1)); //BoardWalk
     }
 
+
+    /**
+     * Gets List of PropertyGroups based on colour.
+     *
+     * @param colour String colour of PropertyGroup
+     * @return List<PropertyStreet> list of PropertyStreets in group
+     */
     public List<PropertyStreet> getPropertyGroup(String colour) {
         return PropertyGroups.valueOf(colour.replaceAll("\\s+","").toUpperCase() + "PROPERTIES").propertySet;
     }
 
+
+    /**
+     * Gets Property at index of List.
+     *
+     * @param index int index of Property
+     * @return Property at index
+     */
     public Property getProperty(int index) {
         return this.properties.get(index);
     }
 
+
+    /**
+     * Gets the number of Properties.
+     *
+     * @return int number of Properties
+     */
     public int getNumProperties() {
         return this.properties.size();
     }
