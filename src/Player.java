@@ -121,7 +121,6 @@ public class Player {
             this.removeMoney(cost);
             System.out.println("You have purchased " + p.getName() + " for $" + p.getPrice() + "!");
             this.properties.add(p);
-            p.setOwner(this);
             return true;
         }
         else {

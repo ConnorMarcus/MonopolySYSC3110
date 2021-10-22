@@ -48,16 +48,6 @@ public class PropertyStreet extends Property{
 
 
     /**
-     * Sets owner of PropertyStreet after it is purchased.
-     *
-     * @param owner Player who owns PropertyStreet
-     */
-    public void setOwner(Player owner) {
-        this.owner = owner;
-    }
-
-
-    /**
      * Handlers player that landed on PropertyStreet (Player can buy if available or must pay rent to owner).
      *
      * @param landedPlayer the Player object that landed on the property
