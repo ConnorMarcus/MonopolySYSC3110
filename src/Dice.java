@@ -18,7 +18,9 @@ public class Dice {
         if (numDice <= 0) {
             throw new IllegalArgumentException("Number of dice must be > 0");
         }
-        this.numDice = numDice;
+        else {
+            this.numDice = numDice;
+        }
     }
 
 

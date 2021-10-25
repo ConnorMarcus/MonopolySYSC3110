@@ -45,21 +45,36 @@ public class MonopolyBoard {
     public MonopolyBoard() {
         this.properties = new ArrayList<>();
         this.properties.add(new PropertyFreeSpace("GO"));
-        this.properties.addAll(PropertyGroups.BROWNPROPERTIES.propertySet);
+        this.properties.add(PropertyGroups.BROWNPROPERTIES.propertySet.get(0)); // Mediterranean Avenue
+        this.properties.add(new PropertyFreeSpace("Free"));
+        this.properties.add(PropertyGroups.BROWNPROPERTIES.propertySet.get(1)); // Baltic Avenue
         this.properties.add(new PropertyFreeSpace("Income Tax"));
         this.properties.add(new PropertyFreeSpace("Reading Railroad")); //price constant among all railroads so don't need to pass the price (use a constant for the price in the class)
-        this.properties.addAll(PropertyGroups.LIGHTBLUEPROPERTIES.propertySet);
+        this.properties.add(PropertyGroups.LIGHTBLUEPROPERTIES.propertySet.get(0)); //Oriental Avenue
+        this.properties.add(new PropertyFreeSpace("Free"));
+        this.properties.addAll(PropertyGroups.LIGHTBLUEPROPERTIES.propertySet.subList(1, 3));
         this.properties.add(new PropertyFreeSpace("Jail"));
-        this.properties.addAll(PropertyGroups.PINKPROPERTIES.propertySet);
+        this.properties.add(PropertyGroups.PINKPROPERTIES.propertySet.get(0)); //St. Charles Place
+        this.properties.add(new PropertyFreeSpace("Electric Company"));
+        this.properties.addAll(PropertyGroups.PINKPROPERTIES.propertySet.subList(1,3));
         this.properties.add(new PropertyFreeSpace("Pennsylvania Railroad"));
-        this.properties.addAll(PropertyGroups.ORANGEPROPERTIES.propertySet);
+        this.properties.add(PropertyGroups.ORANGEPROPERTIES.propertySet.get(0)); //St. James Place
+        this.properties.add(new PropertyFreeSpace("Free"));
+        this.properties.addAll(PropertyGroups.ORANGEPROPERTIES.propertySet.subList(1,3));
         this.properties.add(new PropertyFreeSpace("Free Parking"));
-        this.properties.addAll(PropertyGroups.REDPROPERTIES.propertySet);
+        this.properties.add(PropertyGroups.REDPROPERTIES.propertySet.get(0)); //Kentucky Avenue
+        this.properties.add(new PropertyFreeSpace("Free"));
+        this.properties.addAll(PropertyGroups.REDPROPERTIES.propertySet.subList(1,3));
         this.properties.add(new PropertyFreeSpace("B&O Railroad"));
-        this.properties.addAll(PropertyGroups.YELLOWPROPERTIES.propertySet);
+        this.properties.addAll(PropertyGroups.YELLOWPROPERTIES.propertySet.subList(0,2));
+        this.properties.add(new PropertyFreeSpace("Water Works"));
+        this.properties.add(PropertyGroups.YELLOWPROPERTIES.propertySet.get(2)); //Marvin Gardens
         this.properties.add(new PropertyFreeSpace("Go To Jail"));
-        this.properties.addAll(PropertyGroups.GREENPROPERTIES.propertySet);
+        this.properties.addAll(PropertyGroups.GREENPROPERTIES.propertySet.subList(0,2));
+        this.properties.add(new PropertyFreeSpace("Free"));
+        this.properties.add(PropertyGroups.GREENPROPERTIES.propertySet.get(2)); //Pennsylvania Avenue
         this.properties.add(new PropertyFreeSpace("Short Line"));
+        this.properties.add(new PropertyFreeSpace("Free"));
         this.properties.add(PropertyGroups.DARKBLUEPROPERTIES.propertySet.get(0)); //Park Place
         this.properties.add(new PropertyFreeSpace("Luxury Tax"));
         this.properties.add(PropertyGroups.DARKBLUEPROPERTIES.propertySet.get(1)); //BoardWalk
