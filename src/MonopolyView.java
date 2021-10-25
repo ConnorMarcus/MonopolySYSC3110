@@ -8,6 +8,7 @@ public class MonopolyView extends JFrame {
         boardPanel = new BoardPanel(new MonopolyBoard());
         Player testPlayer = new Player("1");
         boardPanel.addPlayerLabel(testPlayer);
+        testPlayer.setPosition(20);
         boardPanel.updatePlayerLabelPosition(testPlayer);
         this.add(boardPanel);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);

@@ -13,23 +13,27 @@ public class BoardPanel extends JPanel {
     private final int PANELHEIGHT = 693;
     private MonopolyBoard board;
     private List<JLabel> playerLabels;
+    private JLabel[] spaces;
 
     public BoardPanel(MonopolyBoard board) {
         this.setLayout(null);
         this.setPreferredSize(new Dimension(PANELWIDTH, PANELHEIGHT));
         this.board = board;
         this.playerLabels = new ArrayList<>();
+        this.spaces = new JLabel[board.getNumProperties()];
+        initializeLabels();
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    private void initializeLabels() {
+        for (int i=0; i<spaces.length; i++) {
+            spaces[i] = new JLabel();
+        }
         int x = 0;
         int y = 0;
         int WIDTH = PANELWIDTH/11;
         int HEIGHT = PANELHEIGHT/11;
 
-
+        //Initialize top and bottom spaces
         for (int i=20; i<31; i++) {
             try {
                 //All the top images are rotated 180 degrees
@@ -38,9 +42,14 @@ public class BoardPanel extends JPanel {
                 transform.rotate(Math.PI, image1.getWidth() / 2, image1.getHeight() / 2);
                 AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
                 image1 = op.filter(image1, null);
-                g.drawImage(image1, x, y, null);
+                spaces[i].setIcon(new ImageIcon(image1));
+                spaces[i].setBounds(x, y, spaces[i].getPreferredSize().width, spaces[i].getPreferredSize().height);
+                this.add(spaces[i]);
+
                 BufferedImage image2 = ImageIO.read(new File(String.format("images/%s.png", board.getProperty(30-i).getName())));
-                g.drawImage(image2, x, y+PANELHEIGHT-HEIGHT, null);
+                spaces[30-i].setIcon(new ImageIcon(image2));
+                spaces[30-i].setBounds(x, y+PANELHEIGHT-HEIGHT, spaces[30-i].getPreferredSize().width, spaces[30-i].getPreferredSize().height);
+                this.add(spaces[30-i]);
             }
             catch (Exception e) {
                 System.err.println("Error loading image! " + e.getMessage());
@@ -51,21 +60,29 @@ public class BoardPanel extends JPanel {
 
         x -= WIDTH;
         y += HEIGHT;
+
+        //Initialize right and left spaces
         for (int i=31; i<40; i++) {
             try {
-                //All the right images are rotated 270 degrees and all the left images are rotated by 90 degrees
+                //All the right images are rotated 270 degrees
                 BufferedImage image1 = ImageIO.read(new File(String.format("images/%s.png", board.getProperty(i).getName())));
                 AffineTransform transform = new AffineTransform();
                 transform.rotate(1.5*Math.PI, image1.getWidth() / 2, image1.getHeight() / 2);
                 AffineTransformOp transformOp = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
                 image1 = transformOp.filter(image1, null);
-                g.drawImage(image1, x, y, null);
+                spaces[i].setIcon(new ImageIcon(image1));
+                spaces[i].setBounds(x, y, spaces[i].getPreferredSize().width, spaces[i].getPreferredSize().height);
+                this.add(spaces[i]);
+
+                //All the left images are rotated by 90 degrees
                 BufferedImage image2 = ImageIO.read(new File(String.format("images/%s.png", board.getProperty(50-i).getName())));
                 AffineTransform transform2 = new AffineTransform();
                 transform2.rotate(Math.PI/2, image2.getWidth() / 2, image2.getHeight() / 2);
                 AffineTransformOp transformOp2 = new AffineTransformOp(transform2, AffineTransformOp.TYPE_BILINEAR);
                 image2 = transformOp2.filter(image2, null);
-                g.drawImage(image2, x-PANELWIDTH+WIDTH, y, null);
+                spaces[50-i].setIcon(new ImageIcon(image2));
+                spaces[50-i].setBounds(x-PANELWIDTH+WIDTH, y, spaces[50-i].getPreferredSize().width, spaces[50-i].getPreferredSize().height);
+                this.add(spaces[50-i]);
             }
             catch (Exception e) {
                 System.err.println("Error loading image!");
@@ -86,23 +103,8 @@ public class BoardPanel extends JPanel {
             throw new IllegalArgumentException("The Player object that was passed does not correspond with a player label!");
         }
         else {
-            int xPos = 0;
-            int yPos = 0;
-            if (player.getPosition() < 10) {
-                xPos = (PANELWIDTH/11) * (10 - player.getPosition());
-                yPos = 10*PANELHEIGHT/11;
-            }
-            else if(player.getPosition() < 20) {
-                yPos = (PANELHEIGHT/11) * (20 - player.getPosition());
-            }
-            else if(player.getPosition() < 30) {
-                xPos = (PANELWIDTH/11) * (player.getPosition() - 20);
-            }
-            else {
-                xPos = 10*PANELWIDTH/11;
-                yPos = (PANELHEIGHT/11) * (player.getPosition() - 30);
-            }
-            this.add(playerLabel);
+            int xPos = spaces[player.getPosition()].getX();
+            int yPos = spaces[player.getPosition()].getY();
             playerLabel.setBounds(xPos, yPos, playerLabel.getPreferredSize().width, playerLabel.getPreferredSize().height);
         }
     }
@@ -112,6 +114,9 @@ public class BoardPanel extends JPanel {
         playerLabel.setName(player.getIdentifier());
         playerLabel.setIcon(new ImageIcon("images/player1.png"));
         this.playerLabels.add(playerLabel);
+        this.add(playerLabel);
+        this.setComponentZOrder(playerLabel, 0);
+        updatePlayerLabelPosition(player);
     }
 
 }
