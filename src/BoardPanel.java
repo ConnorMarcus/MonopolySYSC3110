@@ -23,6 +23,7 @@ public class BoardPanel extends JPanel {
     public BoardPanel(MonopolyBoard board) {
         this.setLayout(null);
         this.setPreferredSize(new Dimension(PANELWIDTH, PANELHEIGHT));
+        this.setBackground(new Color(211, 236, 211));
         this.board = board;
         this.playerLabels = new ArrayList<>();
         this.spaces = new JLabel[board.getNumProperties()];
