@@ -16,7 +16,7 @@ public class MonopolyBoard {
      * Enum for each different PropertyGroup.
      */
     private enum PropertyGroups {
-        PURPLEPROPERTIES(Arrays.asList(new PropertyStreet("purple", "Mediterranean Avenue", 60), new PropertyStreet("purple", "Baltic Avenue", 60))),
+        BROWNPROPERTIES(Arrays.asList(new PropertyStreet("brown", "Mediterranean Avenue", 60), new PropertyStreet("brown", "Baltic Avenue", 60))),
         LIGHTBLUEPROPERTIES(Arrays.asList(new PropertyStreet("light blue", "Oriental Avenue", 100), new PropertyStreet("light blue", "Vermont Avenue", 100), new PropertyStreet("light blue", "Connecticut Avenue", 120))),
         PINKPROPERTIES(Arrays.asList(new PropertyStreet("pink", "St. Charles Place", 140), new PropertyStreet("pink", "States Avenue", 140), new PropertyStreet("pink", "Virginia Avenue", 160))),
         ORANGEPROPERTIES(Arrays.asList(new PropertyStreet("orange", "St. James Place", 180), new PropertyStreet("orange", "Tennessee Avenue", 180), new PropertyStreet("orange", "New York Avenue", 200))),
@@ -45,9 +45,9 @@ public class MonopolyBoard {
     public MonopolyBoard() {
         this.properties = new ArrayList<>();
         this.properties.add(new PropertyFreeSpace("GO"));
-        this.properties.add(PropertyGroups.PURPLEPROPERTIES.propertySet.get(0)); // Mediterranean Avenue
+        this.properties.add(PropertyGroups.BROWNPROPERTIES.propertySet.get(0)); // Mediterranean Avenue
         this.properties.add(new PropertyFreeSpace("Free"));
-        this.properties.add(PropertyGroups.PURPLEPROPERTIES.propertySet.get(1)); // Baltic Avenue
+        this.properties.add(PropertyGroups.BROWNPROPERTIES.propertySet.get(1)); // Baltic Avenue
         this.properties.add(new PropertyFreeSpace("Income Tax"));
         this.properties.add(new PropertyFreeSpace("Reading Railroad")); //price constant among all railroads so don't need to pass the price (use a constant for the price in the class)
         this.properties.add(PropertyGroups.LIGHTBLUEPROPERTIES.propertySet.get(0)); //Oriental Avenue

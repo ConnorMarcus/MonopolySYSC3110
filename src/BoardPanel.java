@@ -8,6 +8,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * BoardPanel class which handles the game board.
+ *
+ * @author Connor Marcus
+ */
 public class BoardPanel extends JPanel {
     private final int PANELWIDTH = 693;
     private final int PANELHEIGHT = 693;
@@ -24,6 +29,9 @@ public class BoardPanel extends JPanel {
         initializeLabels();
     }
 
+    /**
+     * Initializes JPanel game board.
+     */
     private void initializeLabels() {
         for (int i=0; i<spaces.length; i++) {
             spaces[i] = new JLabel();
@@ -92,6 +100,11 @@ public class BoardPanel extends JPanel {
         }
     }
 
+    /**
+     * Moves the Player icons position on the board.
+     *
+     * @param player the player object being moved.
+     */
     public void updatePlayerLabelPosition(Player player) {
         JLabel playerLabel = null;
         for (JLabel label : this.playerLabels) {
@@ -109,6 +122,11 @@ public class BoardPanel extends JPanel {
         }
     }
 
+    /**
+     * Adds player label to playerLabels.
+     *
+     * @param player the Player object getting added.
+     */
     public void addPlayerLabel(Player player) {
         JLabel playerLabel = new JLabel();
         playerLabel.setName(player.getIdentifier());
