@@ -71,7 +71,7 @@ public class Game {
      */
     private void CreatePlayers(int numPlayers) {
         for (int i = 0; i<numPlayers; i++) {
-            playerList.add(new Player(String.valueOf(i+1)));
+            //playerList.add(new Player(String.valueOf(i+1)));
         }
     }
 

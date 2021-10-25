@@ -12,20 +12,31 @@ public class Player {
     private Set<Property> properties;
     private boolean tookTurn;
     private boolean isBankrupt;
+    private String playerImageFile;
 
 
     /**
      * The constructor for Player.
      *
      * @param identifier String identifier of the Player
+     * @param playerImageFile String containing the file path to the player image
      */
-    public Player(String identifier) {
+    public Player(String identifier, String playerImageFile) {
         this.IDENTIFIER = identifier;
         this.money = 1500;
         this.position = 0;
         this.properties = new HashSet<>();
         this.tookTurn = false;
         this.isBankrupt = false;
+        this.playerImageFile = playerImageFile;
+    }
+
+    /**
+     * Gets the file path to the player image.
+     * @return the playerImageFile String
+     */
+    public String getPlayerImageFile() {
+        return this.playerImageFile;
     }
 
 

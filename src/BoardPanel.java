@@ -112,7 +112,7 @@ public class BoardPanel extends JPanel {
     public void addPlayerLabel(Player player) {
         JLabel playerLabel = new JLabel();
         playerLabel.setName(player.getIdentifier());
-        playerLabel.setIcon(new ImageIcon("images/player1.png"));
+        playerLabel.setIcon(new ImageIcon(player.getPlayerImageFile()));
         this.playerLabels.add(playerLabel);
         this.add(playerLabel);
         this.setComponentZOrder(playerLabel, 0);
