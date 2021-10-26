@@ -57,7 +57,7 @@ public class SidePanel extends JPanel {
     }
 
     /**
-     * Adds the buttons to the JLabels.
+     * Adds the buttons to the JPanel.
      */
     private void addButtons() {
         Font buttonFont = new Font("arial",Font.BOLD, 25);
