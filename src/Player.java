@@ -10,7 +10,6 @@ public class Player {
     private int money;
     private int position;
     private Set<Property> properties;
-    private boolean tookTurn;
     private boolean isBankrupt;
     private String playerImageFile;
 
@@ -26,7 +25,6 @@ public class Player {
         this.money = 1500;
         this.position = 0;
         this.properties = new HashSet<>();
-        this.tookTurn = false;
         this.isBankrupt = false;
         this.playerImageFile = playerImageFile;
     }
@@ -126,17 +124,11 @@ public class Player {
      *
      * @param p the Property object that the Player wants to purchase
      */
-    public boolean purchaseProperty(PropertyStreet p) {
+    public void purchaseProperty(PropertyStreet p) {
         int cost = p.getPrice();
         if (this.canPay(cost)) {
             this.removeMoney(cost);
-            System.out.println("You have purchased " + p.getName() + " for $" + p.getPrice() + "!");
             this.properties.add(p);
-            return true;
-        }
-        else {
-            System.out.println("You do not have enough money to buy this property!");
-            return false;
         }
     }
 
@@ -208,26 +200,6 @@ public class Player {
         }
         return propertyString.replaceAll(", $", ""); //removes trailing comma
     }
-
-    /**
-     * Checks if a player took their turn.
-     *
-     * @return true if a player took their turn, and false otherwise
-     */
-    public boolean isTookTurn() {
-        return this.tookTurn;
-    }
-
-
-    /**
-     * Sets whether a player took their turn.
-     *
-     * @param tookTurn the boolean value to be set
-     */
-    public void setTookTurn(boolean tookTurn) {
-        this.tookTurn = tookTurn;
-    }
-
 
     /**
      * Overrides the equals method from the Object class.

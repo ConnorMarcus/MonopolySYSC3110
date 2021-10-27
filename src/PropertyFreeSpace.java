@@ -1,3 +1,5 @@
+import javax.swing.*;
+
 /**
  * Free space/Starting Property Object.
  *
@@ -22,7 +24,7 @@ public class PropertyFreeSpace extends Property {
      */
     @Override
     public void Landed(Player landedPlayer) {
-        System.out.println("This is a free space in Milestone 1!");
+        JOptionPane.showMessageDialog(null, "This is a free space in Milestone 2!");
     }
 
     /**

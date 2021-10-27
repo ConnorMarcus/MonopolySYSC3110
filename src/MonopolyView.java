@@ -27,22 +27,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         this.model = new MonopolyModel(Integer.parseInt(options[choice]));
         this.model.addMonopolyObserver(this);
         this.boardPanel = new BoardPanel(this.model.getBoard(), this.model.getPlayerList());
-//        Player testPlayer = new Player("1", "images/player1.png");
-//        Player testPlayer2 = new Player("2", "images/player2.png");
-//        Player testPlayer3 = new Player("3", "images/player3.png");
-//        Player testPlayer4 = new Player("4", "images/player4.png");
-        //boardPanel.addPlayerLabel(testPlayer);
-        //boardPanel.addPlayerLabel(testPlayer2);
-        //boardPanel.addPlayerLabel(testPlayer3);
-        //boardPanel.addPlayerLabel(testPlayer4);
-
-//        ArrayList<Player> players = new ArrayList<>();
-//        players.add(testPlayer);
-//        players.add(testPlayer2);
-//        players.add(testPlayer3);
-//        players.add(testPlayer4);
         this.sidePanel = new SidePanel(this.model);
-
         this.setLayout(new FlowLayout());
         this.add(this.boardPanel);
         this.add(this.sidePanel);
@@ -82,8 +67,8 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
     @Override
     public void handleBankrupt(Player player) {
         JOptionPane.showMessageDialog(null, "Player " + player.getIdentifier() + "has gone bankrupt! They are out of the game.");
-        //this.boardPanel.removePlayerLabel(player);
-        //this.sidePanel.removePlayerInfo(player);
+        this.boardPanel.removePlayerLabel(player);
+        this.sidePanel.removePlayerInfo(player);
     }
 
     /**
@@ -94,6 +79,11 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
     public void handleWinner(Player player) {
         JOptionPane.showMessageDialog(null, "Player " + player.getIdentifier() + " has won the game!");
         System.exit(0);
+    }
+
+    @Override
+    public void handlePlayerUpdate(Player player) {
+        this.sidePanel.updatePlayerInfo(player);
     }
 
     /**

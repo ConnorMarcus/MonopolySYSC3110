@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.Scanner;
 
 /**
@@ -58,10 +59,10 @@ public class PropertyStreet extends Property{
             int rent = (int)(this.price * RENTRATE);
             rent = landedPlayer.payRent(rent);
             owner.addMoney(rent);
-            System.out.println("Player " + owner.getIdentifier() + " owns this property you must pay them $" + rent);
+            JOptionPane.showMessageDialog( null,"Player " + owner.getIdentifier() + " owns this property you must pay them $" + rent);
         }
         else if (owner != null) { //landed player owns the property
-            System.out.println("You already own this property!");
+            JOptionPane.showMessageDialog(null, "You already own this property!");
         }
         else {
             buyHandler(landedPlayer);
@@ -75,23 +76,18 @@ public class PropertyStreet extends Property{
      * @param landedPlayer Player object that landed on PropertyStreet
      */
     private void buyHandler(Player landedPlayer) {
-        String answer = "";
-        Scanner in = new Scanner(System.in);
         if (landedPlayer.getMoney() >= this.price) {
-            System.out.println("Would you like to buy " + this + " for $" + this.price + "? (y/n)");
-            answer = in.nextLine().toLowerCase();
-            while (!(answer.equals("y")) && !(answer.equals("n"))) {
-                System.out.println("Please enter y or n");
-                System.out.println("Would you like to buy " + this + " for $" + this.price + "? (y/n)");
-                answer = in.nextLine().toLowerCase();
-            }
-            if (answer.equals("y")) {
+            String[] options = {"no", "yes"};
+            int choice = JOptionPane.showOptionDialog(null, "Would you like to buy this property for " + this.price + "?",
+                    "Buy Property",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
+            if (choice == 1) {
                 landedPlayer.purchaseProperty(this);
                 owner = landedPlayer;
             }
         }
         else {
-            System.out.println("You do not have enough money to buy this property!");
+            JOptionPane.showMessageDialog(null, "You do not have enough money to buy this property!");
         }
     }
 

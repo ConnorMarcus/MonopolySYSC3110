@@ -2,6 +2,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,7 +14,8 @@ public class SidePanel extends JPanel {
     private final int PANELWIDTH = 350;
     private final int PANELHEIGHT = 693;
     private final int INFOAREAHEIGHT = 620;
-    private List<Player> players;
+    private MonopolyModel model;
+    private List<JLabel> playerInfoLabels;
 
 
     /**
@@ -24,7 +26,8 @@ public class SidePanel extends JPanel {
     public SidePanel(MonopolyModel model) {
         this.setPreferredSize(new Dimension(PANELWIDTH, PANELHEIGHT));
         this.setBackground(new Color(211, 236, 211));
-        this.players = model.getPlayerList();
+        this.model = model;
+        this.playerInfoLabels = new ArrayList<>();
         this.addPlayersInfo();
         this.addButtons(model);
         this.setVisible(true);
@@ -34,10 +37,11 @@ public class SidePanel extends JPanel {
      * Adds the players info Jlabels to the JPanel.
      */
     private void addPlayersInfo() {
-        int numberOfPlayer = this.players.size();
-        for (Player p: this.players) {
+        int numberOfPlayer = this.model.getPlayerList().size();
+        for (Player p: this.model.getPlayerList()) {
             String text = "<html><br>Money: $" + p.getMoney() + "<br>Properties: " +  p.getPropertyString() + "</html>";
             JLabel info = new JLabel(text);
+            info.setName(p.getIdentifier());
 
             info.setFont(new Font("Aharoni", Font.BOLD, 12 ));
             info.setPreferredSize(new Dimension(PANELWIDTH - 10, (INFOAREAHEIGHT / numberOfPlayer)));
@@ -49,9 +53,54 @@ public class SidePanel extends JPanel {
 
             info.setVerticalAlignment(JLabel.NORTH);
             info.setBorder(title);
+            this.playerInfoLabels.add(info);
             this.add(info);
         }
+    }
 
+    /**
+     * Updates a players information label.
+     * @param player The player whose label is changing.
+     */
+    public void updatePlayerInfo(Player player) {
+        JLabel playerLabel = null;
+        for (JLabel label : this.playerInfoLabels) {
+            if (label.getName().equals(player.getIdentifier())) {
+                playerLabel = label;
+                break;
+            }
+        }
+        if (playerLabel == null) {
+            throw new IllegalArgumentException("The Player object that was passed does not correspond with a player info label!");
+        }
+        else {
+            playerLabel.setText("<html><br>Money: $" + player.getMoney() + "<br>Properties: " +  player.getPropertyString() + "</html>");
+        }
+    }
+
+    /**
+     * Removes a player's info from the SidePanel.
+     * @param player The player whose label is being removed
+     */
+    public void removePlayerInfo(Player player) {
+        JLabel playerLabel = null;
+        for (JLabel label : this.playerInfoLabels) {
+            if (label.getName().equals(player.getIdentifier())) {
+                playerLabel = label;
+                break;
+            }
+        }
+        if (playerLabel == null) {
+            throw new IllegalArgumentException("The Player object that was passed does not correspond with a player info label!");
+        }
+        else {
+            this.playerInfoLabels.remove(playerLabel);
+            this.remove(playerLabel);
+            this.revalidate();
+            for (JLabel label : this.playerInfoLabels) {
+                label.setPreferredSize(new Dimension(PANELWIDTH - 10, (INFOAREAHEIGHT / playerInfoLabels.size())));
+            }
+        }
     }
 
     /**
@@ -86,10 +135,15 @@ public class SidePanel extends JPanel {
         this.add(buy);
     }
 
+    /**
+     * Enables one of the SidePanel's buttons.
+     * @param buttonText The text of the button to disable
+     */
     public void enableButton(String buttonText) {
         for (Component c : this.getComponents()) {
             if (c instanceof JButton && ((JButton) c).getText().equals(buttonText)) {
-                ((JButton) c).setEnabled(true);
+                c.setEnabled(true);
+                break;
             }
         }
     }

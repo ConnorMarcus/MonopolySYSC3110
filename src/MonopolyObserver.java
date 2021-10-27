@@ -6,4 +6,5 @@ public interface MonopolyObserver {
     void handlePassTurn(Player player);
     void handleBankrupt(Player player);
     void handleWinner(Player player);
+    void handlePlayerUpdate(Player player);
 }

@@ -112,6 +112,7 @@ public class BoardPanel extends JPanel {
         for (JLabel label : this.playerLabels) {
             if (label.getName().equals(player.getIdentifier())) {
                 playerLabel = label;
+                break;
             }
         }
         if (playerLabel == null) {
@@ -125,7 +126,7 @@ public class BoardPanel extends JPanel {
     }
 
     /**
-     * Adds player label to playerLabels.
+     * Adds player label to list of playerLabels.
      *
      * @param player the Player object getting added.
      */
@@ -141,6 +142,29 @@ public class BoardPanel extends JPanel {
         }
         else {
             throw new IllegalArgumentException("Cannot pass null Player!");
+        }
+    }
+
+    /**
+     * Removes player label from list of playerLabels.
+     *
+     * @param player the Player object getting removed.
+     */
+    public void removePlayerLabel(Player player) {
+        JLabel playerLabel = null;
+        for (JLabel label : this.playerLabels) {
+            if (label.getName().equals(player.getIdentifier())) {
+                playerLabel = label;
+                break;
+            }
+        }
+        if (playerLabel != null) {
+            this.remove(playerLabel);
+            this.repaint();
+            this.playerLabels.remove(playerLabel);
+        }
+        else {
+            throw new IllegalArgumentException("The Player object that was passed does not correspond with a player label!");
         }
     }
 

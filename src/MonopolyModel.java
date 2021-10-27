@@ -60,9 +60,11 @@ public class MonopolyModel {
         for (MonopolyObserver o : this.observers) {
             o.handleTakeTurn(turnPlayer, roll, propertyLandedOn);
         }
-        //propertyLandedOn.Landed(turnPlayer);
+        propertyLandedOn.Landed(turnPlayer);
+        for (MonopolyObserver o : this.observers) {
+            o.handlePlayerUpdate(turnPlayer);
+        }
         if (turnPlayer.getIsBankrupt()) bankrupt(turnPlayer); // Checks if player is bankrupt after paying rent
-        turnPlayer.setTookTurn(true);
     }
 
     /**
@@ -73,7 +75,6 @@ public class MonopolyModel {
     public void PassTurn() {
         Player turnPlayer = this.playerList.get(this.turn);
         this.turn = (this.turn + 1) % this.playerList.size();
-        turnPlayer.setTookTurn(false);
         for (MonopolyObserver o : this.observers) {
             o.handlePassTurn(turnPlayer);
         }
