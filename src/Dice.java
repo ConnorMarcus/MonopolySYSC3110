@@ -29,12 +29,13 @@ public class Dice {
      *
      * @return the sum of all the dice rolls
      */
-    public int rollDice() {
-        int sum = 0;
+    public int[] rollDice() {
+        int[] dice = new int[numDice];
         Random r = new Random();
         for (int i=0; i<this.numDice; i++) {
-            sum += r.nextInt(6) + 1;
+            int roll = r.nextInt(6) + 1;
+            dice[i] = roll;
         }
-        return sum;
+        return dice;
     }
 }

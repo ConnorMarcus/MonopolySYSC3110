@@ -19,6 +19,9 @@ public class BoardPanel extends JPanel {
     private MonopolyBoard board;
     private List<JLabel> playerLabels;
     private JLabel[] spaces;
+    private JLabel dice1;
+    private JLabel dice2;
+
 
     public BoardPanel(MonopolyBoard board, List<Player> players) {
         this.setLayout(null);
@@ -27,6 +30,8 @@ public class BoardPanel extends JPanel {
         this.board = board;
         this.playerLabels = new ArrayList<>();
         this.spaces = new JLabel[board.getNumProperties()];
+        this.dice1 = new JLabel();
+        this.dice2 = new JLabel();
         initializeLabels();
         players.forEach(this::addPlayerLabel);
     }
@@ -35,6 +40,19 @@ public class BoardPanel extends JPanel {
      * Initializes JPanel game board.
      */
     private void initializeLabels() {
+        //Adds logo to board
+        JLabel logo = new JLabel();
+        logo.setIcon(new ImageIcon("images/logo.png"));
+        logo.setBounds(147, 137, 395, 395);
+        this.add(logo);
+
+        //Sets bounds and adds dice Jlabels
+        this.dice1.setBounds(450, 475, 55, 55);
+        this.add(this.dice1);
+
+        this.dice2.setBounds(525, 500, 55, 55);
+        this.add(this.dice2);
+
         for (int i=0; i<spaces.length; i++) {
             spaces[i] = new JLabel();
         }
@@ -166,6 +184,15 @@ public class BoardPanel extends JPanel {
         else {
             throw new IllegalArgumentException("The Player object that was passed does not correspond with a player label!");
         }
+    }
+
+    /**
+     * Updates the dice displayed on the board.
+     *
+     */
+    public void updateDice(int d1, int d2) {
+        this.dice1.setIcon(new ImageIcon("images/" + d1 + ".png"));
+        this.dice2.setIcon(new ImageIcon("images/" + d2 + ".png"));
     }
 
 }

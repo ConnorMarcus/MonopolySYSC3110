@@ -53,8 +53,12 @@ public class MonopolyModel {
      */
     public void TakeTurn() {
         Player turnPlayer = this.playerList.get(this.turn);
-        int roll = dice.rollDice();
-        int newPosition = (turnPlayer.getPosition() + roll) % this.board.getNumProperties();
+        int[] roll = dice.rollDice();
+        int rollSum = 0;
+        for (int i = 0; i < roll.length; i++) {
+            rollSum += roll[i];
+        }
+        int newPosition = (turnPlayer.getPosition() + rollSum) % this.board.getNumProperties();
         turnPlayer.setPosition(newPosition);
         Property propertyLandedOn = this.board.getProperty(newPosition);
         for (MonopolyObserver o : this.observers) {

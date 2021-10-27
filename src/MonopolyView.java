@@ -44,9 +44,14 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
      * @param propertyLandedOn The property that the player landed on
      */
     @Override
-    public void handleTakeTurn(Player player, int roll, Property propertyLandedOn) {
-        JOptionPane.showMessageDialog(null, "Player " + player.getIdentifier() + " has rolled a " + roll + ". They are now on " + propertyLandedOn + ".");
+    public void handleTakeTurn(Player player, int[] roll, Property propertyLandedOn) {
+        int sum = 0;
+        for (int i = 0; i < roll.length; i++) {
+            sum += roll[i];
+        }
+        JOptionPane.showMessageDialog(null, "Player " + player.getIdentifier() + " has rolled a " + sum + ". They are now on " + propertyLandedOn + ".");
         this.boardPanel.updatePlayerLabelPosition(player);
+        this.boardPanel.updateDice(roll[0], roll[1]);
         this.sidePanel.enableButton("Pass");
     }
 
