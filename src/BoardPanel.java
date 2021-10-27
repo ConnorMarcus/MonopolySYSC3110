@@ -20,7 +20,7 @@ public class BoardPanel extends JPanel {
     private List<JLabel> playerLabels;
     private JLabel[] spaces;
 
-    public BoardPanel(MonopolyBoard board) {
+    public BoardPanel(MonopolyBoard board, List<Player> players) {
         this.setLayout(null);
         this.setPreferredSize(new Dimension(PANELWIDTH, PANELHEIGHT));
         this.setBackground(new Color(211, 236, 211));
@@ -28,6 +28,7 @@ public class BoardPanel extends JPanel {
         this.playerLabels = new ArrayList<>();
         this.spaces = new JLabel[board.getNumProperties()];
         initializeLabels();
+        players.forEach(this::addPlayerLabel);
     }
 
     /**
@@ -128,14 +129,19 @@ public class BoardPanel extends JPanel {
      *
      * @param player the Player object getting added.
      */
-    public void addPlayerLabel(Player player) {
-        JLabel playerLabel = new JLabel();
-        playerLabel.setName(player.getIdentifier());
-        playerLabel.setIcon(new ImageIcon(player.getPlayerImageFile()));
-        this.playerLabels.add(playerLabel);
-        this.add(playerLabel);
-        this.setComponentZOrder(playerLabel, 0);
-        updatePlayerLabelPosition(player);
+    private void addPlayerLabel(Player player) {
+        if (player != null) {
+            JLabel playerLabel = new JLabel();
+            playerLabel.setName(player.getIdentifier());
+            playerLabel.setIcon(new ImageIcon(player.getPlayerImageFile()));
+            this.playerLabels.add(playerLabel);
+            this.add(playerLabel);
+            this.setComponentZOrder(playerLabel, 0);
+            updatePlayerLabelPosition(player);
+        }
+        else {
+            throw new IllegalArgumentException("Cannot pass null Player!");
+        }
     }
 
 }

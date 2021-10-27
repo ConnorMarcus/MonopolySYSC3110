@@ -22,8 +22,7 @@ public class SidePanel extends JPanel {
      *
      * @param players list of Players in the game
      */
-    public SidePanel(ArrayList<Player> players) {
-        super();
+    public SidePanel(List<Player> players) {
         this.setPreferredSize(new Dimension(PANELWIDTH, PANELHEIGHT));
         this.setBackground(new Color(211, 236, 211));
         this.players = players;
