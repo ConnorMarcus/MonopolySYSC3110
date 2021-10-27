@@ -91,6 +91,13 @@ public class PropertyStreet extends Property{
         }
     }
 
+    /**
+     * Removes the owner from this Property.
+     */
+    public void removeOwner() {
+        this.owner = null;
+    }
+
 
     /**
      * String representation of PropertyStreet object.

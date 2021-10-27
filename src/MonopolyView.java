@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * MonopolyView class which handles the GUI.
@@ -49,9 +50,9 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         for (int i = 0; i < roll.length; i++) {
             sum += roll[i];
         }
-        JOptionPane.showMessageDialog(null, "Player " + player.getIdentifier() + " has rolled a " + sum + ". They are now on " + propertyLandedOn + ".");
         this.boardPanel.updatePlayerLabelPosition(player);
         this.boardPanel.updateDice(roll[0], roll[1]);
+        JOptionPane.showMessageDialog(null, "Player " + player.getIdentifier() + " has rolled a " + sum + ". They are now on " + propertyLandedOn + ".");
         this.sidePanel.enableButton("Pass");
     }
 
@@ -87,8 +88,8 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
     }
 
     @Override
-    public void handlePlayerUpdate(Player player) {
-        this.sidePanel.updatePlayerInfo(player);
+    public void handlePlayerUpdate(List<Player> playerList) {
+        playerList.forEach((player) -> this.sidePanel.updatePlayerInfo(player));
     }
 
     /**

@@ -1,3 +1,5 @@
+import java.util.List;
+
 /**
  * Interface that all the observers of the MonopolyModel must implement.
  */
@@ -6,5 +8,5 @@ public interface MonopolyObserver {
     void handlePassTurn(Player player);
     void handleBankrupt(Player player);
     void handleWinner(Player player);
-    void handlePlayerUpdate(Player player);
+    void handlePlayerUpdate(List<Player> playerList);
 }

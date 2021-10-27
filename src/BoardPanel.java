@@ -5,8 +5,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * BoardPanel class which handles the game board.
@@ -14,10 +15,10 @@ import java.util.List;
  * @author Connor Marcus
  */
 public class BoardPanel extends JPanel {
-    private final int PANELWIDTH = 693;
-    private final int PANELHEIGHT = 693;
+    private final int PANEL_WIDTH = 693;
+    private final int PANEL_HEIGHT = 693;
     private MonopolyBoard board;
-    private List<JLabel> playerLabels;
+    private Map<String, JLabel> playerLabelMap;
     private JLabel[] spaces;
     private JLabel dice1;
     private JLabel dice2;
@@ -25,41 +26,30 @@ public class BoardPanel extends JPanel {
 
     public BoardPanel(MonopolyBoard board, List<Player> players) {
         this.setLayout(null);
-        this.setPreferredSize(new Dimension(PANELWIDTH, PANELHEIGHT));
+        this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         this.setBackground(new Color(211, 236, 211));
         this.board = board;
-        this.playerLabels = new ArrayList<>();
+        this.playerLabelMap = new HashMap<>();
         this.spaces = new JLabel[board.getNumProperties()];
         this.dice1 = new JLabel();
         this.dice2 = new JLabel();
-        initializeLabels();
+        initializeSpaces();
         players.forEach(this::addPlayerLabel);
+        addLabels();
     }
 
     /**
      * Initializes JPanel game board.
      */
-    private void initializeLabels() {
-        //Adds logo to board
-        JLabel logo = new JLabel();
-        logo.setIcon(new ImageIcon("images/logo.png"));
-        logo.setBounds(147, 137, 395, 395);
-        this.add(logo);
-
-        //Sets bounds and adds dice Jlabels
-        this.dice1.setBounds(450, 475, 55, 55);
-        this.add(this.dice1);
-
-        this.dice2.setBounds(525, 500, 55, 55);
-        this.add(this.dice2);
-
+    private void initializeSpaces() {
         for (int i=0; i<spaces.length; i++) {
             spaces[i] = new JLabel();
         }
+
         int x = 0;
         int y = 0;
-        int WIDTH = PANELWIDTH/11;
-        int HEIGHT = PANELHEIGHT/11;
+        int WIDTH = PANEL_WIDTH /11;
+        int HEIGHT = PANEL_HEIGHT /11;
 
         //Initialize top and bottom spaces
         for (int i=20; i<31; i++) {
@@ -76,7 +66,7 @@ public class BoardPanel extends JPanel {
 
                 BufferedImage image2 = ImageIO.read(new File(String.format("images/%s.png", board.getProperty(30-i).getName())));
                 spaces[30-i].setIcon(new ImageIcon(image2));
-                spaces[30-i].setBounds(x, y+PANELHEIGHT-HEIGHT, spaces[30-i].getPreferredSize().width, spaces[30-i].getPreferredSize().height);
+                spaces[30-i].setBounds(x, y+ PANEL_HEIGHT -HEIGHT, spaces[30-i].getPreferredSize().width, spaces[30-i].getPreferredSize().height);
                 this.add(spaces[30-i]);
             }
             catch (Exception e) {
@@ -109,7 +99,7 @@ public class BoardPanel extends JPanel {
                 AffineTransformOp transformOp2 = new AffineTransformOp(transform2, AffineTransformOp.TYPE_BILINEAR);
                 image2 = transformOp2.filter(image2, null);
                 spaces[50-i].setIcon(new ImageIcon(image2));
-                spaces[50-i].setBounds(x-PANELWIDTH+WIDTH, y, spaces[50-i].getPreferredSize().width, spaces[50-i].getPreferredSize().height);
+                spaces[50-i].setBounds(x- PANEL_WIDTH +WIDTH, y, spaces[50-i].getPreferredSize().width, spaces[50-i].getPreferredSize().height);
                 this.add(spaces[50-i]);
             }
             catch (Exception e) {
@@ -121,18 +111,30 @@ public class BoardPanel extends JPanel {
     }
 
     /**
+     * Adds the dice and Monopoly labels to the JPanel
+     */
+    private void addLabels() {
+        //Adds dice logos to board
+        JLabel logo = new JLabel();
+        logo.setIcon(new ImageIcon("images/logo.png"));
+        logo.setBounds(PANEL_WIDTH /5, PANEL_HEIGHT /5, 395, 395);
+        this.add(logo);
+
+        //Sets bounds and adds dice Jlabels
+        this.dice1.setBounds(PANEL_WIDTH /2+100, PANEL_HEIGHT /2+100, 55, 55);
+        this.add(this.dice1);
+
+        this.dice2.setBounds(PANEL_WIDTH /2+150, PANEL_WIDTH /2+150, 55, 55);
+        this.add(this.dice2);
+    }
+
+    /**
      * Moves the Player icons position on the board.
      *
      * @param player the player object being moved.
      */
     public void updatePlayerLabelPosition(Player player) {
-        JLabel playerLabel = null;
-        for (JLabel label : this.playerLabels) {
-            if (label.getName().equals(player.getIdentifier())) {
-                playerLabel = label;
-                break;
-            }
-        }
+        JLabel playerLabel = this.playerLabelMap.get(player.getIdentifier());
         if (playerLabel == null) {
             throw new IllegalArgumentException("The Player object that was passed does not correspond with a player label!");
         }
@@ -144,16 +146,15 @@ public class BoardPanel extends JPanel {
     }
 
     /**
-     * Adds player label to list of playerLabels.
+     * Adds player label to Map of playerLabels.
      *
      * @param player the Player object getting added.
      */
     private void addPlayerLabel(Player player) {
         if (player != null) {
             JLabel playerLabel = new JLabel();
-            playerLabel.setName(player.getIdentifier());
             playerLabel.setIcon(new ImageIcon(player.getPlayerImageFile()));
-            this.playerLabels.add(playerLabel);
+            this.playerLabelMap.put(player.getIdentifier(), playerLabel);
             this.add(playerLabel);
             this.setComponentZOrder(playerLabel, 0);
             updatePlayerLabelPosition(player);
@@ -169,17 +170,10 @@ public class BoardPanel extends JPanel {
      * @param player the Player object getting removed.
      */
     public void removePlayerLabel(Player player) {
-        JLabel playerLabel = null;
-        for (JLabel label : this.playerLabels) {
-            if (label.getName().equals(player.getIdentifier())) {
-                playerLabel = label;
-                break;
-            }
-        }
+        JLabel playerLabel = this.playerLabelMap.remove(player.getIdentifier());
         if (playerLabel != null) {
             this.remove(playerLabel);
             this.repaint();
-            this.playerLabels.remove(playerLabel);
         }
         else {
             throw new IllegalArgumentException("The Player object that was passed does not correspond with a player label!");

@@ -202,6 +202,14 @@ public class Player {
     }
 
     /**
+     * Getter for the properties attribute.
+     * @return The set of all properties that the player owns.
+     */
+    public Set<Property> getProperties() {
+        return this.properties;
+    }
+
+    /**
      * Overrides the equals method from the Object class.
      *
      * @param o The object that is being compared

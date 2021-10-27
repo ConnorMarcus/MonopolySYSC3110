@@ -2,8 +2,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * SidePanel class used to display Players info and buttons.
@@ -14,8 +14,7 @@ public class SidePanel extends JPanel {
     private final int PANELWIDTH = 350;
     private final int PANELHEIGHT = 693;
     private final int INFOAREAHEIGHT = 620;
-    private MonopolyModel model;
-    private List<JLabel> playerInfoLabels;
+    private Map<String, JLabel> playerInfoMap;
 
 
     /**
@@ -26,9 +25,8 @@ public class SidePanel extends JPanel {
     public SidePanel(MonopolyModel model) {
         this.setPreferredSize(new Dimension(PANELWIDTH, PANELHEIGHT));
         this.setBackground(new Color(211, 236, 211));
-        this.model = model;
-        this.playerInfoLabels = new ArrayList<>();
-        this.addPlayersInfo();
+        this.playerInfoMap = new HashMap<>();
+        this.addPlayersInfo(model);
         this.addButtons(model);
         this.setVisible(true);
     }
@@ -36,9 +34,9 @@ public class SidePanel extends JPanel {
     /**
      * Adds the players info Jlabels to the JPanel.
      */
-    private void addPlayersInfo() {
-        int numberOfPlayer = this.model.getPlayerList().size();
-        for (Player p: this.model.getPlayerList()) {
+    private void addPlayersInfo(MonopolyModel model) {
+        int numberOfPlayer = model.getPlayerList().size();
+        for (Player p: model.getPlayerList()) {
             String text = "<html><br>Money: $" + p.getMoney() + "<br>Properties: " +  p.getPropertyString() + "</html>";
             JLabel info = new JLabel(text);
             info.setName(p.getIdentifier());
@@ -53,7 +51,7 @@ public class SidePanel extends JPanel {
 
             info.setVerticalAlignment(JLabel.NORTH);
             info.setBorder(title);
-            this.playerInfoLabels.add(info);
+            this.playerInfoMap.put(p.getIdentifier(), info);
             this.add(info);
         }
     }
@@ -63,13 +61,7 @@ public class SidePanel extends JPanel {
      * @param player The player whose label is changing.
      */
     public void updatePlayerInfo(Player player) {
-        JLabel playerLabel = null;
-        for (JLabel label : this.playerInfoLabels) {
-            if (label.getName().equals(player.getIdentifier())) {
-                playerLabel = label;
-                break;
-            }
-        }
+        JLabel playerLabel = this.playerInfoMap.get(player.getIdentifier());
         if (playerLabel == null) {
             throw new IllegalArgumentException("The Player object that was passed does not correspond with a player info label!");
         }
@@ -83,22 +75,15 @@ public class SidePanel extends JPanel {
      * @param player The player whose label is being removed
      */
     public void removePlayerInfo(Player player) {
-        JLabel playerLabel = null;
-        for (JLabel label : this.playerInfoLabels) {
-            if (label.getName().equals(player.getIdentifier())) {
-                playerLabel = label;
-                break;
-            }
-        }
+        JLabel playerLabel = this.playerInfoMap.remove(player.getIdentifier());
         if (playerLabel == null) {
             throw new IllegalArgumentException("The Player object that was passed does not correspond with a player info label!");
         }
         else {
-            this.playerInfoLabels.remove(playerLabel);
             this.remove(playerLabel);
             this.revalidate();
-            for (JLabel label : this.playerInfoLabels) {
-                label.setPreferredSize(new Dimension(PANELWIDTH - 10, (INFOAREAHEIGHT / playerInfoLabels.size())));
+            for (JLabel label : this.playerInfoMap.values()) {
+                label.setPreferredSize(new Dimension(PANELWIDTH - 10, (INFOAREAHEIGHT / this.playerInfoMap.size())));
             }
         }
     }

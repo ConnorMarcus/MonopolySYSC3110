@@ -66,7 +66,7 @@ public class MonopolyModel {
         }
         propertyLandedOn.Landed(turnPlayer);
         for (MonopolyObserver o : this.observers) {
-            o.handlePlayerUpdate(turnPlayer);
+            o.handlePlayerUpdate(this.playerList);
         }
         if (turnPlayer.getIsBankrupt()) bankrupt(turnPlayer); // Checks if player is bankrupt after paying rent
     }
@@ -93,6 +93,12 @@ public class MonopolyModel {
     private void bankrupt(Player p) {
         for (MonopolyObserver o : this.observers) {
             o.handleBankrupt(p);
+        }
+        for (Property property : p.getProperties()) {
+            //Right now all Properties that the player owns are PropertyStreets
+            if (property instanceof PropertyStreet) {
+                ((PropertyStreet) property).removeOwner();
+            }
         }
         this.playerList.remove(p);
 
