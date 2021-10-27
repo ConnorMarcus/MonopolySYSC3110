@@ -40,7 +40,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
     /**
      * Handles what happens when a player takes their turn.
      * @param player The Player who took their turn
-     * @param roll The player's roll
+     * @param roll The list of the players roll
      * @param propertyLandedOn The property that the player landed on
      */
     @Override

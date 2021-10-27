@@ -187,8 +187,10 @@ public class BoardPanel extends JPanel {
     }
 
     /**
-     * Updates the dice displayed on the board.
+     * Updates the dice Jlabel image icon.
      *
+     * @param d1 int roll of dice 1
+     * @param d2 int roll of dice 2
      */
     public void updateDice(int d1, int d2) {
         this.dice1.setIcon(new ImageIcon("images/" + d1 + ".png"));

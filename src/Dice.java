@@ -27,7 +27,7 @@ public class Dice {
     /**
      * Rolls all of the dice.
      *
-     * @return the sum of all the dice rolls
+     * @return int[] the roll of each dice
      */
     public int[] rollDice() {
         int[] dice = new int[numDice];
