@@ -2,7 +2,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,14 +19,14 @@ public class SidePanel extends JPanel {
     /**
      * Constructor for SidePanel class.
      *
-     * @param players list of Players in the game
+     * @param model The MonopolyModel that corresponds with the object.
      */
-    public SidePanel(List<Player> players) {
+    public SidePanel(MonopolyModel model) {
         this.setPreferredSize(new Dimension(PANELWIDTH, PANELHEIGHT));
         this.setBackground(new Color(211, 236, 211));
-        this.players = players;
+        this.players = model.getPlayerList();
         this.addPlayersInfo();
-        this.addButtons();
+        this.addButtons(model);
         this.setVisible(true);
     }
 
@@ -58,30 +57,41 @@ public class SidePanel extends JPanel {
     /**
      * Adds the buttons to the JPanel.
      */
-    private void addButtons() {
+    private void addButtons(MonopolyModel model) {
         Font buttonFont = new Font("arial",Font.BOLD, 25);
         Dimension buttonSize = new Dimension(100, 40);
+        MonopolyController controller = new MonopolyController(model);
 
         JButton roll = new JButton("Roll");
         roll.setFont(buttonFont);
         roll.setFocusPainted(false);
         roll.setPreferredSize(buttonSize);
+        roll.addActionListener(controller);
 
         JButton pass = new JButton("Pass");
         pass.setFont(buttonFont);
         pass.setFocusPainted(false);
         pass.setPreferredSize(buttonSize);
+        pass.setEnabled(false);
+        pass.addActionListener(controller);
 
         JButton buy = new JButton("Buy");
         buy.setFont(buttonFont);
         buy.setFocusPainted(false);
         buy.setPreferredSize(buttonSize);
+        buy.setEnabled(false);
 
         this.add(roll);
         this.add(pass);
         this.add(buy);
     }
 
-
+    public void enableButton(String buttonText) {
+        for (Component c : this.getComponents()) {
+            if (c instanceof JButton && ((JButton) c).getText().equals(buttonText)) {
+                ((JButton) c).setEnabled(true);
+            }
+        }
+    }
 
 }

@@ -24,4 +24,13 @@ public class PropertyFreeSpace extends Property {
     public void Landed(Player landedPlayer) {
         System.out.println("This is a free space in Milestone 1!");
     }
+
+    /**
+     * Overrides the toString method from the Object class.
+     * @return A String representation of this class.
+     */
+    @Override
+    public String toString() {
+        return "Free Space";
+    }
 }
