@@ -10,6 +10,7 @@ import java.util.List;
 public class MonopolyView extends JFrame implements MonopolyObserver {
     private BoardPanel boardPanel;
     private SidePanel sidePanel;
+    private GameLogPanel gameLogPanel;
     private MonopolyModel model;
 
     /**
@@ -29,12 +30,15 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         this.model.addMonopolyObserver(this);
         this.boardPanel = new BoardPanel(this.model.getBoard(), this.model.getPlayerList());
         this.sidePanel = new SidePanel(this.model);
+        this.gameLogPanel = new GameLogPanel();
         this.setLayout(new FlowLayout());
+        this.add(this.gameLogPanel);
         this.add(this.boardPanel);
         this.add(this.sidePanel);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setResizable(false);
         this.pack();
+        this.setSize(new Dimension(1075, 790));
         this.setVisible(true);
     }
 
@@ -52,7 +56,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         }
         this.boardPanel.updatePlayerLabelPosition(player);
         this.boardPanel.updateDice(roll[0], roll[1]);
-        JOptionPane.showMessageDialog(null, "Player " + player.getIdentifier() + " has rolled a " + sum + ". They are now on " + propertyLandedOn + ".");
+        this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has rolled a " + sum + ". They are now on " + propertyLandedOn + ".");
         this.sidePanel.enableButton("Pass");
     }
 
@@ -62,7 +66,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
      */
     @Override
     public void handlePassTurn(Player player) {
-        JOptionPane.showMessageDialog(null, "Player " + player.getIdentifier() + " has finished their turn.");
+        this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has finished their turn.");
         this.sidePanel.enableButton("Roll");
     }
 
@@ -72,7 +76,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
      */
     @Override
     public void handleBankrupt(Player player) {
-        JOptionPane.showMessageDialog(null, "Player " + player.getIdentifier() + "has gone bankrupt! They are out of the game.");
+        this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + "has gone bankrupt! They are out of the game.");
         this.boardPanel.removePlayerLabel(player);
         this.sidePanel.removePlayerInfo(player);
     }

@@ -28,7 +28,6 @@ public class SidePanel extends JPanel {
         this.playerInfoMap = new HashMap<>();
         this.addPlayersInfo(model);
         this.addButtons(model);
-        this.setVisible(true);
     }
 
     /**
