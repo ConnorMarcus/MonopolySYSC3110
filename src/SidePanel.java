@@ -11,9 +11,9 @@ import java.util.Map;
  * @author Noah Hammoud
  */
 public class SidePanel extends JPanel {
-    private final int PANELWIDTH = 350;
-    private final int PANELHEIGHT = 693;
-    private final int INFOAREAHEIGHT = 620;
+    private final int PANEL_WIDTH = 350;
+    private final int PANEL_HEIGHT = 693;
+    private final int INFO_AREA_HEIGHT = 620;
     private Map<String, JLabel> playerInfoMap;
 
 
@@ -23,7 +23,7 @@ public class SidePanel extends JPanel {
      * @param model The MonopolyModel that corresponds with the object.
      */
     public SidePanel(MonopolyModel model) {
-        this.setPreferredSize(new Dimension(PANELWIDTH, PANELHEIGHT));
+        this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         this.setBackground(new Color(211, 236, 211));
         this.playerInfoMap = new HashMap<>();
         this.addPlayersInfo(model);
@@ -41,7 +41,7 @@ public class SidePanel extends JPanel {
             info.setName(p.getIdentifier());
 
             info.setFont(new Font("Aharoni", Font.BOLD, 12 ));
-            info.setPreferredSize(new Dimension(PANELWIDTH - 10, (INFOAREAHEIGHT / numberOfPlayer)));
+            info.setPreferredSize(new Dimension(PANEL_WIDTH - 10, (INFO_AREA_HEIGHT / numberOfPlayer)));
 
             Border line = BorderFactory.createLineBorder(Color.black);
             TitledBorder title = BorderFactory.createTitledBorder(line,"Player " + p.getIdentifier());
@@ -82,7 +82,7 @@ public class SidePanel extends JPanel {
             this.remove(playerLabel);
             this.revalidate();
             for (JLabel label : this.playerInfoMap.values()) {
-                label.setPreferredSize(new Dimension(PANELWIDTH - 10, (INFOAREAHEIGHT / this.playerInfoMap.size())));
+                label.setPreferredSize(new Dimension(PANEL_WIDTH - 10, (INFO_AREA_HEIGHT / this.playerInfoMap.size())));
             }
         }
     }

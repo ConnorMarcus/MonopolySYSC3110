@@ -11,7 +11,7 @@ public class Player {
     private int position;
     private Set<Property> properties;
     private boolean isBankrupt;
-    private String playerImageFile;
+    private final String PLAYER_IMAGE_FILE;
 
 
     /**
@@ -26,15 +26,15 @@ public class Player {
         this.position = 0;
         this.properties = new HashSet<>();
         this.isBankrupt = false;
-        this.playerImageFile = playerImageFile;
+        this.PLAYER_IMAGE_FILE = playerImageFile;
     }
 
     /**
      * Gets the file path to the player image.
-     * @return the playerImageFile String
+     * @return the PLAYER_IMAGE_FILE String
      */
     public String getPlayerImageFile() {
-        return this.playerImageFile;
+        return this.PLAYER_IMAGE_FILE;
     }
 
 

@@ -11,7 +11,7 @@ public abstract class Property {
      *
      * @param landedPlayer the Player object that landed on the property
      */
-    public abstract void Landed(Player landedPlayer);
+    public abstract void landed(Player landedPlayer);
 
 
     /**

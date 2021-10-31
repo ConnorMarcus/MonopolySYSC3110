@@ -7,15 +7,15 @@ import java.awt.*;
  * @author Noah Hammoud
  */
 public class GameLogPanel extends JPanel {
-    private final int PANELWIDTH = 1043;
-    private final int PANELHEIGHT = 40;
+    private final int PANEL_WIDTH = 1043;
+    private final int PANEL_HEIGHT = 40;
     private JLabel gameLog;
 
     /**
      * Constructor for GameLogPanel class.
      */
     public GameLogPanel() {
-        this.setPreferredSize(new Dimension(PANELWIDTH, PANELHEIGHT));
+        this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         this.setBackground(new Color(211, 236, 211));
         gameLog = new JLabel("Welcome to Monopoly!  Please roll to start the game");
         gameLog.setHorizontalAlignment(SwingConstants.CENTER);

@@ -23,16 +23,7 @@ public class PropertyFreeSpace extends Property {
      * @param landedPlayer the Player object that landed on the property.
      */
     @Override
-    public void Landed(Player landedPlayer) {
+    public void landed(Player landedPlayer) {
         JOptionPane.showMessageDialog(null, "This is a free space in Milestone 2!");
-    }
-
-    /**
-     * Overrides the toString method from the Object class.
-     * @return A String representation of this class.
-     */
-    @Override
-    public String toString() {
-        return "Free Space";
     }
 }

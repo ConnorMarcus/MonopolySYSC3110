@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,14 +30,14 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         this.boardPanel = new BoardPanel(this.model.getBoard(), this.model.getPlayerList());
         this.sidePanel = new SidePanel(this.model);
         this.gameLogPanel = new GameLogPanel();
-        this.setLayout(new FlowLayout());
-        this.add(this.gameLogPanel);
-        this.add(this.boardPanel);
-        this.add(this.sidePanel);
+        JPanel mainPanel = new JPanel(); //Container panel with flow layout
+        mainPanel.add(boardPanel);
+        mainPanel.add(sidePanel);
+        this.add(this.gameLogPanel, BorderLayout.NORTH);
+        this.add(mainPanel, BorderLayout.CENTER);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setResizable(false);
         this.pack();
-        this.setSize(new Dimension(1075, 790));
         this.setVisible(true);
     }
 

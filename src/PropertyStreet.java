@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.util.Scanner;
 
 /**
  * Normal Properties (houses) class
@@ -10,7 +9,7 @@ import java.util.Scanner;
 public class PropertyStreet extends Property{
     private String colour;
     private int price;
-    private final double RENTRATE = 0.1;
+    private final double RENT_RATE = 0.1;
     private Player owner;
 
 
@@ -54,9 +53,9 @@ public class PropertyStreet extends Property{
      * @param landedPlayer the Player object that landed on the property
      */
     @Override
-    public void Landed(Player landedPlayer) {
+    public void landed(Player landedPlayer) {
         if(owner != null && landedPlayer != owner) {
-            int rent = (int)(this.price * RENTRATE);
+            int rent = (int)(this.price * RENT_RATE);
             rent = landedPlayer.payRent(rent);
             owner.addMoney(rent);
             JOptionPane.showMessageDialog( null,"Player " + owner.getIdentifier() + " owns this property you must pay them $" + rent);

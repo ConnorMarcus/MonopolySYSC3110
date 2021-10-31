@@ -51,7 +51,7 @@ public class MonopolyModel {
     /**
      * Takes the turn of the turn player.
      */
-    public void TakeTurn() {
+    public void takeTurn() {
         Player turnPlayer = this.playerList.get(this.turn);
         int[] roll = dice.rollDice();
         int rollSum = 0;
@@ -64,7 +64,7 @@ public class MonopolyModel {
         for (MonopolyObserver o : this.observers) {
             o.handleTakeTurn(turnPlayer, roll, propertyLandedOn);
         }
-        propertyLandedOn.Landed(turnPlayer);
+        propertyLandedOn.landed(turnPlayer);
         for (MonopolyObserver o : this.observers) {
             o.handlePlayerUpdate(this.playerList);
         }
@@ -76,7 +76,7 @@ public class MonopolyModel {
      *
      * @return boolean use to change turn.
      */
-    public void PassTurn() {
+    public void passTurn() {
         Player turnPlayer = this.playerList.get(this.turn);
         this.turn = (this.turn + 1) % this.playerList.size();
         for (MonopolyObserver o : this.observers) {

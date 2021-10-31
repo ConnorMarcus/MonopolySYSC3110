@@ -6,7 +6,7 @@ import java.util.Random;
  * @author George Pantazopoulos
  */
 public class Dice {
-    private int numDice;
+    private final int NUM_DICE;
 
 
     /**
@@ -19,7 +19,7 @@ public class Dice {
             throw new IllegalArgumentException("Number of dice must be > 0");
         }
         else {
-            this.numDice = numDice;
+            this.NUM_DICE = numDice;
         }
     }
 
@@ -30,9 +30,9 @@ public class Dice {
      * @return int[] the roll of each dice
      */
     public int[] rollDice() {
-        int[] dice = new int[numDice];
+        int[] dice = new int[NUM_DICE];
         Random r = new Random();
-        for (int i=0; i<this.numDice; i++) {
+        for (int i = 0; i<this.NUM_DICE; i++) {
             int roll = r.nextInt(6) + 1;
             dice[i] = roll;
         }

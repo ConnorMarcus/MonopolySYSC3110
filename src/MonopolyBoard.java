@@ -16,14 +16,14 @@ public class MonopolyBoard {
      * Enum for each different PropertyGroup.
      */
     private enum PropertyGroups {
-        BROWNPROPERTIES(Arrays.asList(new PropertyStreet("brown", "Mediterranean Avenue", 60), new PropertyStreet("brown", "Baltic Avenue", 60))),
-        LIGHTBLUEPROPERTIES(Arrays.asList(new PropertyStreet("light blue", "Oriental Avenue", 100), new PropertyStreet("light blue", "Vermont Avenue", 100), new PropertyStreet("light blue", "Connecticut Avenue", 120))),
-        PINKPROPERTIES(Arrays.asList(new PropertyStreet("pink", "St. Charles Place", 140), new PropertyStreet("pink", "States Avenue", 140), new PropertyStreet("pink", "Virginia Avenue", 160))),
-        ORANGEPROPERTIES(Arrays.asList(new PropertyStreet("orange", "St. James Place", 180), new PropertyStreet("orange", "Tennessee Avenue", 180), new PropertyStreet("orange", "New York Avenue", 200))),
-        REDPROPERTIES(Arrays.asList(new PropertyStreet("red", "Kentucky Avenue", 220), new PropertyStreet("red", "Indiana Avenue", 220), new PropertyStreet("red", "Illinois Avenue", 240))),
-        YELLOWPROPERTIES(Arrays.asList(new PropertyStreet("yellow", "Atlantic Avenue", 260), new PropertyStreet("yellow", "Ventnor Avenue", 260), new PropertyStreet("yellow", "Marvin Gardens", 280))),
-        GREENPROPERTIES(Arrays.asList(new PropertyStreet("green", "Pacific Avenue", 300), new PropertyStreet("green", "North Carolina Avenue", 300), new PropertyStreet("green", "Pennsylvania Avenue", 320))),
-        DARKBLUEPROPERTIES(Arrays.asList(new PropertyStreet("dark blue", "Park Place", 350), new PropertyStreet("dark blue", "Boardwalk", 400)));
+        PURPLE_PROPERTIES(Arrays.asList(new PropertyStreet("purple", "Mediterranean Avenue", 60), new PropertyStreet("purple", "Baltic Avenue", 60))),
+        LIGHT_BLUE_PROPERTIES(Arrays.asList(new PropertyStreet("light blue", "Oriental Avenue", 100), new PropertyStreet("light blue", "Vermont Avenue", 100), new PropertyStreet("light blue", "Connecticut Avenue", 120))),
+        PINK_PROPERTIES(Arrays.asList(new PropertyStreet("pink", "St. Charles Place", 140), new PropertyStreet("pink", "States Avenue", 140), new PropertyStreet("pink", "Virginia Avenue", 160))),
+        ORANGE_PROPERTIES(Arrays.asList(new PropertyStreet("orange", "St. James Place", 180), new PropertyStreet("orange", "Tennessee Avenue", 180), new PropertyStreet("orange", "New York Avenue", 200))),
+        RED_PROPERTIES(Arrays.asList(new PropertyStreet("red", "Kentucky Avenue", 220), new PropertyStreet("red", "Indiana Avenue", 220), new PropertyStreet("red", "Illinois Avenue", 240))),
+        YELLOW_PROPERTIES(Arrays.asList(new PropertyStreet("yellow", "Atlantic Avenue", 260), new PropertyStreet("yellow", "Ventnor Avenue", 260), new PropertyStreet("yellow", "Marvin Gardens", 280))),
+        GREEN_PROPERTIES(Arrays.asList(new PropertyStreet("green", "Pacific Avenue", 300), new PropertyStreet("green", "North Carolina Avenue", 300), new PropertyStreet("green", "Pennsylvania Avenue", 320))),
+        DARK_BLUE_PROPERTIES(Arrays.asList(new PropertyStreet("dark blue", "Park Place", 350), new PropertyStreet("dark blue", "Boardwalk", 400)));
 
         private List<PropertyStreet> propertySet;
 
@@ -44,40 +44,47 @@ public class MonopolyBoard {
      */
     public MonopolyBoard() {
         this.properties = new ArrayList<>();
+        addProperties();
+    }
+
+    /**
+     * Helper method to add the properties in the correct order to the board; avoids too much code in the constructor
+     */
+    private void addProperties() {
         this.properties.add(new PropertyFreeSpace("GO"));
-        this.properties.add(PropertyGroups.BROWNPROPERTIES.propertySet.get(0)); // Mediterranean Avenue
-        this.properties.add(new PropertyFreeSpace("Free"));
-        this.properties.add(PropertyGroups.BROWNPROPERTIES.propertySet.get(1)); // Baltic Avenue
+        this.properties.add(PropertyGroups.PURPLE_PROPERTIES.propertySet.get(0)); // Mediterranean Avenue
+        this.properties.add(new PropertyFreeSpace("Free Space"));
+        this.properties.add(PropertyGroups.PURPLE_PROPERTIES.propertySet.get(1)); // Baltic Avenue
         this.properties.add(new PropertyFreeSpace("Income Tax"));
         this.properties.add(new PropertyFreeSpace("Reading Railroad")); //price constant among all railroads so don't need to pass the price (use a constant for the price in the class)
-        this.properties.add(PropertyGroups.LIGHTBLUEPROPERTIES.propertySet.get(0)); //Oriental Avenue
-        this.properties.add(new PropertyFreeSpace("Free"));
-        this.properties.addAll(PropertyGroups.LIGHTBLUEPROPERTIES.propertySet.subList(1, 3));
+        this.properties.add(PropertyGroups.LIGHT_BLUE_PROPERTIES.propertySet.get(0)); //Oriental Avenue
+        this.properties.add(new PropertyFreeSpace("Free Space"));
+        this.properties.addAll(PropertyGroups.LIGHT_BLUE_PROPERTIES.propertySet.subList(1, 3));
         this.properties.add(new PropertyFreeSpace("Jail"));
-        this.properties.add(PropertyGroups.PINKPROPERTIES.propertySet.get(0)); //St. Charles Place
+        this.properties.add(PropertyGroups.PINK_PROPERTIES.propertySet.get(0)); //St. Charles Place
         this.properties.add(new PropertyFreeSpace("Electric Company"));
-        this.properties.addAll(PropertyGroups.PINKPROPERTIES.propertySet.subList(1,3));
+        this.properties.addAll(PropertyGroups.PINK_PROPERTIES.propertySet.subList(1,3));
         this.properties.add(new PropertyFreeSpace("Pennsylvania Railroad"));
-        this.properties.add(PropertyGroups.ORANGEPROPERTIES.propertySet.get(0)); //St. James Place
-        this.properties.add(new PropertyFreeSpace("Free"));
-        this.properties.addAll(PropertyGroups.ORANGEPROPERTIES.propertySet.subList(1,3));
+        this.properties.add(PropertyGroups.ORANGE_PROPERTIES.propertySet.get(0)); //St. James Place
+        this.properties.add(new PropertyFreeSpace("Free Space"));
+        this.properties.addAll(PropertyGroups.ORANGE_PROPERTIES.propertySet.subList(1,3));
         this.properties.add(new PropertyFreeSpace("Free Parking"));
-        this.properties.add(PropertyGroups.REDPROPERTIES.propertySet.get(0)); //Kentucky Avenue
-        this.properties.add(new PropertyFreeSpace("Free"));
-        this.properties.addAll(PropertyGroups.REDPROPERTIES.propertySet.subList(1,3));
+        this.properties.add(PropertyGroups.RED_PROPERTIES.propertySet.get(0)); //Kentucky Avenue
+        this.properties.add(new PropertyFreeSpace("Free Space"));
+        this.properties.addAll(PropertyGroups.RED_PROPERTIES.propertySet.subList(1,3));
         this.properties.add(new PropertyFreeSpace("B&O Railroad"));
-        this.properties.addAll(PropertyGroups.YELLOWPROPERTIES.propertySet.subList(0,2));
+        this.properties.addAll(PropertyGroups.YELLOW_PROPERTIES.propertySet.subList(0,2));
         this.properties.add(new PropertyFreeSpace("Water Works"));
-        this.properties.add(PropertyGroups.YELLOWPROPERTIES.propertySet.get(2)); //Marvin Gardens
+        this.properties.add(PropertyGroups.YELLOW_PROPERTIES.propertySet.get(2)); //Marvin Gardens
         this.properties.add(new PropertyFreeSpace("Go To Jail"));
-        this.properties.addAll(PropertyGroups.GREENPROPERTIES.propertySet.subList(0,2));
-        this.properties.add(new PropertyFreeSpace("Free"));
-        this.properties.add(PropertyGroups.GREENPROPERTIES.propertySet.get(2)); //Pennsylvania Avenue
+        this.properties.addAll(PropertyGroups.GREEN_PROPERTIES.propertySet.subList(0,2));
+        this.properties.add(new PropertyFreeSpace("Free Space"));
+        this.properties.add(PropertyGroups.GREEN_PROPERTIES.propertySet.get(2)); //Pennsylvania Avenue
         this.properties.add(new PropertyFreeSpace("Short Line"));
-        this.properties.add(new PropertyFreeSpace("Free"));
-        this.properties.add(PropertyGroups.DARKBLUEPROPERTIES.propertySet.get(0)); //Park Place
+        this.properties.add(new PropertyFreeSpace("Free Space"));
+        this.properties.add(PropertyGroups.DARK_BLUE_PROPERTIES.propertySet.get(0)); //Park Place
         this.properties.add(new PropertyFreeSpace("Luxury Tax"));
-        this.properties.add(PropertyGroups.DARKBLUEPROPERTIES.propertySet.get(1)); //BoardWalk
+        this.properties.add(PropertyGroups.DARK_BLUE_PROPERTIES.propertySet.get(1)); //BoardWalk
     }
 
 

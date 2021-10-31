@@ -2,8 +2,12 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Controller for the MVC
+ * @author Connor Marcus
+ */
 public class MonopolyController implements ActionListener {
-    MonopolyModel model;
+    private MonopolyModel model;
 
     /**
      * Constructor for the class
@@ -22,11 +26,11 @@ public class MonopolyController implements ActionListener {
         if (e.getSource() instanceof JButton) {
             if (((JButton)e.getSource()).getText().equals("Roll")) {
                 ((JButton)e.getSource()).setEnabled(false);
-                this.model.TakeTurn();
+                this.model.takeTurn();
             }
             else if (((JButton)e.getSource()).getText().equals("Pass")) {
                 ((JButton)e.getSource()).setEnabled(false);
-                this.model.PassTurn();
+                this.model.passTurn();
             }
         }
 
