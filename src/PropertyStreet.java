@@ -77,7 +77,7 @@ public class PropertyStreet extends Property{
     private void buyHandler(Player landedPlayer) {
         if (landedPlayer.getMoney() >= this.price) {
             String[] options = {"no", "yes"};
-            int choice = JOptionPane.showOptionDialog(null, "Would you like to buy this property for " + this.price + "?",
+            int choice = JOptionPane.showOptionDialog(null, "Would you like to buy this property for $" + this.price + "?",
                     "Buy Property",
                     JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
             if (choice == 1) {
