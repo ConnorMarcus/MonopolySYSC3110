@@ -18,8 +18,9 @@ Steps to run the project executable:
 2. Extract the zip file.
 3. Navigate to the directory containing the extracted zip file using the command line.
 4. Execute the jar file on the command line (e.g.: java -jar SYSC3110Project.jar).
-Note 1: The steps assume that Java is already installed on the system and that the system can run jar files on the command line.
-Note 2: More details about how to play the game can be found in the user manual.
+**Note 1: The steps assume that Java is already installed on the system and that the system can run jar files on the command line.
+**Note 2: Since houses and hotels cannot yet be bought in Milestone 2, the "Buy" button is disabled. 
+**Note 3: More details about how to play the game can be found in the user manual.
 ------------------------------------
 Roadmap Ahead:
 The next step in the project is to add the logic for the remaining properties such as jail, the railroads, and the utilities. The option to play against "AI" players will also be added in the next iteration. 
