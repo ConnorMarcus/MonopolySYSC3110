@@ -4,10 +4,10 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * BoardPanel class which handles the game board.
@@ -55,7 +55,7 @@ public class BoardPanel extends JPanel {
         for (int i=20; i<31; i++) {
             try {
                 //All the top images are rotated 180 degrees
-                BufferedImage image1 = ImageIO.read(new File(String.format("images/%s.png", board.getProperty(i).getName())));
+                BufferedImage image1 = ImageIO.read(Objects.requireNonNull(this.getClass().getClassLoader().getResource(String.format("images/%s.png", board.getProperty(i).getName()))));
                 AffineTransform transform = new AffineTransform();
                 transform.rotate(Math.PI, image1.getWidth() / 2, image1.getHeight() / 2);
                 AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
@@ -64,7 +64,8 @@ public class BoardPanel extends JPanel {
                 spaces[i].setBounds(x, y, spaces[i].getPreferredSize().width, spaces[i].getPreferredSize().height);
                 this.add(spaces[i]);
 
-                BufferedImage image2 = ImageIO.read(new File(String.format("images/%s.png", board.getProperty(30-i).getName())));
+                //All the bottom images do not need to be rotated
+                BufferedImage image2 = ImageIO.read(Objects.requireNonNull(this.getClass().getClassLoader().getResource(String.format("images/%s.png", board.getProperty(30-i).getName()))));
                 spaces[30-i].setIcon(new ImageIcon(image2));
                 spaces[30-i].setBounds(x, y+ PANEL_HEIGHT -HEIGHT, spaces[30-i].getPreferredSize().width, spaces[30-i].getPreferredSize().height);
                 this.add(spaces[30-i]);
@@ -83,7 +84,7 @@ public class BoardPanel extends JPanel {
         for (int i=31; i<40; i++) {
             try {
                 //All the right images are rotated 270 degrees
-                BufferedImage image1 = ImageIO.read(new File(String.format("images/%s.png", board.getProperty(i).getName())));
+                BufferedImage image1 = ImageIO.read(Objects.requireNonNull(this.getClass().getClassLoader().getResource(String.format("images/%s.png", board.getProperty(i).getName()))));
                 AffineTransform transform = new AffineTransform();
                 transform.rotate(1.5*Math.PI, image1.getWidth() / 2, image1.getHeight() / 2);
                 AffineTransformOp transformOp = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
@@ -93,7 +94,7 @@ public class BoardPanel extends JPanel {
                 this.add(spaces[i]);
 
                 //All the left images are rotated by 90 degrees
-                BufferedImage image2 = ImageIO.read(new File(String.format("images/%s.png", board.getProperty(50-i).getName())));
+                BufferedImage image2 = ImageIO.read(Objects.requireNonNull(this.getClass().getClassLoader().getResource(String.format("images/%s.png", board.getProperty(50-i).getName()))));
                 AffineTransform transform2 = new AffineTransform();
                 transform2.rotate(Math.PI/2, image2.getWidth() / 2, image2.getHeight() / 2);
                 AffineTransformOp transformOp2 = new AffineTransformOp(transform2, AffineTransformOp.TYPE_BILINEAR);
@@ -116,7 +117,8 @@ public class BoardPanel extends JPanel {
     private void addLabels() {
         //Adds dice logos to board
         JLabel logo = new JLabel();
-        logo.setIcon(new ImageIcon("images/logo.png"));
+        logo.setIcon(new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("images/logo.png"))));
+
         logo.setBounds(PANEL_WIDTH /5, PANEL_HEIGHT /5, 395, 395);
         this.add(logo);
 
@@ -153,7 +155,7 @@ public class BoardPanel extends JPanel {
     private void addPlayerLabel(Player player) {
         if (player != null) {
             JLabel playerLabel = new JLabel();
-            playerLabel.setIcon(new ImageIcon(player.getPlayerImageFile()));
+            playerLabel.setIcon(new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource(player.getPlayerImageFile()))));
             this.playerLabelMap.put(player.getIdentifier(), playerLabel);
             this.add(playerLabel);
             this.setComponentZOrder(playerLabel, 0);
@@ -187,8 +189,8 @@ public class BoardPanel extends JPanel {
      * @param d2 int roll of dice 2
      */
     public void updateDice(int d1, int d2) {
-        this.dice1.setIcon(new ImageIcon("images/" + d1 + ".png"));
-        this.dice2.setIcon(new ImageIcon("images/" + d2 + ".png"));
+        this.dice1.setIcon(new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("images/" + d1 + ".png"))));
+        this.dice2.setIcon(new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("images/" + d2 + ".png"))));
     }
 
 }
