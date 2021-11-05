@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * MonopolyView class which handles the GUI.
@@ -49,14 +50,11 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
      */
     @Override
     public void handleTakeTurn(Player player, int[] roll, Property propertyLandedOn) {
-        int sum = 0;
-        for (int i = 0; i < roll.length; i++) {
-            sum += roll[i];
-        }
         this.boardPanel.updatePlayerLabelPosition(player);
         this.boardPanel.updateDice(roll[0], roll[1]);
-        this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has rolled a " + sum + ". They are now on " + propertyLandedOn + ".");
+        this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has rolled a " + IntStream.of(roll).sum() + ". They are now on " + propertyLandedOn + ".");
         this.sidePanel.enableButton("Pass");
+        propertyLandedOn.landed(player);
     }
 
     /**

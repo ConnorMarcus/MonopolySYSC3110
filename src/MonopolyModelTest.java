@@ -13,27 +13,21 @@ public class MonopolyModelTest {
         model = new MonopolyModel(2);
     }
 
-
-    @org.junit.After
-    public void tearDown() throws Exception {
-    }
-
     /**
      * Test that the model's board is correct
      */
     @org.junit.Test
     public void testGetBoard(){
-        MonopolyBoard testBoard = new MonopolyBoard();
-        //Test boards have the same amount of properties
-        assertEquals(testBoard.getNumProperties(), model.getBoard().getNumProperties());
-        //Test boards have same first property
-        assertEquals(testBoard.getProperty(0).getName(), model.getBoard().getProperty(0).getName());
-        //Test boards have same last property
-        assertEquals(testBoard.getProperty(39).getName(), model.getBoard().getProperty(39).getName());
+        //Test the amount of properties of the board
+        assertEquals(40, model.getBoard().getNumProperties());
+        //Test the first property of the board
+        assertEquals("GO", model.getBoard().getProperty(0).getName());
+        //Test the last property of the board
+        assertEquals("Boardwalk", model.getBoard().getProperty(39).getName());
     }
 
     /**
-     * Test initial turn of the
+     * Test initial turn of the game
      */
     @org.junit.Test
     public void testGetTurn() {
@@ -41,17 +35,12 @@ public class MonopolyModelTest {
     }
 
     /**
-     *
-     *
-     *
-     *
-     *
-     *
+     * Tests that an exception is thrown when a null observer is passed.
      *
      */
-    @org.junit.Test
+    @org.junit.Test(expected = IllegalArgumentException.class)
     public void testAddMonopolyObserver(){
-        //model.addMonopolyObserver(null);
+        model.addMonopolyObserver(null);
     }
 
 
@@ -60,12 +49,16 @@ public class MonopolyModelTest {
      * through the board.
      */
     @org.junit.Test
-    public void testTakeTurn(){
-        // This will trigger a JOptionPane to show up, informing the user whether they want to
-        // buy the property, or that the property they landed on is a free space for milestone 2.
+    public void testTakeTurn() {
+        //Test that a player is moved when they take their turn
+        int initialPosition = model.getPlayerList().get(0).getPosition();
         model.takeTurn();
         int newPosition = model.getPlayerList().get(0).getPosition();
-        assertTrue(newPosition > 0);
+        assertTrue(newPosition > initialPosition);
+        initialPosition = newPosition;
+        model.takeTurn();
+        newPosition = model.getPlayerList().get(0).getPosition();
+        assertTrue(newPosition > initialPosition);
 
         //Test to check that player is removed when they are bankrupted
         model.getPlayerList().get(0).setBankrupt(true);

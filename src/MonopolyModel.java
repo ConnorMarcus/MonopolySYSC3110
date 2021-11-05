@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * The model part of the MVC; handles the game logic.
@@ -40,7 +42,9 @@ public class MonopolyModel {
      * of the current turn.
      * @return the current value of the turn variable
      */
-    public int getTurn(){ return this.turn; }
+    public int getTurn(){
+        return this.turn;
+    }
 
     /**
      * Adds a new MonopolyObserver to the list of observers.
@@ -61,18 +65,12 @@ public class MonopolyModel {
     public void takeTurn() {
         Player turnPlayer = this.playerList.get(this.turn);
         int[] roll = dice.rollDice();
-        int rollSum = 0;
-        for (int i = 0; i < roll.length; i++) {
-            rollSum += roll[i];
-        }
+        int rollSum = IntStream.of(roll).sum();
         int newPosition = (turnPlayer.getPosition() + rollSum) % this.board.getNumProperties();
         turnPlayer.setPosition(newPosition);
         Property propertyLandedOn = this.board.getProperty(newPosition);
         for (MonopolyObserver o : this.observers) {
             o.handleTakeTurn(turnPlayer, roll, propertyLandedOn);
-        }
-        propertyLandedOn.landed(turnPlayer);
-        for (MonopolyObserver o : this.observers) {
             o.handlePlayerUpdate(this.playerList);
         }
         if (turnPlayer.getIsBankrupt()) bankrupt(turnPlayer); // Checks if player is bankrupt after paying rent
