@@ -93,7 +93,7 @@ public class MonopolyModel {
     }
 
     /**
-     * Removes bankrupted Player from game and checks if their is a winner (One player remaining).
+     * Removes bankrupted Player from game and checks if there is a winner (One player remaining).
      *
      * @param p Player that has gone Bankrupt
      */

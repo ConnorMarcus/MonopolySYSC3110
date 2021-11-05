@@ -1,14 +1,16 @@
 import static org.junit.Assert.*;
 
+/**
+ * MonopolyModel Test class
+ * @author Vahid Foroughi
+ */
 public class MonopolyModelTest {
 
     MonopolyModel model;
-    MonopolyView view;
 
     @org.junit.Before
     public void setUp() throws Exception {
-        //model = new MonopolyModel(2);
-       //view = new MonopolyView("Monopoly Test");
+        model = new MonopolyModel(2);
     }
 
 
@@ -16,10 +18,13 @@ public class MonopolyModelTest {
     public void tearDown() throws Exception {
     }
 
+    /**
+     * Test that the model's board is correct
+     */
     @org.junit.Test
     public void testGetBoard(){
         MonopolyBoard testBoard = new MonopolyBoard();
-        //Test boards have same amount of properties
+        //Test boards have the same amount of properties
         assertEquals(testBoard.getNumProperties(), model.getBoard().getNumProperties());
         //Test boards have same first property
         assertEquals(testBoard.getProperty(0).getName(), model.getBoard().getProperty(0).getName());
@@ -27,13 +32,28 @@ public class MonopolyModelTest {
         assertEquals(testBoard.getProperty(39).getName(), model.getBoard().getProperty(39).getName());
     }
 
-    /*
+    /**
+     * Test initial turn of the
+     */
     @org.junit.Test
-    public void testAddMonopolyObserver(){
-        assertEquals(0, model.addMonopolyObserver(null););
+    public void testGetTurn() {
+        assertEquals(0, model.getTurn());
     }
 
+    /**
+     *
+     *
+     *
+     *
+     *
+     *
+     *
      */
+    @org.junit.Test
+    public void testAddMonopolyObserver(){
+        //model.addMonopolyObserver(null);
+    }
+
 
     /**
      * Test to check that turn is being taken and player is moving
@@ -46,6 +66,11 @@ public class MonopolyModelTest {
         model.takeTurn();
         int newPosition = model.getPlayerList().get(0).getPosition();
         assertTrue(newPosition > 0);
+
+        //Test to check that player is removed when they are bankrupted
+        model.getPlayerList().get(0).setBankrupt(true);
+        model.takeTurn();
+        assertEquals(1, model.getPlayerList().size());
     }
 
     /**
@@ -53,7 +78,6 @@ public class MonopolyModelTest {
      */
     @org.junit.Test
     public void testPassTurn(){
-        model = new MonopolyModel(2);
         int currTurn =  model.getTurn();
         assertEquals(0, currTurn);
         model.passTurn();
@@ -62,5 +86,16 @@ public class MonopolyModelTest {
         model.passTurn();
         int passBack = model.getTurn();
         assertEquals(0, passBack);
+    }
+
+    /**
+     * Test to ensure that the player list contains the correct
+     * amount of players chosen in the model.
+     */
+    @org.junit.Test
+    public void testGetPlayerList(){
+        assertEquals(2, model.getPlayerList().size());
+        assertEquals("1", model.getPlayerList().get(0).getIdentifier());
+        assertEquals("2", model.getPlayerList().get(1).getIdentifier());
     }
 }

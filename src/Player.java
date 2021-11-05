@@ -87,6 +87,7 @@ public class Player {
         this.position = pos;
     }
 
+    public void setBankrupt(boolean b) {this.isBankrupt = b;}
 
     /**
      * Adds money to Player.
