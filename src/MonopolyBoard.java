@@ -95,7 +95,7 @@ public class MonopolyBoard {
      * @return List<PropertyStreet> list of PropertyStreets in group
      */
     public List<PropertyStreet> getPropertyGroup(String colour) {
-        return PropertyGroups.valueOf(colour.replaceAll("\\s+","").toUpperCase() + "PROPERTIES").propertySet;
+        return PropertyGroups.valueOf(colour.replaceAll("\\s+","").toUpperCase() + "_PROPERTIES").propertySet;
     }
 
 
