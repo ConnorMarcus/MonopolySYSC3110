@@ -36,6 +36,13 @@ public class MonopolyModel {
     }
 
     /**
+     * Gets the value of the turn variable used to keep
+     * of the current turn.
+     * @return the current value of the turn variable
+     */
+    public int getTurn(){ return this.turn; }
+
+    /**
      * Adds a new MonopolyObserver to the list of observers.
      * @param observer The new MonopolyObserver
      */
