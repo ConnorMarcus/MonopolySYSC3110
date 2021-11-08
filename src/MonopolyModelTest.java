@@ -9,7 +9,7 @@ public class MonopolyModelTest {
     MonopolyModel model;
 
     @org.junit.Before
-    public void setUp() throws Exception {
+    public void setUp() {
         model = new MonopolyModel(2);
     }
 
