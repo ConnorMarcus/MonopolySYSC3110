@@ -98,11 +98,8 @@ public class MonopolyModel {
         for (MonopolyObserver o : this.observers) {
             o.handleBankrupt(p);
         }
-        for (Property property : p.getProperties()) {
-            //Right now all Properties that the player owns are PropertyStreets
-            if (property instanceof PropertyStreet) {
-                ((PropertyStreet) property).removeOwner();
-            }
+        for (OwnableProperty property : p.getProperties()) {
+            property.removeOwner();
         }
         this.playerList.remove(p);
 

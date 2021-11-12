@@ -9,8 +9,9 @@ public class Player {
     private final String IDENTIFIER;
     private int money;
     private int position;
-    private Set<Property> properties;
+    private Set<OwnableProperty> properties;
     private boolean isBankrupt;
+    private int numRailroads;
     private final String PLAYER_IMAGE_FILE;
 
 
@@ -24,6 +25,7 @@ public class Player {
         this.IDENTIFIER = identifier;
         this.money = 1500;
         this.position = 0;
+        this.numRailroads = 0;
         this.properties = new HashSet<>();
         this.isBankrupt = false;
         this.PLAYER_IMAGE_FILE = playerImageFile;
@@ -125,11 +127,12 @@ public class Player {
      *
      * @param p the Property object that the Player wants to purchase
      */
-    public void purchaseProperty(PropertyStreet p) {
+    public void purchaseProperty(OwnableProperty p) {
         int cost = p.getPrice();
         if (this.canPay(cost)) {
             this.removeMoney(cost);
             this.properties.add(p);
+            if (p instanceof PropertyRailroad) numRailroads++;
         }
     }
 
@@ -173,7 +176,7 @@ public class Player {
      */
     public Set<String> getPropertyGroups(MonopolyBoard board) { //Function will be used in Milestone 3
         Set<String> propertyGroups = new HashSet<>();
-        for (Property p : this.properties) {
+        for (OwnableProperty p : this.properties) {
             if (p instanceof PropertyStreet && !propertyGroups.contains(((PropertyStreet) p).getColour())) {
                 String colour = ((PropertyStreet) p).getColour();
                 propertyGroups.add(colour);
@@ -196,7 +199,7 @@ public class Player {
      */
     public String getPropertyString() {
         String propertyString = "";
-        for (Property p : this.properties) {
+        for (OwnableProperty p : this.properties) {
             propertyString += p + ", ";
         }
         return propertyString.replaceAll(", $", ""); //removes trailing comma
@@ -206,8 +209,16 @@ public class Player {
      * Getter for the properties attribute.
      * @return The set of all properties that the player owns.
      */
-    public Set<Property> getProperties() {
+    public Set<OwnableProperty> getProperties() {
         return this.properties;
+    }
+
+    /**
+     * Gets the number of Railroad properties the player owns
+     * @return the number of Railroad properties the player owns
+     */
+    public int getNumRailroads() {
+        return numRailroads;
     }
 
     /**

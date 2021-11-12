@@ -24,6 +24,6 @@ public class PropertyFreeSpace extends Property {
      */
     @Override
     public void landed(Player landedPlayer) {
-        JOptionPane.showMessageDialog(null, "This is a free space in Milestone 2!");
+        JOptionPane.showMessageDialog(null, "This is a free space!");
     }
 }

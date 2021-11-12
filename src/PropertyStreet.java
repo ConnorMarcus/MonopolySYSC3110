@@ -6,7 +6,7 @@ import javax.swing.*;
  * @author Vahid Foroughi
 
  */
-public class PropertyStreet extends Property{
+public class PropertyStreet extends Property implements OwnableProperty {
     private String colour;
     private int price;
     private final double RENT_RATE = 0.1;
