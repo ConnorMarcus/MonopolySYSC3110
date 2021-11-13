@@ -75,7 +75,7 @@ public class MonopolyBoard {
         this.properties.addAll(PropertyGroups.YELLOW_PROPERTIES.propertySet.subList(0,2));
         this.properties.add(new PropertyUtility("Water Works"));
         this.properties.add(PropertyGroups.YELLOW_PROPERTIES.propertySet.get(2)); //Marvin Gardens
-        this.properties.add(new PropertyFreeSpace("Go To Jail"));
+        this.properties.add(new PropertyGoToJail("Go To Jail"));
         this.properties.addAll(PropertyGroups.GREEN_PROPERTIES.propertySet.subList(0,2));
         this.properties.add(new PropertyFreeSpace("Free Space"));
         this.properties.add(PropertyGroups.GREEN_PROPERTIES.propertySet.get(2)); //Pennsylvania Avenue

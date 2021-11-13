@@ -57,6 +57,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         this.sidePanel.enableButton("Pass", true);
         if (propertyLandedOn instanceof PropertyUtility) ((PropertyUtility) propertyLandedOn).setDiceRoll(rollSum);
         propertyLandedOn.landed(player);
+        if (propertyLandedOn.getName().equals("Go To Jail")) this.boardPanel.updatePlayerLabelPosition(player);
     }
 
     /**
@@ -99,6 +100,54 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
     @Override
     public void handlePlayerUpdate(List<Player> playerList) {
         playerList.forEach((player) -> this.sidePanel.updatePlayerInfo(player));
+    }
+
+    /**
+     * Handles the start of a jailed player's turn
+     * @param player The player who is in jail
+     */
+    @Override
+    public void handleJailedPlayer(Player player) {
+        player.incrementTimeInJail();
+        if (player.getTimeInJail() == 3) {
+            JOptionPane.showMessageDialog(null, "Player " + player.getIdentifier() + " has spent 3 turns in jail! They must pay the $50 fine to get out!");
+            player.payMoney(50);
+            player.setJailed(false);
+            player.resetTimeInJail();
+            if (player.getMoney() < 0) {
+                model.getPlayerList().remove(player);
+                handleBankrupt(player);
+                if (model.getPlayerList().size() == 1) handleWinner(model.getPlayerList().get(0));
+            }
+            handlePlayerUpdate(model.getPlayerList());
+        }
+        else {
+            if (player.getMoney() >= 50) {
+                String[] options = {"no", "yes"};
+                int choice = JOptionPane.showOptionDialog(null, "Would you like to pay $50 to get out of jail this turn?", "Player " + player.getIdentifier(),
+                        JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
+                if (choice == 1) {
+                    player.payMoney(50);
+                    player.setJailed(false);
+                    player.resetTimeInJail();
+                    handlePlayerUpdate(model.getPlayerList());
+                }
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "Player " + player.getIdentifier() + " cannot currently afford to pay the fine of $50, they must roll doubles!");
+            }
+        }
+    }
+
+    /**
+     * Handles what happens when a player fails to get out of jail
+     * @param player The player that is stuck in jail
+     */
+    @Override
+    public void handleStuckInJail(Player player, int[] roll) {
+        this.boardPanel.updateDice(roll[0], roll[1]);
+        this.sidePanel.enableButton("Pass", true);
+        this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " did not roll doubles, they are stuck in jail!");
     }
 
     /**

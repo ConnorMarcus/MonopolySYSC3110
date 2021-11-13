@@ -11,6 +11,8 @@ public class Player {
     private int position;
     private Set<OwnableProperty> properties;
     private boolean isBankrupt;
+    private boolean isJailed;
+    private int timeInJail;
     private int numRailroads;
     private int numUtilities;
     private final String PLAYER_IMAGE_FILE;
@@ -27,8 +29,10 @@ public class Player {
         this.money = 1500;
         this.position = 0;
         this.numRailroads = 0;
+        this.timeInJail = 0;
         this.properties = new HashSet<>();
         this.isBankrupt = false;
+        this.isJailed = false;
         this.PLAYER_IMAGE_FILE = playerImageFile;
     }
 
@@ -229,6 +233,44 @@ public class Player {
      */
     public int getNumUtilities() {
         return numUtilities;
+    }
+
+    /**
+     * Gets whether the player is currently in jail or not
+     * @return true if the player is in jail, and false otherwise
+     */
+    public boolean isJailed() {
+        return isJailed;
+    }
+
+    /**
+     * Sets whether the player is in jail
+     * @param jailed true if the player is in jail, and false otherwise
+     */
+    public void setJailed(boolean jailed) {
+        this.isJailed = jailed;
+    }
+
+    /**
+     * Gets the number of turns the players has spent in jail
+     * @return The number of turns the players has spent in jail
+     */
+    public int getTimeInJail() {
+        return timeInJail;
+    }
+
+    /**
+     * Increments the number of turns the player has spent in jail by 1.
+     */
+    public void incrementTimeInJail() {
+        timeInJail++;
+    }
+
+    /**
+     * Resets the number of turns the player has spent in jail
+     */
+    public void resetTimeInJail() {
+        timeInJail = 0;
     }
 
     /**

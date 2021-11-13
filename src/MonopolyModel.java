@@ -64,21 +64,26 @@ public class MonopolyModel {
     public void takeTurn() {
         Player turnPlayer = this.playerList.get(this.turn);
         int[] roll = dice.rollDice();
-        int rollSum = IntStream.of(roll).sum();
-        int newPosition = (turnPlayer.getPosition() + rollSum) % this.board.getNumProperties();
-        turnPlayer.setPosition(newPosition);
-        Property propertyLandedOn = this.board.getProperty(newPosition);
-        for (MonopolyObserver o : this.observers) {
-            o.handleTakeTurn(turnPlayer, roll, propertyLandedOn);
-            o.handlePlayerUpdate(this.playerList);
+        if (turnPlayer.isJailed() && roll[0] != roll[1]) {
+            for (MonopolyObserver o : this.observers) {
+                o.handleStuckInJail(turnPlayer, roll);
+            }
         }
-        if (turnPlayer.getIsBankrupt()) bankrupt(turnPlayer); // Checks if player is bankrupt after paying rent
+        else {
+            int rollSum = IntStream.of(roll).sum();
+            int newPosition = (turnPlayer.getPosition() + rollSum) % this.board.getNumProperties();
+            turnPlayer.setPosition(newPosition);
+            Property propertyLandedOn = this.board.getProperty(newPosition);
+            for (MonopolyObserver o : this.observers) {
+                o.handleTakeTurn(turnPlayer, roll, propertyLandedOn);
+                o.handlePlayerUpdate(this.playerList);
+            }
+            if (turnPlayer.getIsBankrupt()) bankrupt(turnPlayer); // Checks if player is bankrupt after paying rent
+        }
     }
 
     /**
      * Passes Player's turn.
-     *
-     * @return boolean use to change turn.
      */
     public void passTurn() {
         Player turnPlayer = this.playerList.get(this.turn);
@@ -86,7 +91,12 @@ public class MonopolyModel {
         for (MonopolyObserver o : this.observers) {
             o.handlePassTurn(turnPlayer);
         }
-
+        Player nextPlayer = this.playerList.get(this.turn);
+        if (nextPlayer.isJailed()) {
+            for (MonopolyObserver o : this.observers) {
+                o.handleJailedPlayer(nextPlayer);
+            }
+        }
     }
 
     /**
