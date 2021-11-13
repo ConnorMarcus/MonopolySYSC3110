@@ -121,12 +121,12 @@ public class SidePanel extends JPanel {
 
     /**
      * Enables one of the SidePanel's buttons.
-     * @param buttonText The text of the button to disable
+     * @param buttonText The text of the button to enable/disable
      */
-    public void enableButton(String buttonText) {
+    public void enableButton(String buttonText, boolean enabled) {
         for (Component c : this.getComponents()) {
             if (c instanceof JButton && ((JButton) c).getText().equals(buttonText)) {
-                c.setEnabled(true);
+                c.setEnabled(enabled);
                 break;
             }
         }

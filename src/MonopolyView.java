@@ -54,7 +54,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         this.boardPanel.updatePlayerLabelPosition(player);
         this.boardPanel.updateDice(roll[0], roll[1]);
         this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has rolled a " + rollSum + ". They are now on " + propertyLandedOn + ".");
-        this.sidePanel.enableButton("Pass");
+        this.sidePanel.enableButton("Pass", true);
         if (propertyLandedOn instanceof PropertyUtility) ((PropertyUtility) propertyLandedOn).setDiceRoll(rollSum);
         propertyLandedOn.landed(player);
     }
@@ -66,7 +66,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
     @Override
     public void handlePassTurn(Player player) {
         this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has finished their turn.");
-        this.sidePanel.enableButton("Roll");
+        this.sidePanel.enableButton("Roll", true);
     }
 
     /**
@@ -75,9 +75,11 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
      */
     @Override
     public void handleBankrupt(Player player) {
-        this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + "has gone bankrupt! They are out of the game.");
+        this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has gone bankrupt! They are out of the game.");
         this.boardPanel.removePlayerLabel(player);
         this.sidePanel.removePlayerInfo(player);
+        this.sidePanel.enableButton("Roll", true);
+        this.sidePanel.enableButton("Pass", false);
     }
 
     /**
