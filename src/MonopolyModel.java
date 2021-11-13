@@ -71,6 +71,9 @@ public class MonopolyModel {
         }
         else {
             int rollSum = IntStream.of(roll).sum();
+            if ((turnPlayer.getPosition() + rollSum) > (this.board.getNumProperties()-1)) {
+                turnPlayer.setPassingGo(true);
+            }
             int newPosition = (turnPlayer.getPosition() + rollSum) % this.board.getNumProperties();
             turnPlayer.setPosition(newPosition);
             Property propertyLandedOn = this.board.getProperty(newPosition);
@@ -78,6 +81,7 @@ public class MonopolyModel {
                 o.handleTakeTurn(turnPlayer, roll, propertyLandedOn);
                 o.handlePlayerUpdate(this.playerList);
             }
+            turnPlayer.setPassingGo(false);
             if (turnPlayer.getIsBankrupt()) bankrupt(turnPlayer); // Checks if player is bankrupt after paying rent
         }
     }

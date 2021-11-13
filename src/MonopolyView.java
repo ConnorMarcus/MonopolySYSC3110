@@ -55,6 +55,11 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         this.boardPanel.updateDice(roll[0], roll[1]);
         this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has rolled a " + rollSum + ". They are now on " + propertyLandedOn + ".");
         this.sidePanel.enableButton("Pass", true);
+        if (player.isPassingGo()) {
+            JOptionPane.showMessageDialog(null, "Player " + player.getIdentifier() + " has received $200 for passing GO!");
+            player.addMoney(200);
+            handlePlayerUpdate(model.getPlayerList());
+        }
         if (propertyLandedOn instanceof PropertyUtility) ((PropertyUtility) propertyLandedOn).setDiceRoll(rollSum);
         propertyLandedOn.landed(player);
         if (propertyLandedOn.getName().equals("Go To Jail")) this.boardPanel.updatePlayerLabelPosition(player);

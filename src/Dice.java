@@ -36,7 +36,6 @@ public class Dice {
             int roll = r.nextInt(6) + 1;
             dice[i] = roll;
         }
-        //return dice;
-        return new int[]{6, 4};
+        return dice;
     }
 }

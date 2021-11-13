@@ -12,6 +12,7 @@ public class Player {
     private Set<OwnableProperty> properties;
     private boolean isBankrupt;
     private boolean isJailed;
+    private boolean passedGo;
     private int timeInJail;
     private int numRailroads;
     private int numUtilities;
@@ -33,6 +34,7 @@ public class Player {
         this.properties = new HashSet<>();
         this.isBankrupt = false;
         this.isJailed = false;
+        this.passedGo = false;
         this.PLAYER_IMAGE_FILE = playerImageFile;
     }
 
@@ -271,6 +273,22 @@ public class Player {
      */
     public void resetTimeInJail() {
         timeInJail = 0;
+    }
+
+    /**
+     * Gets whether the player is currently passing go or not
+     * @return true if the player is passing go, and false otherwise
+     */
+    public boolean isPassingGo() {
+        return passedGo;
+    }
+
+    /**
+     * Sets whether the player is passing go
+     * @param passingGo true if the player is in jail, and false otherwise
+     */
+    public void setPassingGo(boolean passingGo) {
+        this.passedGo = passingGo;
     }
 
     /**
