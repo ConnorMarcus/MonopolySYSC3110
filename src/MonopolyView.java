@@ -50,10 +50,12 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
      */
     @Override
     public void handleTakeTurn(Player player, int[] roll, Property propertyLandedOn) {
+        int rollSum = IntStream.of(roll).sum();
         this.boardPanel.updatePlayerLabelPosition(player);
         this.boardPanel.updateDice(roll[0], roll[1]);
-        this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has rolled a " + IntStream.of(roll).sum() + ". They are now on " + propertyLandedOn + ".");
+        this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has rolled a " + rollSum + ". They are now on " + propertyLandedOn + ".");
         this.sidePanel.enableButton("Pass");
+        if (propertyLandedOn instanceof PropertyUtility) ((PropertyUtility) propertyLandedOn).setDiceRoll(rollSum);
         propertyLandedOn.landed(player);
     }
 
@@ -88,6 +90,10 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         System.exit(0);
     }
 
+    /**
+     * Handles updates related to the player's information
+     * @param playerList The list of players in the game
+     */
     @Override
     public void handlePlayerUpdate(List<Player> playerList) {
         playerList.forEach((player) -> this.sidePanel.updatePlayerInfo(player));

@@ -61,7 +61,7 @@ public class MonopolyBoard {
         this.properties.addAll(PropertyGroups.LIGHT_BLUE_PROPERTIES.propertySet.subList(1, 3));
         this.properties.add(new PropertyFreeSpace("Jail"));
         this.properties.add(PropertyGroups.PINK_PROPERTIES.propertySet.get(0)); //St. Charles Place
-        this.properties.add(new PropertyFreeSpace("Electric Company"));
+        this.properties.add(new PropertyUtility("Electric Company"));
         this.properties.addAll(PropertyGroups.PINK_PROPERTIES.propertySet.subList(1,3));
         this.properties.add(new PropertyRailroad("Pennsylvania Railroad"));
         this.properties.add(PropertyGroups.ORANGE_PROPERTIES.propertySet.get(0)); //St. James Place
@@ -73,7 +73,7 @@ public class MonopolyBoard {
         this.properties.addAll(PropertyGroups.RED_PROPERTIES.propertySet.subList(1,3));
         this.properties.add(new PropertyRailroad("B&O Railroad"));
         this.properties.addAll(PropertyGroups.YELLOW_PROPERTIES.propertySet.subList(0,2));
-        this.properties.add(new PropertyFreeSpace("Water Works"));
+        this.properties.add(new PropertyUtility("Water Works"));
         this.properties.add(PropertyGroups.YELLOW_PROPERTIES.propertySet.get(2)); //Marvin Gardens
         this.properties.add(new PropertyFreeSpace("Go To Jail"));
         this.properties.addAll(PropertyGroups.GREEN_PROPERTIES.propertySet.subList(0,2));

@@ -12,6 +12,7 @@ public class Player {
     private Set<OwnableProperty> properties;
     private boolean isBankrupt;
     private int numRailroads;
+    private int numUtilities;
     private final String PLAYER_IMAGE_FILE;
 
 
@@ -133,6 +134,7 @@ public class Player {
             this.removeMoney(cost);
             this.properties.add(p);
             if (p instanceof PropertyRailroad) numRailroads++;
+            else if (p instanceof PropertyUtility) numUtilities++;
         }
     }
 
@@ -219,6 +221,14 @@ public class Player {
      */
     public int getNumRailroads() {
         return numRailroads;
+    }
+
+    /**
+     * Gets the number of Utility properties the player owns
+     * @return the number of Utility properties the player owns
+     */
+    public int getNumUtilities() {
+        return numUtilities;
     }
 
     /**
