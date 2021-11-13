@@ -145,7 +145,7 @@ public class Player {
      * @param cost int amount of money to pay
      * @return int amount of money actual payed. (If player does not have enough pay all of money)
      */
-    public int payRent(int cost) {
+    public int payMoney(int cost) {
         if (canPay(cost)) {
             this.removeMoney(cost);
             return cost;

@@ -54,7 +54,7 @@ public class MonopolyBoard {
         this.properties.add(PropertyGroups.PURPLE_PROPERTIES.propertySet.get(0)); // Mediterranean Avenue
         this.properties.add(new PropertyFreeSpace("Free Space"));
         this.properties.add(PropertyGroups.PURPLE_PROPERTIES.propertySet.get(1)); // Baltic Avenue
-        this.properties.add(new PropertyFreeSpace("Income Tax"));
+        this.properties.add(new PropertyTax("Income Tax", 200));
         this.properties.add(new PropertyRailroad("Reading Railroad"));
         this.properties.add(PropertyGroups.LIGHT_BLUE_PROPERTIES.propertySet.get(0)); //Oriental Avenue
         this.properties.add(new PropertyFreeSpace("Free Space"));
@@ -82,7 +82,7 @@ public class MonopolyBoard {
         this.properties.add(new PropertyRailroad("Short Line"));
         this.properties.add(new PropertyFreeSpace("Free Space"));
         this.properties.add(PropertyGroups.DARK_BLUE_PROPERTIES.propertySet.get(0)); //Park Place
-        this.properties.add(new PropertyFreeSpace("Luxury Tax"));
+        this.properties.add(new PropertyTax("Luxury Tax", 100));
         this.properties.add(PropertyGroups.DARK_BLUE_PROPERTIES.propertySet.get(1)); //BoardWalk
     }
 

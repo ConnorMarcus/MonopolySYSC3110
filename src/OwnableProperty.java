@@ -4,7 +4,7 @@ import javax.swing.*;
  * Abstract class that represents properties that can be bought
  * @author Connor Marcus
  */
-public abstract class OwnableProperty extends Property{
+public abstract class OwnableProperty extends Property {
     private final int PRICE;
     private Player owner;
 
@@ -52,7 +52,7 @@ public abstract class OwnableProperty extends Property{
     public void landed(Player landedPlayer) {
         if(owner != null && landedPlayer != owner) {
             int cost = calculateCost();
-            cost = landedPlayer.payRent(cost);
+            cost = landedPlayer.payMoney(cost);
             owner.addMoney(cost);
             JOptionPane.showMessageDialog( null,"Player " + owner.getIdentifier() + " owns this property you must pay them $" + cost);
         }
