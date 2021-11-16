@@ -85,9 +85,6 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
     public void handlePassTurn(Player player) {
         this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has finished their turn.");
         this.sidePanel.enableButton("Roll", true);
-        if (model.getPlayerList().get(model.getTurn()).getIsAI()) {
-            this.handleAITurn(model.getPlayerList().get(model.getTurn()));
-        }
     }
 
     /**
@@ -176,16 +173,14 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
      */
     @Override
     public void handleAITurn(Player player) {
-        JButton roll = this.sidePanel.getButton("Roll");
-        JButton pass = this.sidePanel.getButton("Pass");
-//        Timer timer = new Timer(5000, (e) -> {});
-//        timer.setRepeats(false);
-//        timer.start();
-        roll.doClick();
-        Timer test = new Timer(5000, (e) -> pass.doClick());
-        test.setRepeats(false);
-        test.start();
-
+        Timer rollTimer = new Timer(2000, (e) -> {
+            sidePanel.clickButton("Roll");
+            Timer passTimer = new Timer(5000, (e2) -> sidePanel.clickButton("Pass"));
+            passTimer.setRepeats(false);
+            passTimer.start();
+        });
+        rollTimer.setRepeats(false);
+        rollTimer.start();
     }
 
     /**

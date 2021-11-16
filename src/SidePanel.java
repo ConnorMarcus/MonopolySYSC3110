@@ -120,17 +120,12 @@ public class SidePanel extends JPanel {
         this.add(buy);
     }
 
-    public MonopolyController getController() {
-        return this.controller;
-    }
-
     /**
-     *
-     *
-     * @param buttonText
-     * @return
+     * Gets the button with the corresponding text
+     * @param buttonText The text of the button
+     * @return The corresponding button
      */
-    public JButton getButton(String buttonText) {
+    private JButton getButton(String buttonText) {
         for (Component c : this.getComponents()) {
             if (c instanceof JButton && ((JButton) c).getText().equals(buttonText)) {
                 return (JButton) c;
@@ -146,6 +141,15 @@ public class SidePanel extends JPanel {
     public void enableButton(String buttonText, boolean enabled) {
         JButton button = this.getButton(buttonText);
         button.setEnabled(enabled);
+    }
+
+    /**
+     * Clicks one of the SidePanel's buttons.
+     * @param buttonText The text of the button to click
+     */
+    public void clickButton(String buttonText) {
+        JButton button = this.getButton(buttonText);
+        button.doClick();
     }
 
 }

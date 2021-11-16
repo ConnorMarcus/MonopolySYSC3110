@@ -25,12 +25,7 @@ public class MonopolyModel {
         this.playerList = new ArrayList<>();
         this.playerList.add(new Player(String.valueOf(1), String.format("images/player%s.png", 1), false));
         for (int i=1; i<numPlayers; i++) {
-            if (type.equals("AI")) {
-                this.playerList.add(new Player(String.valueOf(i+1), String.format("images/player%s.png", i+1), true));
-            }
-            else {
-                this.playerList.add(new Player(String.valueOf(i+1), String.format("images/player%s.png", i+1), false));
-            }
+            this.playerList.add(new Player(String.valueOf(i+1), String.format("images/player%s.png", i+1), type.equals("AI")));
         }
     }
 
@@ -108,7 +103,7 @@ public class MonopolyModel {
                 o.handleJailedPlayer(nextPlayer);
             }
         }
-        if (nextPlayer.getIsAI() && !(turnPlayer.getIsAI())) {
+        if (nextPlayer.getIsAI()) {
             for (MonopolyObserver o : this.observers) {
                 o.handleAITurn(nextPlayer);
             }
