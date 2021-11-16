@@ -11,4 +11,5 @@ public interface MonopolyObserver {
     void handlePlayerUpdate(List<Player> playerList);
     void handleJailedPlayer(Player player);
     void handleStuckInJail(Player player, int[] roll);
+    void handleAITurn(Player player);
 }

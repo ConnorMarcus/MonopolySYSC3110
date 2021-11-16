@@ -29,7 +29,7 @@ public class GameLogPanel extends JPanel {
     /**
      * Updates the GameLog Jlabel text.
      *
-     * @param text the string that will be displayed 
+     * @param text the string that will be displayed
      */
     public void updateGameLog(String text) {
         gameLog.setText(text);

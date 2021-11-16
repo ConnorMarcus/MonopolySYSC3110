@@ -15,6 +15,7 @@ public class SidePanel extends JPanel {
     private final int PANEL_HEIGHT = 693;
     private final int INFO_AREA_HEIGHT = 620;
     private Map<String, JLabel> playerInfoMap;
+    private MonopolyController controller;
 
 
     /**
@@ -93,7 +94,7 @@ public class SidePanel extends JPanel {
     private void addButtons(MonopolyModel model) {
         Font buttonFont = new Font("arial",Font.BOLD, 25);
         Dimension buttonSize = new Dimension(100, 40);
-        MonopolyController controller = new MonopolyController(model);
+        controller = new MonopolyController(model);
 
         JButton roll = new JButton("Roll");
         roll.setFont(buttonFont);
@@ -119,17 +120,32 @@ public class SidePanel extends JPanel {
         this.add(buy);
     }
 
+    public MonopolyController getController() {
+        return this.controller;
+    }
+
+    /**
+     *
+     *
+     * @param buttonText
+     * @return
+     */
+    public JButton getButton(String buttonText) {
+        for (Component c : this.getComponents()) {
+            if (c instanceof JButton && ((JButton) c).getText().equals(buttonText)) {
+                return (JButton) c;
+            }
+        }
+        return null;
+    }
+
     /**
      * Enables one of the SidePanel's buttons.
      * @param buttonText The text of the button to enable/disable
      */
     public void enableButton(String buttonText, boolean enabled) {
-        for (Component c : this.getComponents()) {
-            if (c instanceof JButton && ((JButton) c).getText().equals(buttonText)) {
-                c.setEnabled(enabled);
-                break;
-            }
-        }
+        JButton button = this.getButton(buttonText);
+        button.setEnabled(enabled);
     }
 
 }

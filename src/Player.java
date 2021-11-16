@@ -16,6 +16,7 @@ public class Player {
     private int timeInJail;
     private int numRailroads;
     private int numUtilities;
+    private final boolean isAI;
     private final String PLAYER_IMAGE_FILE;
 
 
@@ -25,7 +26,7 @@ public class Player {
      * @param identifier String identifier of the Player
      * @param playerImageFile String containing the file path to the player image
      */
-    public Player(String identifier, String playerImageFile) {
+    public Player(String identifier, String playerImageFile, boolean isAI) {
         this.IDENTIFIER = identifier;
         this.money = 1500;
         this.position = 0;
@@ -35,6 +36,7 @@ public class Player {
         this.isBankrupt = false;
         this.isJailed = false;
         this.passedGo = false;
+        this.isAI = isAI;
         this.PLAYER_IMAGE_FILE = playerImageFile;
     }
 
@@ -86,6 +88,14 @@ public class Player {
         return this.isBankrupt;
     }
 
+    /**
+     * Gets isAI
+     *
+     * @return boolean, isAI flag.
+     */
+    public boolean getIsAI() {
+        return this.isAI;
+    }
 
     /**
      * Sets Players Position.

@@ -17,14 +17,20 @@ public class MonopolyModel {
      * Constructor of the class; initializes the class attributes.
      * @param numPlayers The number of players playing the Monopoly game
      */
-    public MonopolyModel(int numPlayers) {
+    public MonopolyModel(String type, int numPlayers) {
         this.board = new MonopolyBoard();
         this.dice = new Dice(2);
         this.turn = 0;
         this.observers = new ArrayList<>();
         this.playerList = new ArrayList<>();
-        for (int i=0; i<numPlayers; i++) {
-            this.playerList.add(new Player(String.valueOf(i+1), String.format("images/player%s.png", i+1)));
+        this.playerList.add(new Player(String.valueOf(1), String.format("images/player%s.png", 1), false));
+        for (int i=1; i<numPlayers; i++) {
+            if (type.equals("AI")) {
+                this.playerList.add(new Player(String.valueOf(i+1), String.format("images/player%s.png", i+1), true));
+            }
+            else {
+                this.playerList.add(new Player(String.valueOf(i+1), String.format("images/player%s.png", i+1), false));
+            }
         }
     }
 
@@ -44,6 +50,7 @@ public class MonopolyModel {
     public int getTurn(){
         return this.turn;
     }
+
 
     /**
      * Adds a new MonopolyObserver to the list of observers.
@@ -99,6 +106,11 @@ public class MonopolyModel {
         if (nextPlayer.isJailed()) {
             for (MonopolyObserver o : this.observers) {
                 o.handleJailedPlayer(nextPlayer);
+            }
+        }
+        if (nextPlayer.getIsAI() && !(turnPlayer.getIsAI())) {
+            for (MonopolyObserver o : this.observers) {
+                o.handleAITurn(nextPlayer);
             }
         }
     }

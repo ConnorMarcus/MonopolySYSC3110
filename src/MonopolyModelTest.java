@@ -10,7 +10,7 @@ public class MonopolyModelTest {
 
     @org.junit.Before
     public void setUp() {
-        model = new MonopolyModel(2);
+        model = new MonopolyModel("Multiplayer",2);
     }
 
     /**

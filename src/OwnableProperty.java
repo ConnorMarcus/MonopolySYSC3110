@@ -54,9 +54,11 @@ public abstract class OwnableProperty extends Property {
             int cost = calculateCost();
             cost = landedPlayer.payMoney(cost);
             owner.addMoney(cost);
-            JOptionPane.showMessageDialog( null,"Player " + owner.getIdentifier() + " owns this property you must pay them $" + cost);
+            if (!landedPlayer.getIsAI()) {
+                JOptionPane.showMessageDialog( null,"Player " + owner.getIdentifier() + " owns this property you must pay them $" + cost);
+            }
         }
-        else if (owner != null) { //landed player owns the property
+        else if (owner != null && !(landedPlayer.getIsAI())) { //landed player owns the property
             JOptionPane.showMessageDialog(null, "You already own this property!");
         }
         else {
@@ -73,16 +75,25 @@ public abstract class OwnableProperty extends Property {
     private void buyHandler(Player landedPlayer) {
         if (landedPlayer.getMoney() >= this.PRICE) {
             String[] options = {"no", "yes"};
-            int choice = JOptionPane.showOptionDialog(null, "Would you like to buy this property for $" + this.PRICE + "?",
-                    "Buy Property",
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
-            if (choice == 1) {
+            if (!landedPlayer.getIsAI()) {
+                int choice = JOptionPane.showOptionDialog(null, "Would you like to buy this property for $" + this.PRICE + "?",
+                        "Buy Property",
+                        JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
+
+                if (choice == 1) {
+                    landedPlayer.purchaseProperty(this);
+                    owner = landedPlayer;
+                }
+            }
+            else {
                 landedPlayer.purchaseProperty(this);
                 owner = landedPlayer;
             }
         }
         else {
-            JOptionPane.showMessageDialog(null, "You do not have enough money to buy this property!");
+            if (!landedPlayer.getIsAI()) {
+                JOptionPane.showMessageDialog(null, "You do not have enough money to buy this property!");
+            }
         }
     }
 }

@@ -19,14 +19,15 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
      */
     public MonopolyView(String title) {
         super(title);
-        String[] options = {"4", "3", "2"};
-        int choice = JOptionPane.showOptionDialog(null, "How many players would like to play:",
-                "Choose Players",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[2]);
+        String[] options = {"Multiplayer", "AI"};
+        int choice = JOptionPane.showOptionDialog(null, "Select type of opponents:",
+                "Game type",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
         if (choice == -1) {
             System.exit(0);
         }
-        this.model = new MonopolyModel(Integer.parseInt(options[choice]));
+        int numberOfPlayers = Integer.parseInt(this.gamePrompt());
+        this.model = new MonopolyModel(options[choice], numberOfPlayers);
         this.model.addMonopolyObserver(this);
         this.boardPanel = new BoardPanel(this.model.getBoard(), this.model.getPlayerList());
         this.sidePanel = new SidePanel(this.model);
@@ -40,6 +41,17 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         this.setResizable(false);
         this.pack();
         this.setVisible(true);
+    }
+
+    private String gamePrompt() {
+        String[] options = {"4", "3", "2"};
+        int choice = JOptionPane.showOptionDialog(null, "How many players would like to play:",
+                "Choose Players",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[2]);
+        if (choice == -1) {
+            System.exit(0);
+        }
+        return options[choice];
     }
 
     /**
@@ -73,6 +85,9 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
     public void handlePassTurn(Player player) {
         this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has finished their turn.");
         this.sidePanel.enableButton("Roll", true);
+        if (model.getPlayerList().get(model.getTurn()).getIsAI()) {
+            this.handleAITurn(model.getPlayerList().get(model.getTurn()));
+        }
     }
 
     /**
@@ -153,6 +168,24 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         this.boardPanel.updateDice(roll[0], roll[1]);
         this.sidePanel.enableButton("Pass", true);
         this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " did not roll doubles, they are stuck in jail!");
+    }
+
+    /**
+     * Handles AI players turn, Rolls and Passes turn.
+     * @param player The AI player.
+     */
+    @Override
+    public void handleAITurn(Player player) {
+        JButton roll = this.sidePanel.getButton("Roll");
+        JButton pass = this.sidePanel.getButton("Pass");
+//        Timer timer = new Timer(5000, (e) -> {});
+//        timer.setRepeats(false);
+//        timer.start();
+        roll.doClick();
+        Timer test = new Timer(5000, (e) -> pass.doClick());
+        test.setRepeats(false);
+        test.start();
+
     }
 
     /**
