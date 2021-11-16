@@ -173,9 +173,15 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
      */
     @Override
     public void handleAITurn(Player player) {
+        this.sidePanel.enableButton("Roll", false); //disable button so cannot be clicked by user
         Timer rollTimer = new Timer(2000, (e) -> {
-            sidePanel.clickButton("Roll");
-            Timer passTimer = new Timer(5000, (e2) -> sidePanel.clickButton("Pass"));
+            this.sidePanel.enableButton("Roll", true);
+            this.sidePanel.clickButton("Roll");
+            this.sidePanel.enableButton("Pass", false); //disable button so cannot be clicked by user
+            Timer passTimer = new Timer(5000, (e2) -> {
+                this.sidePanel.enableButton("Pass", true);
+                this.sidePanel.clickButton("Pass");
+            });
             passTimer.setRepeats(false);
             passTimer.start();
         });
