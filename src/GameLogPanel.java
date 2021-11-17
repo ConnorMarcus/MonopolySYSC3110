@@ -3,7 +3,6 @@ import java.awt.*;
 
 /**
  * The GameLogPanel class used to display text to the users.
- *
  * @author Noah Hammoud
  */
 public class GameLogPanel extends JPanel {

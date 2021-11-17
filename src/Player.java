@@ -16,6 +16,8 @@ public class Player {
     private int timeInJail;
     private int numRailroads;
     private int numUtilities;
+    private boolean rolledDoubles;
+    private int consecutiveDoubles;
     private final boolean isAI;
     private final String PLAYER_IMAGE_FILE;
 
@@ -36,6 +38,8 @@ public class Player {
         this.isBankrupt = false;
         this.isJailed = false;
         this.passedGo = false;
+        this.rolledDoubles = false;
+        this.consecutiveDoubles = 0;
         this.isAI = isAI;
         this.PLAYER_IMAGE_FILE = playerImageFile;
     }
@@ -302,8 +306,32 @@ public class Player {
     }
 
     /**
+     * Gets whether the player has rolled doubles or not.
+     * @return
+     */
+    public boolean getRolledDoubles() {
+        return this.rolledDoubles;
+    }
+
+    /**
+     * Sets if player rolled double and increment consecutive counter.
+     * @param isDouble true if player rolled double.
+     */
+    public void setRolledDoubles(boolean isDouble) {
+        this.consecutiveDoubles = isDouble ? this.consecutiveDoubles + 1 : 0;
+        this.rolledDoubles = isDouble;
+    }
+
+    /**
+     * Gets number of consecutive doubles rolled by player (if three player goes to jail).
+     * @return the consecutive rolled doubles.
+     */
+    public int getConsecutiveDoubles() {
+        return this.consecutiveDoubles;
+    }
+
+    /**
      * Overrides the equals method from the Object class.
-     *
      * @param o The object that is being compared
      * @return true if the object is a player and the identifier of the player is the same, and false otherwise
      */

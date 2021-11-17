@@ -66,7 +66,12 @@ public class MonopolyModel {
     public void takeTurn() {
         Player turnPlayer = this.playerList.get(this.turn);
         int[] roll = dice.rollDice();
-        if (turnPlayer.isJailed() && roll[0] != roll[1]) {
+
+        boolean isDouble = roll[0] == roll[1];
+        boolean value = isDouble ? true : false;
+        turnPlayer.setRolledDoubles(value);
+
+        if (turnPlayer.isJailed() && !(isDouble)) {
             for (MonopolyObserver o : this.observers) {
                 o.handleStuckInJail(turnPlayer, roll);
             }
@@ -127,7 +132,6 @@ public class MonopolyModel {
                     nextPlayer.resetTimeInJail();
                 }
             }
-//
         }
         if (nextPlayer.getIsAI()) {
             for (MonopolyObserver o : this.observers) {
@@ -138,7 +142,6 @@ public class MonopolyModel {
 
     /**
      * Removes bankrupted Player from game and checks if there is a winner (One player remaining).
-     *
      * @param p Player that has gone Bankrupt
      */
     public void bankrupt(Player p) {

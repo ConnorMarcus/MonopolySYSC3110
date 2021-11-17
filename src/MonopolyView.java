@@ -84,7 +84,6 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         this.boardPanel.updateDice(roll[0], roll[1]);
         String gameLogString = "Player " + player.getIdentifier() + " has rolled a " + rollSum + ". They are now on " + propertyLandedOn + ".";
         this.gameLogPanel.updateGameLog(gameLogString);
-        this.sidePanel.enableButton("Pass", true);
         if (player.isPassingGo()) {
             gameLogString += " Player " + player.getIdentifier() + " has passed GO to collect $200. ";
         }
@@ -92,6 +91,21 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         gameLogString += " " + propertyLandedOn.landed(player);
         this.gameLogPanel.updateGameLog(gameLogString);
         if (propertyLandedOn.getName().equals("Go To Jail")) this.boardPanel.updatePlayerLabelPosition(player);
+
+        if (player.getRolledDoubles()) {
+            //Add delay for AI turn
+            if (player.getIsAI()) {
+                Timer AIDelay = new Timer(2000, (e) -> {this.handleRolledDoubles(player);});
+                AIDelay.setRepeats(false);
+                AIDelay.start();
+            }
+            else {
+                this.handleRolledDoubles(player);
+            }
+        }
+        else {
+            this.sidePanel.enableButton("Pass", true);
+        }
     }
 
     /**
@@ -207,14 +221,28 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
             this.sidePanel.clickButton("Roll");
             this.sidePanel.enableButton("Pass", false); //disable button so cannot be clicked by user
             Timer passTimer = new Timer(3000, (e2) -> {
-                this.sidePanel.enableButton("Pass", true);
-                this.sidePanel.clickButton("Pass");
+                if (!(player.getRolledDoubles())) {
+                    this.sidePanel.enableButton("Pass", true);
+                    this.sidePanel.clickButton("Pass");
+                }
+                else handleAITurn(player);
             });
             passTimer.setRepeats(false);
             passTimer.start();
         });
         rollTimer.setRepeats(false);
         rollTimer.start();
+    }
+
+    /**
+     * Handles when a player rolls doubles on their turn.
+     * @param player the player who rolled doubles.
+     */
+    private void handleRolledDoubles(Player player) {
+        this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " rolled doubles and gets another turn!");
+        if (!(player.getIsAI())) {
+            this.sidePanel.enableButton("Roll", true);
+        }
     }
 
     /**
