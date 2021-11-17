@@ -83,7 +83,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         this.boardPanel.updatePlayerLabelPosition(player);
         this.boardPanel.updateDice(roll[0], roll[1]);
         String gameLogString = "Player " + player.getIdentifier() + " has rolled a " + rollSum + ". They are now on " + propertyLandedOn + ".";
-        this.gameLogPanel.updateGameLog(gameLogString);
+        //this.gameLogPanel.updateGameLog(gameLogString);
         if (player.isPassingGo()) {
             gameLogString += " Player " + player.getIdentifier() + " has passed GO to collect $200. ";
         }
