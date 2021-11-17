@@ -19,10 +19,12 @@ public class PropertyTax extends Property {
     /**
      * Handles what happens when you land on the property
      * @param landedPlayer the Player object that landed on the property
+     * @return A string describing what happened when the player landed on the property
      */
     @Override
-    public void landed(Player landedPlayer) {
+    public String landed(Player landedPlayer) {
         int cost = landedPlayer.payMoney(TAX_PRICE);
-        JOptionPane.showMessageDialog(null, "You must pay $" + cost + " in tax!");
+        if (!landedPlayer.getIsAI()) JOptionPane.showMessageDialog(null, "You must pay $" + cost + " in tax!");
+        return "Player " + landedPlayer.getIdentifier() + " payed $" + cost + " in tax!";
     }
 }

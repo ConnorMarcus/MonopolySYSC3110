@@ -12,6 +12,8 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
     private SidePanel sidePanel;
     private GameLogPanel gameLogPanel;
     private MonopolyModel model;
+    public static final String MULTIPLAYER_STRING = "Multiplayer";
+    public static final String AI_STRING = "AI";
 
     /**
      * Constructor for MonopolyView class.
@@ -19,14 +21,14 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
      */
     public MonopolyView(String title) {
         super(title);
-        String[] options = {"Multiplayer", "AI"};
+        String[] options = {MULTIPLAYER_STRING, AI_STRING};
         int choice = JOptionPane.showOptionDialog(null, "Select type of opponents:",
                 "Game type",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
         if (choice == -1) {
             System.exit(0);
         }
-        int numberOfPlayers = Integer.parseInt(this.gamePrompt());
+        int numberOfPlayers = this.gamePrompt(options[choice]);
         this.model = new MonopolyModel(options[choice], numberOfPlayers);
         this.model.addMonopolyObserver(this);
         this.boardPanel = new BoardPanel(this.model.getBoard(), this.model.getPlayerList());
@@ -43,15 +45,30 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         this.setVisible(true);
     }
 
-    private String gamePrompt() {
-        String[] options = {"4", "3", "2"};
-        int choice = JOptionPane.showOptionDialog(null, "How many players would like to play:",
+    /**
+     * Option Dialog that Appears at th beginning of the game
+     * @param gameType The type of game that is being player
+     * @return The integer corresponding to the user's choice
+     */
+    private int gamePrompt(String gameType) {
+        String[] options;
+        String message;
+        if (gameType.equals(MULTIPLAYER_STRING)) {
+            options = new String[]{"4", "3", "2"};
+            message = "How many players would like to play:";
+        }
+        else {
+            options = new String[]{"3", "2", "1"};
+            message = "How many AI players would you like to play against:";
+        }
+        int choice = JOptionPane.showOptionDialog(null, message,
                 "Choose Players",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[2]);
         if (choice == -1) {
             System.exit(0);
         }
-        return options[choice];
+        if (gameType.equals(AI_STRING)) return Integer.parseInt(options[choice])+1;
+        return Integer.parseInt(options[choice]);
     }
 
     /**
@@ -65,15 +82,15 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         int rollSum = IntStream.of(roll).sum();
         this.boardPanel.updatePlayerLabelPosition(player);
         this.boardPanel.updateDice(roll[0], roll[1]);
-        this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has rolled a " + rollSum + ". They are now on " + propertyLandedOn + ".");
+        String gameLogString = "Player " + player.getIdentifier() + " has rolled a " + rollSum + ". They are now on " + propertyLandedOn + ".";
+        this.gameLogPanel.updateGameLog(gameLogString);
         this.sidePanel.enableButton("Pass", true);
         if (player.isPassingGo()) {
-            JOptionPane.showMessageDialog(null, "Player " + player.getIdentifier() + " has received $200 for passing GO!");
-            player.addMoney(200);
-            handlePlayerUpdate(model.getPlayerList());
+            gameLogString += " Player " + player.getIdentifier() + " has passed GO to collect $200. ";
         }
         if (propertyLandedOn instanceof PropertyUtility) ((PropertyUtility) propertyLandedOn).setDiceRoll(rollSum);
-        propertyLandedOn.landed(player);
+        gameLogString += " " + propertyLandedOn.landed(player);
+        this.gameLogPanel.updateGameLog(gameLogString);
         if (propertyLandedOn.getName().equals("Go To Jail")) this.boardPanel.updatePlayerLabelPosition(player);
     }
 
@@ -124,36 +141,47 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
      * @param player The player who is in jail
      */
     @Override
-    public void handleJailedPlayer(Player player) {
-        player.incrementTimeInJail();
-        if (player.getTimeInJail() == 3) {
-            JOptionPane.showMessageDialog(null, "Player " + player.getIdentifier() + " has spent 3 turns in jail! They must pay the $50 fine to get out!");
-            player.payMoney(50);
-            player.setJailed(false);
-            player.resetTimeInJail();
-            if (player.getMoney() < 0) {
-                model.getPlayerList().remove(player);
-                handleBankrupt(player);
-                if (model.getPlayerList().size() == 1) handleWinner(model.getPlayerList().get(0));
-            }
-            handlePlayerUpdate(model.getPlayerList());
-        }
-        else {
-            if (player.getMoney() >= 50) {
-                String[] options = {"no", "yes"};
-                int choice = JOptionPane.showOptionDialog(null, "Would you like to pay $50 to get out of jail this turn?", "Player " + player.getIdentifier(),
-                        JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
-                if (choice == 1) {
-                    player.payMoney(50);
-                    player.setJailed(false);
-                    player.resetTimeInJail();
-                    handlePlayerUpdate(model.getPlayerList());
+    public void handleJailChoice(Player player) {
+        String jailString = "";
+        if (player.getMoney() >= 50) {
+            String[] options = {"no", "yes"};
+            int choice = -1;
+            if (!player.getIsAI()) {
+                choice=JOptionPane.showOptionDialog(null, "Would you like to pay $50 to get out of jail this turn?", "Player " + player.getIdentifier(),
+                            JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
                 }
+            else if (player.getTimeInJail()==2) choice=1;
+
+            if (choice == 1) {
+                player.setJailed(false);
+                jailString = "Player " + player.getIdentifier() + " has spent $50 to get out of jail!";
             }
             else {
-                JOptionPane.showMessageDialog(null, "Player " + player.getIdentifier() + " cannot currently afford to pay the fine of $50, they must roll doubles!");
+                jailString = "Player " + player.getIdentifier() + " has not paid the fine to get out of jail!";
             }
+            }
+        else {
+            jailString = "Player " + player.getIdentifier() + " cannot currently afford to pay the fine of $50, they must roll doubles!";
         }
+        if (player.getIsAI()) {
+            //Add slight delay if AI player so previous log is not erased immediately
+            String finalJailString = jailString;
+            Timer jailLogTimer = new Timer(1000, (e) -> this.gameLogPanel.updateGameLog(finalJailString));
+            jailLogTimer.setRepeats(false);
+            jailLogTimer.start();
+        }
+        else {
+            this.gameLogPanel.updateGameLog(jailString);
+        }
+    }
+
+    /**
+     * Handles what happens when a player spends three turns in jail.
+     * @param player The player who is in jail
+     */
+    @Override
+    public void handleThreeTurnsInJail(Player player) {
+        this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has spent three turns in jail and paid the $50 fine!");
     }
 
     /**
@@ -178,7 +206,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
             this.sidePanel.enableButton("Roll", true);
             this.sidePanel.clickButton("Roll");
             this.sidePanel.enableButton("Pass", false); //disable button so cannot be clicked by user
-            Timer passTimer = new Timer(5000, (e2) -> {
+            Timer passTimer = new Timer(3000, (e2) -> {
                 this.sidePanel.enableButton("Pass", true);
                 this.sidePanel.clickButton("Pass");
             });

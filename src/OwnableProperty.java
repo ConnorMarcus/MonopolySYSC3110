@@ -47,9 +47,10 @@ public abstract class OwnableProperty extends Property {
      * Handles player that landed on the property (Player can buy if available or must pay money to owner).
      *
      * @param landedPlayer the Player object that landed on the property
+     * @return A string describing what happened when the player landed on the property
      */
     @Override
-    public void landed(Player landedPlayer) {
+    public String landed(Player landedPlayer) {
         if(owner != null && landedPlayer != owner) {
             int cost = calculateCost();
             cost = landedPlayer.payMoney(cost);
@@ -57,12 +58,14 @@ public abstract class OwnableProperty extends Property {
             if (!landedPlayer.getIsAI()) {
                 JOptionPane.showMessageDialog( null,"Player " + owner.getIdentifier() + " owns this property you must pay them $" + cost);
             }
+            return "Player " + landedPlayer.getIdentifier() + " payed $" + cost + " to Player " + owner.getIdentifier() + ".";
         }
-        else if (owner != null && !(landedPlayer.getIsAI())) { //landed player owns the property
-            JOptionPane.showMessageDialog(null, "You already own this property!");
+        else if (owner != null) { //landed player owns the property
+            if (!landedPlayer.getIsAI()) JOptionPane.showMessageDialog(null, "You already own this property!");
+            return "";
         }
         else {
-            buyHandler(landedPlayer);
+            return buyHandler(landedPlayer);
         }
     }
 
@@ -71,8 +74,10 @@ public abstract class OwnableProperty extends Property {
      * Offers the Player to buy the property.
      *
      * @param landedPlayer Player object that landed on the property.
+     * @return a string indicating whether the player bought the property or not.
      */
-    private void buyHandler(Player landedPlayer) {
+    private String buyHandler(Player landedPlayer) {
+        String boughtString = "";
         if (landedPlayer.getMoney() >= this.PRICE) {
             String[] options = {"no", "yes"};
             if (!landedPlayer.getIsAI()) {
@@ -83,11 +88,13 @@ public abstract class OwnableProperty extends Property {
                 if (choice == 1) {
                     landedPlayer.purchaseProperty(this);
                     owner = landedPlayer;
+                    boughtString = "Player " + landedPlayer.getIdentifier() + " has bought " + this.getName() + ".";
                 }
             }
             else {
                 landedPlayer.purchaseProperty(this);
                 owner = landedPlayer;
+                boughtString = "Player " + landedPlayer.getIdentifier() + " has bought " + this.getName() + ".";
             }
         }
         else {
@@ -95,5 +102,6 @@ public abstract class OwnableProperty extends Property {
                 JOptionPane.showMessageDialog(null, "You do not have enough money to buy this property!");
             }
         }
+        return boughtString;
     }
 }

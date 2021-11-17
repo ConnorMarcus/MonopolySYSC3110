@@ -25,7 +25,7 @@ public class MonopolyModel {
         this.playerList = new ArrayList<>();
         this.playerList.add(new Player(String.valueOf(1), String.format("images/player%s.png", 1), false));
         for (int i=1; i<numPlayers; i++) {
-            this.playerList.add(new Player(String.valueOf(i+1), String.format("images/player%s.png", i+1), type.equals("AI")));
+            this.playerList.add(new Player(String.valueOf(i+1), String.format("images/player%s.png", i+1), type.equals(MonopolyView.AI_STRING)));
         }
     }
 
@@ -75,6 +75,10 @@ public class MonopolyModel {
             int rollSum = IntStream.of(roll).sum();
             if ((turnPlayer.getPosition() + rollSum) > (this.board.getNumProperties()-1)) {
                 turnPlayer.setPassingGo(true);
+                turnPlayer.addMoney(200);
+                for (MonopolyObserver o : this.observers) {
+                    o.handlePlayerUpdate(this.playerList);
+                }
             }
             int newPosition = (turnPlayer.getPosition() + rollSum) % this.board.getNumProperties();
             turnPlayer.setPosition(newPosition);
@@ -99,9 +103,31 @@ public class MonopolyModel {
         }
         Player nextPlayer = this.playerList.get(this.turn);
         if (nextPlayer.isJailed()) {
-            for (MonopolyObserver o : this.observers) {
-                o.handleJailedPlayer(nextPlayer);
+            nextPlayer.incrementTimeInJail();
+            if (nextPlayer.getTimeInJail() == 3) {
+                nextPlayer.payMoney(50);
+                nextPlayer.setJailed(false);
+                nextPlayer.resetTimeInJail();
+                for (MonopolyObserver o : this.observers) {
+                    o.handleThreeTurnsInJail(nextPlayer);
+                    o.handlePlayerUpdate(this.playerList);
+                }
+                if (nextPlayer.getMoney() < 0) {
+                    nextPlayer.setBankrupt(true);
+                    bankrupt(nextPlayer);
+                }
             }
+            else {
+                for (MonopolyObserver o : this.observers) {
+                    o.handleJailChoice(nextPlayer);
+                    o.handlePlayerUpdate(this.playerList);
+                }
+                if (!nextPlayer.isJailed())  {
+                    nextPlayer.payMoney(50);
+                    nextPlayer.resetTimeInJail();
+                }
+            }
+//
         }
         if (nextPlayer.getIsAI()) {
             for (MonopolyObserver o : this.observers) {
@@ -115,7 +141,7 @@ public class MonopolyModel {
      *
      * @param p Player that has gone Bankrupt
      */
-    private void bankrupt(Player p) {
+    public void bankrupt(Player p) {
         for (MonopolyObserver o : this.observers) {
             o.handleBankrupt(p);
         }

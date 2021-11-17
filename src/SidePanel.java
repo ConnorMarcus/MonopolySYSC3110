@@ -45,7 +45,9 @@ public class SidePanel extends JPanel {
             info.setPreferredSize(new Dimension(PANEL_WIDTH - 10, (INFO_AREA_HEIGHT / numberOfPlayer)));
 
             Border line = BorderFactory.createLineBorder(Color.black);
-            TitledBorder title = BorderFactory.createTitledBorder(line,"Player " + p.getIdentifier());
+            String titleString = "Player " + p.getIdentifier();
+            if (p.getIsAI()) titleString += " (AI)";
+            TitledBorder title = BorderFactory.createTitledBorder(line, titleString);
             title.setTitleFont(new Font("Aharoni", Font.PLAIN, 20));
             title.setTitleJustification(TitledBorder.CENTER);
 

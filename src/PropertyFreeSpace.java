@@ -21,9 +21,11 @@ public class PropertyFreeSpace extends Property {
      * Outputs free space message.
      *
      * @param landedPlayer the Player object that landed on the property.
+     * @return A string describing what happened when the player landed on the property
      */
     @Override
-    public void landed(Player landedPlayer) {
-        JOptionPane.showMessageDialog(null, "This is a free space!");
+    public String landed(Player landedPlayer) {
+        if (!landedPlayer.getIsAI()) JOptionPane.showMessageDialog(null, "This is a free space!");
+        return "";
     }
 }

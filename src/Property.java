@@ -10,8 +10,9 @@ public abstract class Property {
      * Abstract method to handler player landing on property.
      *
      * @param landedPlayer the Player object that landed on the property
+     * @return A string describing what happened when the player landed on the property
      */
-    public abstract void landed(Player landedPlayer);
+    public abstract String landed(Player landedPlayer);
 
 
     /**

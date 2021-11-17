@@ -9,7 +9,8 @@ public interface MonopolyObserver {
     void handleBankrupt(Player player);
     void handleWinner(Player player);
     void handlePlayerUpdate(List<Player> playerList);
-    void handleJailedPlayer(Player player);
+    void handleJailChoice(Player player);
+    void handleThreeTurnsInJail(Player player);
     void handleStuckInJail(Player player, int[] roll);
     void handleAITurn(Player player);
 }

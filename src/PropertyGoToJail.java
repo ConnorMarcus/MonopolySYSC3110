@@ -16,11 +16,13 @@ public class PropertyGoToJail extends Property {
     /**
      * Handles what happens when you land on the property
      * @param landedPlayer the Player object that landed on the property
+     * @return A string describing what happened when the player landed on the property
      */
     @Override
-    public void landed(Player landedPlayer) {
+    public String landed(Player landedPlayer) {
         landedPlayer.setPosition(10);
         landedPlayer.setJailed(true);
-        JOptionPane.showMessageDialog(null, "You are now in Jail!");
+        if (!landedPlayer.getIsAI()) JOptionPane.showMessageDialog(null, "You are now in Jail!");
+        return "Player " + landedPlayer.getIdentifier() + " is now in Jail!";
     }
 }
