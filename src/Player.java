@@ -16,8 +16,7 @@ public class Player {
     private int timeInJail;
     private int numRailroads;
     private int numUtilities;
-    private boolean rolledDoubles;
-    private int consecutiveDoubles;
+    private int numConsecutiveDoubles;
     private final boolean isAI;
     private final String PLAYER_IMAGE_FILE;
 
@@ -38,8 +37,7 @@ public class Player {
         this.isBankrupt = false;
         this.isJailed = false;
         this.passedGo = false;
-        this.rolledDoubles = false;
-        this.consecutiveDoubles = 0;
+        this.numConsecutiveDoubles = 0;
         this.isAI = isAI;
         this.PLAYER_IMAGE_FILE = playerImageFile;
     }
@@ -306,28 +304,24 @@ public class Player {
     }
 
     /**
-     * Gets whether the player has rolled doubles or not.
-     * @return
+     * @return the number of consecutive doubles that the player rolled
      */
-    public boolean getRolledDoubles() {
-        return this.rolledDoubles;
+    public int getNumConsecutiveDoubles() {
+        return this.numConsecutiveDoubles;
     }
 
     /**
-     * Sets if player rolled double and increment consecutive counter.
-     * @param isDouble true if player rolled double.
+     * Increments the player's double counter
      */
-    public void setRolledDoubles(boolean isDouble) {
-        this.consecutiveDoubles = isDouble ? this.consecutiveDoubles + 1 : 0;
-        this.rolledDoubles = isDouble;
+    public void incrementNumConsecutiveDoubles() {
+        this.numConsecutiveDoubles++;
     }
 
     /**
-     * Gets number of consecutive doubles rolled by player (if three player goes to jail).
-     * @return the consecutive rolled doubles.
+     * Resets the player's double counter to zero
      */
-    public int getConsecutiveDoubles() {
-        return this.consecutiveDoubles;
+    public void resetNumConsecutiveDoubles() {
+        this.numConsecutiveDoubles = 0;
     }
 
     /**

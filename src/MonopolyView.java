@@ -12,8 +12,8 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
     private SidePanel sidePanel;
     private GameLogPanel gameLogPanel;
     private MonopolyModel model;
-    public static final String MULTIPLAYER_STRING = "Multiplayer";
-    public static final String AI_STRING = "AI";
+    static final String MULTIPLAYER_STRING = "Multiplayer";
+    static final String AI_STRING = "AI";
 
     /**
      * Constructor for MonopolyView class.
@@ -82,30 +82,17 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         int rollSum = IntStream.of(roll).sum();
         this.boardPanel.updatePlayerLabelPosition(player);
         this.boardPanel.updateDice(roll[0], roll[1]);
-        String gameLogString = "Player " + player.getIdentifier() + " has rolled a " + rollSum + ". They are now on " + propertyLandedOn + ".";
-        //this.gameLogPanel.updateGameLog(gameLogString);
+        String gameLogString = "Player " + player.getIdentifier() + " has rolled a " + rollSum + ". They are now on " + propertyLandedOn.getName() + ".";
         if (player.isPassingGo()) {
             gameLogString += " Player " + player.getIdentifier() + " has passed GO to collect $200. ";
         }
+
         if (propertyLandedOn instanceof PropertyUtility) ((PropertyUtility) propertyLandedOn).setDiceRoll(rollSum);
         gameLogString += " " + propertyLandedOn.landed(player);
         this.gameLogPanel.updateGameLog(gameLogString);
         if (propertyLandedOn.getName().equals("Go To Jail")) this.boardPanel.updatePlayerLabelPosition(player);
 
-        if (player.getRolledDoubles()) {
-            //Add delay for AI turn
-            if (player.getIsAI()) {
-                Timer AIDelay = new Timer(2000, (e) -> {this.handleRolledDoubles(player);});
-                AIDelay.setRepeats(false);
-                AIDelay.start();
-            }
-            else {
-                this.handleRolledDoubles(player);
-            }
-        }
-        else {
-            this.sidePanel.enableButton("Pass", true);
-        }
+        this.sidePanel.enableButton("Pass", true);
     }
 
     /**
@@ -173,20 +160,12 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
             else {
                 jailString = "Player " + player.getIdentifier() + " has not paid the fine to get out of jail!";
             }
-            }
+        }
         else {
             jailString = "Player " + player.getIdentifier() + " cannot currently afford to pay the fine of $50, they must roll doubles!";
         }
-        if (player.getIsAI()) {
-            //Add slight delay if AI player so previous log is not erased immediately
-            String finalJailString = jailString;
-            Timer jailLogTimer = new Timer(1000, (e) -> this.gameLogPanel.updateGameLog(finalJailString));
-            jailLogTimer.setRepeats(false);
-            jailLogTimer.start();
-        }
-        else {
-            this.gameLogPanel.updateGameLog(jailString);
-        }
+
+        this.gameLogPanel.updateGameLog(jailString);
     }
 
     /**
@@ -215,34 +194,50 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
      */
     @Override
     public void handleAITurn(Player player) {
-        this.sidePanel.enableButton("Roll", false); //disable button so cannot be clicked by user
-        Timer rollTimer = new Timer(2000, (e) -> {
-            this.sidePanel.enableButton("Roll", true);
-            this.sidePanel.clickButton("Roll");
-            this.sidePanel.enableButton("Pass", false); //disable button so cannot be clicked by user
-            Timer passTimer = new Timer(3000, (e2) -> {
-                if (!(player.getRolledDoubles())) {
-                    this.sidePanel.enableButton("Pass", true);
-                    this.sidePanel.clickButton("Pass");
-                }
-                else handleAITurn(player);
+        if (!this.model.getFoundWinner()) {
+            this.sidePanel.enableButton("Roll", false); //disable button so cannot be clicked by user
+            Timer rollTimer = new Timer(2000, (e) -> {
+                this.sidePanel.enableButton("Roll", true);
+                this.sidePanel.clickButton("Roll");
+                this.sidePanel.enableButton("Pass", false); //disable button so cannot be clicked by user
+                Timer passTimer = new Timer(3000, (e2) -> {
+                    if ((!(player.getNumConsecutiveDoubles() > 0) || (player.isJailed())) && !player.getIsBankrupt()) {
+                        this.sidePanel.enableButton("Pass", true);
+                        this.sidePanel.clickButton("Pass");
+                    } else if (!player.getIsBankrupt()) handleAITurn(player);
+                });
+                passTimer.setRepeats(false);
+                passTimer.start();
             });
-            passTimer.setRepeats(false);
-            passTimer.start();
-        });
-        rollTimer.setRepeats(false);
-        rollTimer.start();
+            rollTimer.setRepeats(false);
+            rollTimer.start();
+        }
     }
 
     /**
      * Handles when a player rolls doubles on their turn.
      * @param player the player who rolled doubles.
      */
-    private void handleRolledDoubles(Player player) {
-        this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " rolled doubles and gets another turn!");
-        if (!(player.getIsAI())) {
-            this.sidePanel.enableButton("Roll", true);
-        }
+    @Override
+    public void handleRolledDoubles(Player player) {
+            this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " rolled doubles and gets another turn!");
+            this.sidePanel.enableButton("Pass", false);
+            if (!(player.getIsAI())) {
+                this.sidePanel.enableButton("Roll", true);
+            }
+    }
+
+    /**
+     * Handles what happens when a player rolls three doubles in a row at the start of their turn
+     * @param player The player who rolled three doubles
+     * @param roll The player's roll
+     */
+    @Override
+    public void handleThreeDoubles(Player player, int[] roll) {
+        this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " rolled doubles three times in a row and is going to jail!");
+        this.boardPanel.updateDice(roll[0], roll[1]);
+        this.boardPanel.updatePlayerLabelPosition(player);
+        this.sidePanel.enableButton("Pass", true);
     }
 
     /**

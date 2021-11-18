@@ -19,18 +19,15 @@ public class GameLogPanel extends JPanel {
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         this.setLayout(new GridBagLayout());
         this.setBackground(new Color(211, 236, 211));
-        gameLog = new JTextArea(4, 92);
+        gameLog = new JTextArea(4, 80);
         String welcomeText = "Welcome to Monopoly!  Please roll to start the game";
         listOfStrings = new ArrayList<>();
         listOfStrings.add(welcomeText);
         gameLog.setText(welcomeText);
-        JScrollPane sp = new JScrollPane(gameLog);
-        sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        gameLog.setPreferredSize(new Dimension(1025, 60));
         gameLog.setOpaque(true);
         gameLog.setBackground(Color.WHITE);
         gameLog.setEditable(false);
+        JScrollPane sp = new JScrollPane(gameLog);
         this.add(sp);
 
     }
@@ -41,7 +38,7 @@ public class GameLogPanel extends JPanel {
      * @param text the string that will be displayed
      */
     public void updateGameLog(String text) {
-        if (this.listOfStrings.size() == 5) {
+        if (this.listOfStrings.size() == 10) {
             this.listOfStrings.remove(0);
         }
         this.listOfStrings.add(text);

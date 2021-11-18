@@ -12,6 +12,7 @@ public class MonopolyModel {
     private Dice dice;
     private int turn;
     private List<MonopolyObserver> observers;
+    private boolean foundWinner;
 
     /**
      * Constructor of the class; initializes the class attributes.
@@ -21,6 +22,7 @@ public class MonopolyModel {
         this.board = new MonopolyBoard();
         this.dice = new Dice(2);
         this.turn = 0;
+        this.foundWinner = false;
         this.observers = new ArrayList<>();
         this.playerList = new ArrayList<>();
         this.playerList.add(new Player(String.valueOf(1), String.format("images/player%s.png", 1), false));
@@ -65,13 +67,29 @@ public class MonopolyModel {
      */
     public void takeTurn() {
         Player turnPlayer = this.playerList.get(this.turn);
+        boolean rollAgain = !turnPlayer.isJailed(); //only roll again with doubles if not previously in jail
+        jailCheck(turnPlayer);
         int[] roll = dice.rollDice();
-
         boolean isDouble = roll[0] == roll[1];
-        boolean value = isDouble ? true : false;
-        turnPlayer.setRolledDoubles(value);
 
-        if (turnPlayer.isJailed() && !(isDouble)) {
+        if (isDouble) {
+            turnPlayer.incrementNumConsecutiveDoubles();
+            turnPlayer.setJailed(false);
+            turnPlayer.resetTimeInJail();
+        }
+        else turnPlayer.resetNumConsecutiveDoubles();
+
+        if (turnPlayer.getNumConsecutiveDoubles() == 3) {
+            turnPlayer.setJailed(true);
+            turnPlayer.setPosition(10);
+            turnPlayer.resetNumConsecutiveDoubles();
+            for (MonopolyObserver o : this.observers) {
+                o.handleThreeDoubles(turnPlayer, roll);
+            }
+
+        }
+
+        else if (turnPlayer.isJailed()) {
             for (MonopolyObserver o : this.observers) {
                 o.handleStuckInJail(turnPlayer, roll);
             }
@@ -94,6 +112,46 @@ public class MonopolyModel {
             }
             turnPlayer.setPassingGo(false);
             if (turnPlayer.getIsBankrupt()) bankrupt(turnPlayer); // Checks if player is bankrupt after paying rent
+            else if (isDouble && !turnPlayer.isJailed() && rollAgain) {
+                for (MonopolyObserver o : this.observers) {
+                    o.handleRolledDoubles(turnPlayer);
+                    //if (turnPlayer.getIsAI()) o.handleAITurn(turnPlayer);
+                }
+            }
+            else if (isDouble) turnPlayer.resetNumConsecutiveDoubles(); //reset counter while in jail
+        }
+    }
+
+    /**
+     * Helper method to check if player is still in jail at the start of their turn
+     * @param turnPlayer The player whose turn it is
+     */
+    private void jailCheck(Player turnPlayer) {
+        if (turnPlayer.isJailed()) {
+            turnPlayer.incrementTimeInJail();
+            if (turnPlayer.getTimeInJail() == 3) {
+                turnPlayer.payMoney(50);
+                turnPlayer.setJailed(false);
+                turnPlayer.resetTimeInJail();
+                for (MonopolyObserver o : this.observers) {
+                    o.handleThreeTurnsInJail(turnPlayer);
+                    o.handlePlayerUpdate(this.playerList);
+                }
+                if (turnPlayer.getMoney() < 0) {
+                    turnPlayer.setBankrupt(true);
+                    bankrupt(turnPlayer);
+                }
+            }
+            else {
+                for (MonopolyObserver o : this.observers) {
+                    o.handleJailChoice(turnPlayer);
+                    o.handlePlayerUpdate(this.playerList);
+                }
+                if (!turnPlayer.isJailed())  {
+                    turnPlayer.payMoney(50);
+                    turnPlayer.resetTimeInJail();
+                }
+            }
         }
     }
 
@@ -107,32 +165,6 @@ public class MonopolyModel {
             o.handlePassTurn(turnPlayer);
         }
         Player nextPlayer = this.playerList.get(this.turn);
-        if (nextPlayer.isJailed()) {
-            nextPlayer.incrementTimeInJail();
-            if (nextPlayer.getTimeInJail() == 3) {
-                nextPlayer.payMoney(50);
-                nextPlayer.setJailed(false);
-                nextPlayer.resetTimeInJail();
-                for (MonopolyObserver o : this.observers) {
-                    o.handleThreeTurnsInJail(nextPlayer);
-                    o.handlePlayerUpdate(this.playerList);
-                }
-                if (nextPlayer.getMoney() < 0) {
-                    nextPlayer.setBankrupt(true);
-                    bankrupt(nextPlayer);
-                }
-            }
-            else {
-                for (MonopolyObserver o : this.observers) {
-                    o.handleJailChoice(nextPlayer);
-                    o.handlePlayerUpdate(this.playerList);
-                }
-                if (!nextPlayer.isJailed())  {
-                    nextPlayer.payMoney(50);
-                    nextPlayer.resetTimeInJail();
-                }
-            }
-        }
         if (nextPlayer.getIsAI()) {
             for (MonopolyObserver o : this.observers) {
                 o.handleAITurn(nextPlayer);
@@ -152,13 +184,28 @@ public class MonopolyModel {
             property.removeOwner();
         }
         this.playerList.remove(p);
+        if (this.turn==this.playerList.size()) turn--; //if last player in list went bankrupt
 
         if (this.playerList.size() == 1) {
             Player winner = this.playerList.get(0);
+            this.foundWinner = true;
             for (MonopolyObserver o : this.observers) {
                 o.handleWinner(winner);
             }
         }
+        else if (this.playerList.get(turn).getIsAI()) {
+            for (MonopolyObserver o : this.observers) {
+                o.handleAITurn(this.playerList.get(turn));
+            }
+        }
+    }
+
+    /**
+     * Gets whether a winner has been found in the game
+     * @return true if a winner has been found, and false otherwise
+     */
+    public boolean getFoundWinner() {
+        return this.foundWinner;
     }
 
     /**
