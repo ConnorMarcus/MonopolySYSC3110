@@ -42,22 +42,6 @@ public class BoardPanel extends JPanel {
      * Initializes JPanel game board.
      */
     private void initializeSpaces() {
-//        JLabel test = new JLabel();
-//        test.setIcon(new ImageIcon("images/house.png"));
-//        test.setBounds(570, 620, 15, 16);
-//        this.add(test);
-//        JLabel test2 = new JLabel();
-//        test2.setIcon(new ImageIcon("images/house.png"));
-//        test2.setBounds(585, 620, 15, 16);
-//        this.add(test2);
-//        JLabel test3 = new JLabel();
-//        test3.setIcon(new ImageIcon("images/house.png"));
-//        test3.setBounds(600, 620, 15, 16);
-//        this.add(test3);
-//        JLabel test4 = new JLabel();
-//        test4.setIcon(new ImageIcon("images/house.png"));
-//        test4.setBounds(615, 620, 15, 16);
-//        this.add(test4);
 
         for (int i=0; i<spaces.length; i++) {
             spaces[i] = new JLabel();
