@@ -4,6 +4,7 @@
     <root id="archive" name="SYSC3110Project.jar">
       <element id="module-output" name="SYSC3110Project" />
       <element id="module-source" name="SYSC3110Project" />
+      <element id="library" level="module" name="JUnit4" module-name="SYSC3110Project" />
     </root>
   </artifact>
 </component>
