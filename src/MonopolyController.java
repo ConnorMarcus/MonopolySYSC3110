@@ -34,7 +34,7 @@ public class MonopolyController implements ActionListener {
                 this.model.passTurn();
             }
             else if (((JButton)e.getSource()).getText().equals("Buy")) {
-                ArrayList<Property> properties = new ArrayList<>();
+                ArrayList<PropertyStreet> properties = new ArrayList<>();
                 Player turnPlayer = this.model.getPlayerList().get(model.getTurn());
                 turnPlayer.getPropertyGroups(model.getBoard()).forEach((colour) -> {
                     model.getBoard().getPropertyGroup(colour).forEach((property) -> {

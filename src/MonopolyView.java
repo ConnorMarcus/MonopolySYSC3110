@@ -105,6 +105,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
     public void handlePassTurn(Player player) {
         this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has finished their turn.");
         this.sidePanel.enableButton("Roll", true);
+        this.sidePanel.enableButton("Buy", true);
     }
 
     /**
@@ -206,7 +207,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
                 String colourGroup = propertyGroups[r.nextInt(propertyGroups.length)];
                 int colourGroupSize = this.model.getBoard().getPropertyGroup(colourGroup).size();
                 PropertyStreet houseProperty = this.model.getBoard().getPropertyGroup(colourGroup).get(r.nextInt(colourGroupSize));
-                this.model.buyHouse(houseProperty);
+                if (houseProperty.getNumHouses() < 5) this.model.buyHouse(houseProperty);
             }
             Timer rollTimer = new Timer(2000, (e) -> {
                 this.sidePanel.enableButton("Roll", true);
