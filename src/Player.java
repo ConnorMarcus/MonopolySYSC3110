@@ -194,7 +194,7 @@ public class Player {
      * @param board the Monopoly board that is being used
      * @return a set of all the player's property groups
      */
-    public Set<String> getPropertyGroups(MonopolyBoard board) { //Function will be used in Milestone 3
+    public Set<String> getPropertyGroups(MonopolyBoard board) {
         Set<String> propertyGroups = new HashSet<>();
         for (OwnableProperty p : this.properties) {
             if (p instanceof PropertyStreet && !propertyGroups.contains(((PropertyStreet) p).getColour())) {

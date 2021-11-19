@@ -182,6 +182,7 @@ public class MonopolyModel {
         }
         for (OwnableProperty property : p.getProperties()) {
             property.removeOwner();
+            if (property instanceof PropertyStreet) ((PropertyStreet) property).setNumHouses(0);
         }
         this.playerList.remove(p);
         if (this.turn==this.playerList.size()) turn--; //if last player in list went bankrupt
@@ -214,5 +215,24 @@ public class MonopolyModel {
      */
     public List<Player> getPlayerList() {
         return this.playerList;
+    }
+
+    /**
+     * Buys a house/hotel on a street property
+     * @param property The property to buy a house/hotel on
+     */
+    public void buyHouse(PropertyStreet property) {
+        Player turnPlayer = this.playerList.get(turn);
+        boolean buySuccessful = false;
+        if (turnPlayer.getMoney() >= property.getHouseCost()) {
+            turnPlayer.payMoney(property.getHouseCost());
+            if (property.getNumHouses() < 5) property.setNumHouses(property.getNumHouses() + 1);
+            else throw new IllegalArgumentException("Cannot buy a house/hotel on a property that already has a hotel!");
+            buySuccessful = true;
+        }
+        for (MonopolyObserver o : this.observers) {
+            o.handleHouseBought(property, turnPlayer, buySuccessful);
+            o.handlePlayerUpdate(this.playerList);
+        }
     }
 }

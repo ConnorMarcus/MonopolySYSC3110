@@ -15,4 +15,5 @@ public interface MonopolyObserver {
     void handleRolledDoubles(Player player);
     void handleThreeDoubles(Player player, int[] roll);
     void handleAITurn(Player player);
+    void handleHouseBought(PropertyStreet property, Player turnPlayer, boolean buySuccessful);
 }

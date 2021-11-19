@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * Controller for the MVC
@@ -31,6 +32,22 @@ public class MonopolyController implements ActionListener {
             else if (((JButton)e.getSource()).getText().equals("Pass")) {
                 ((JButton)e.getSource()).setEnabled(false);
                 this.model.passTurn();
+            }
+            else if (((JButton)e.getSource()).getText().equals("Buy")) {
+                ArrayList<Property> properties = new ArrayList<>();
+                Player turnPlayer = this.model.getPlayerList().get(model.getTurn());
+                turnPlayer.getPropertyGroups(model.getBoard()).forEach((colour) -> {
+                    model.getBoard().getPropertyGroup(colour).forEach((property) -> {
+                        if (property.getNumHouses() < 5) {
+                            properties.add(property);
+                        }
+                    });
+                });
+                JList list = new JList(properties.toArray());
+                int choice = JOptionPane.showOptionDialog(null, new JScrollPane(list), "Buy", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, new String[]{"Buy", "Cancel"}, 0);
+                if (choice == 0 && list.getSelectedValue() != null) {
+                    model.buyHouse((PropertyStreet) list.getSelectedValue());
+                }
             }
         }
 

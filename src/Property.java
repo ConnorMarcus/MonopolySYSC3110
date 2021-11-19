@@ -45,4 +45,9 @@ public abstract class Property {
         return String.format("%s", this.name);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Property && ((Property) o).name.equals(this.name));
+    }
+
 }

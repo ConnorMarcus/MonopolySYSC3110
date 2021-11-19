@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 /**
@@ -24,7 +26,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         String[] options = {MULTIPLAYER_STRING, AI_STRING};
         int choice = JOptionPane.showOptionDialog(null, "Select type of opponents:",
                 "Game type",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, 0);
         if (choice == -1) {
             System.exit(0);
         }
@@ -63,7 +65,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         }
         int choice = JOptionPane.showOptionDialog(null, message,
                 "Choose Players",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[2]);
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, 0);
         if (choice == -1) {
             System.exit(0);
         }
@@ -195,16 +197,27 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
     @Override
     public void handleAITurn(Player player) {
         if (!this.model.getFoundWinner()) {
-            this.sidePanel.enableButton("Roll", false); //disable button so cannot be clicked by user
+            this.sidePanel.enableButton("Buy", false); //disable button so cannot be clicked by user
+            this.sidePanel.enableButton("Roll", false);
+            Set<String> sets = player.getPropertyGroups(this.model.getBoard());
+            String[] propertyGroups = sets.toArray(new String[sets.size()]);
+            if (propertyGroups.length > 0 && player.getMoney() > 400) {
+                Random r = new Random();
+                String colourGroup = propertyGroups[r.nextInt(propertyGroups.length)];
+                int colourGroupSize = this.model.getBoard().getPropertyGroup(colourGroup).size();
+                PropertyStreet houseProperty = this.model.getBoard().getPropertyGroup(colourGroup).get(r.nextInt(colourGroupSize));
+                this.model.buyHouse(houseProperty);
+            }
             Timer rollTimer = new Timer(2000, (e) -> {
                 this.sidePanel.enableButton("Roll", true);
                 this.sidePanel.clickButton("Roll");
-                this.sidePanel.enableButton("Pass", false); //disable button so cannot be clicked by user
+                this.sidePanel.enableButton("Pass", false);
                 Timer passTimer = new Timer(3000, (e2) -> {
                     if ((!(player.getNumConsecutiveDoubles() > 0) || (player.isJailed())) && !player.getIsBankrupt()) {
                         this.sidePanel.enableButton("Pass", true);
                         this.sidePanel.clickButton("Pass");
-                    } else if (!player.getIsBankrupt()) handleAITurn(player);
+                    }
+                    else if (!player.getIsBankrupt()) handleAITurn(player); //AI rolled doubles
                 });
                 passTimer.setRepeats(false);
                 passTimer.start();
@@ -238,6 +251,22 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         this.boardPanel.updateDice(roll[0], roll[1]);
         this.boardPanel.updatePlayerLabelPosition(player);
         this.sidePanel.enableButton("Pass", true);
+    }
+
+    /**
+     * Handles what happens to the GUI when a house/hotel is bought on a property
+     * @param property The property where a house/hotel was bought on
+     * @param turnPlayer The player whose turn it is
+     * @param buySuccessful A boolean representing whether the player was able to successful buy the house/hotel
+     */
+    @Override
+    public void handleHouseBought(PropertyStreet property, Player turnPlayer, boolean buySuccessful) {
+        if (buySuccessful) {
+            this.boardPanel.addHouse(property);
+            String houseOrHotel = property.getNumHouses()==5 ? "hotel" : "house";
+            this.gameLogPanel.updateGameLog("Player " + turnPlayer.getIdentifier() + " has purchased a " + houseOrHotel + " on " + property.getName() + ".");
+        }
+        else if (!turnPlayer.getIsAI()) JOptionPane.showMessageDialog(null, "Player " + turnPlayer.getIdentifier() + " is unable to purchase this house/hotel!");
     }
 
     /**

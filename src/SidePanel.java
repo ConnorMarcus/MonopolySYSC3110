@@ -115,7 +115,8 @@ public class SidePanel extends JPanel {
         buy.setFont(buttonFont);
         buy.setFocusPainted(false);
         buy.setPreferredSize(buttonSize);
-        buy.setEnabled(false);
+        //buy.setEnabled(false);
+        buy.addActionListener(controller);
 
         this.add(roll);
         this.add(pass);

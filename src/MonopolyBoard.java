@@ -15,14 +15,14 @@ public class MonopolyBoard {
      * Enum for each different PropertyGroup.
      */
     private enum PropertyGroups {
-        PURPLE_PROPERTIES(Arrays.asList(new PropertyStreet("purple", "Mediterranean Avenue", 60), new PropertyStreet("purple", "Baltic Avenue", 60))),
-        LIGHT_BLUE_PROPERTIES(Arrays.asList(new PropertyStreet("light blue", "Oriental Avenue", 100), new PropertyStreet("light blue", "Vermont Avenue", 100), new PropertyStreet("light blue", "Connecticut Avenue", 120))),
-        PINK_PROPERTIES(Arrays.asList(new PropertyStreet("pink", "St. Charles Place", 140), new PropertyStreet("pink", "States Avenue", 140), new PropertyStreet("pink", "Virginia Avenue", 160))),
-        ORANGE_PROPERTIES(Arrays.asList(new PropertyStreet("orange", "St. James Place", 180), new PropertyStreet("orange", "Tennessee Avenue", 180), new PropertyStreet("orange", "New York Avenue", 200))),
-        RED_PROPERTIES(Arrays.asList(new PropertyStreet("red", "Kentucky Avenue", 220), new PropertyStreet("red", "Indiana Avenue", 220), new PropertyStreet("red", "Illinois Avenue", 240))),
-        YELLOW_PROPERTIES(Arrays.asList(new PropertyStreet("yellow", "Atlantic Avenue", 260), new PropertyStreet("yellow", "Ventnor Avenue", 260), new PropertyStreet("yellow", "Marvin Gardens", 280))),
-        GREEN_PROPERTIES(Arrays.asList(new PropertyStreet("green", "Pacific Avenue", 300), new PropertyStreet("green", "North Carolina Avenue", 300), new PropertyStreet("green", "Pennsylvania Avenue", 320))),
-        DARK_BLUE_PROPERTIES(Arrays.asList(new PropertyStreet("dark blue", "Park Place", 350), new PropertyStreet("dark blue", "Boardwalk", 400)));
+        PURPLE_PROPERTIES(Arrays.asList(new PropertyStreet("purple", "Mediterranean Avenue", 60, 50), new PropertyStreet("purple", "Baltic Avenue", 60, 50))),
+        LIGHT_BLUE_PROPERTIES(Arrays.asList(new PropertyStreet("light blue", "Oriental Avenue", 100, 50), new PropertyStreet("light blue", "Vermont Avenue", 100, 50), new PropertyStreet("light blue", "Connecticut Avenue", 120, 50))),
+        PINK_PROPERTIES(Arrays.asList(new PropertyStreet("pink", "St. Charles Place", 140, 100), new PropertyStreet("pink", "States Avenue", 140, 100), new PropertyStreet("pink", "Virginia Avenue", 160, 100))),
+        ORANGE_PROPERTIES(Arrays.asList(new PropertyStreet("orange", "St. James Place", 180, 100), new PropertyStreet("orange", "Tennessee Avenue", 180, 100), new PropertyStreet("orange", "New York Avenue", 200, 100))),
+        RED_PROPERTIES(Arrays.asList(new PropertyStreet("red", "Kentucky Avenue", 220, 150), new PropertyStreet("red", "Indiana Avenue", 220, 150), new PropertyStreet("red", "Illinois Avenue", 240, 150))),
+        YELLOW_PROPERTIES(Arrays.asList(new PropertyStreet("yellow", "Atlantic Avenue", 260, 150), new PropertyStreet("yellow", "Ventnor Avenue", 260, 150), new PropertyStreet("yellow", "Marvin Gardens", 280, 150))),
+        GREEN_PROPERTIES(Arrays.asList(new PropertyStreet("green", "Pacific Avenue", 300, 200), new PropertyStreet("green", "North Carolina Avenue", 300, 200), new PropertyStreet("green", "Pennsylvania Avenue", 320, 200))),
+        DARK_BLUE_PROPERTIES(Arrays.asList(new PropertyStreet("dark blue", "Park Place", 350, 200), new PropertyStreet("dark blue", "Boardwalk", 400, 200)));
 
         private List<PropertyStreet> propertySet;
 
@@ -94,7 +94,7 @@ public class MonopolyBoard {
      * @return List<PropertyStreet> list of PropertyStreets in group
      */
     public List<PropertyStreet> getPropertyGroup(String colour) {
-        return PropertyGroups.valueOf(colour.replaceAll("\\s+","").toUpperCase() + "_PROPERTIES").propertySet;
+        return PropertyGroups.valueOf(colour.replaceAll("\\s+","_").toUpperCase() + "_PROPERTIES").propertySet;
     }
 
 
@@ -116,6 +116,20 @@ public class MonopolyBoard {
      */
     public int getNumProperties() {
         return this.properties.size();
+    }
+
+    /**
+     * Gets the index of a given property
+     * @param property The property to get the index of
+     * @return The index of the property in the monopoly board list
+     */
+    public int getPropertyIndex(Property property) {
+        int count = 0;
+        for (Property p : this.properties) {
+            if (p.equals(property)) return count;
+            count++;
+        }
+        return -1; //invalid property
     }
 
 }

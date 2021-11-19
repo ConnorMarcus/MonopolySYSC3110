@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ public class BoardPanel extends JPanel {
     private MonopolyBoard board;
     private Map<String, JLabel> playerLabelMap;
     private JLabel[] spaces;
+    private JLabel[] houses;
     private JLabel dice1;
     private JLabel dice2;
 
@@ -31,6 +33,7 @@ public class BoardPanel extends JPanel {
         this.board = board;
         this.playerLabelMap = new HashMap<>();
         this.spaces = new JLabel[board.getNumProperties()];
+        this.houses = new JLabel[board.getNumProperties()];
         this.dice1 = new JLabel();
         this.dice2 = new JLabel();
         initializeSpaces();
@@ -42,7 +45,6 @@ public class BoardPanel extends JPanel {
      * Initializes JPanel game board.
      */
     private void initializeSpaces() {
-
         for (int i=0; i<spaces.length; i++) {
             spaces[i] = new JLabel();
         }
@@ -56,11 +58,7 @@ public class BoardPanel extends JPanel {
         for (int i=20; i<31; i++) {
             try {
                 //All the top images are rotated 180 degrees
-                BufferedImage image1 = ImageIO.read(Objects.requireNonNull(this.getClass().getClassLoader().getResource(String.format("images/%s.png", board.getProperty(i).getName()))));
-                AffineTransform transform = new AffineTransform();
-                transform.rotate(Math.PI, image1.getWidth() / 2, image1.getHeight() / 2);
-                AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
-                image1 = op.filter(image1, null);
+                BufferedImage image1 = rotateImage(ImageIO.read(Objects.requireNonNull(this.getClass().getClassLoader().getResource(String.format("images/%s.png", board.getProperty(i).getName())))), Math.PI);
                 spaces[i].setIcon(new ImageIcon(image1));
                 spaces[i].setBounds(x, y, spaces[i].getPreferredSize().width, spaces[i].getPreferredSize().height);
                 this.add(spaces[i]);
@@ -85,21 +83,13 @@ public class BoardPanel extends JPanel {
         for (int i=31; i<40; i++) {
             try {
                 //All the right images are rotated 270 degrees
-                BufferedImage image1 = ImageIO.read(Objects.requireNonNull(this.getClass().getClassLoader().getResource(String.format("images/%s.png", board.getProperty(i).getName()))));
-                AffineTransform transform = new AffineTransform();
-                transform.rotate(1.5*Math.PI, image1.getWidth() / 2, image1.getHeight() / 2);
-                AffineTransformOp transformOp = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
-                image1 = transformOp.filter(image1, null);
+                BufferedImage image1 = rotateImage(ImageIO.read(Objects.requireNonNull(this.getClass().getClassLoader().getResource(String.format("images/%s.png", board.getProperty(i).getName())))), 1.5*Math.PI);
                 spaces[i].setIcon(new ImageIcon(image1));
                 spaces[i].setBounds(x, y, spaces[i].getPreferredSize().width, spaces[i].getPreferredSize().height);
                 this.add(spaces[i]);
 
                 //All the left images are rotated by 90 degrees
-                BufferedImage image2 = ImageIO.read(Objects.requireNonNull(this.getClass().getClassLoader().getResource(String.format("images/%s.png", board.getProperty(50-i).getName()))));
-                AffineTransform transform2 = new AffineTransform();
-                transform2.rotate(Math.PI/2, image2.getWidth() / 2, image2.getHeight() / 2);
-                AffineTransformOp transformOp2 = new AffineTransformOp(transform2, AffineTransformOp.TYPE_BILINEAR);
-                image2 = transformOp2.filter(image2, null);
+                BufferedImage image2 = rotateImage(ImageIO.read(Objects.requireNonNull(this.getClass().getClassLoader().getResource(String.format("images/%s.png", board.getProperty(50-i).getName())))), Math.PI/2);
                 spaces[50-i].setIcon(new ImageIcon(image2));
                 spaces[50-i].setBounds(x- PANEL_WIDTH +WIDTH, y, spaces[50-i].getPreferredSize().width, spaces[50-i].getPreferredSize().height);
                 this.add(spaces[50-i]);
@@ -192,6 +182,55 @@ public class BoardPanel extends JPanel {
     public void updateDice(int d1, int d2) {
         this.dice1.setIcon(new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("images/" + d1 + ".png"))));
         this.dice2.setIcon(new ImageIcon(Objects.requireNonNull(this.getClass().getClassLoader().getResource("images/" + d2 + ".png"))));
+    }
+
+    /**
+     * Adds a house/hotel image on a property
+     * @param property The property where the image is being added
+     */
+    public void addHouse(PropertyStreet property) {
+        int index = this.board.getPropertyIndex(property);
+        int numHouses = property.getNumHouses();
+        int x = spaces[index].getX();
+        int y = spaces[index].getY();
+        double rotationAngle;
+
+        if (index <= 10) rotationAngle = 0;
+        else if (index<20) rotationAngle = Math.PI/2;
+        else if (index <= 30) rotationAngle = Math.PI;
+        else rotationAngle = 1.5*Math.PI;
+
+        try {
+            BufferedImage houseImage = rotateImage(ImageIO.read(Objects.requireNonNull(this.getClass().getClassLoader().getResource(String.format("images/house%s.png", numHouses)))), rotationAngle);
+            if (houses[index] == null) {
+                houses[index] = new JLabel();
+                houses[index].setIcon(new ImageIcon(houseImage));
+                houses[index].setBounds(x, y, houses[index].getPreferredSize().width, houses[index].getPreferredSize().height);
+                this.add(houses[index]);
+                this.setComponentZOrder(houses[index], 4); //makes sure houses are above spaces but below player labels
+                this.repaint();
+            }
+            else {
+                houses[index].setIcon(new ImageIcon(houseImage));
+            }
+        }
+        catch (IOException e) {
+            System.err.println("Could not read file!");
+            System.exit(1);
+        }
+
+    }
+
+    /**
+     * @param image The image to be rotated
+     * @param rotationAngle The angle of rotation
+     * @return A rotated version of the image
+     */
+    private BufferedImage rotateImage(BufferedImage image, double rotationAngle) {
+        AffineTransform transform = new AffineTransform();
+        transform.rotate(rotationAngle, image.getWidth() / 2, image.getHeight() / 2);
+        AffineTransformOp transformOp = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
+        return transformOp.filter(image, null);
     }
 
 }
