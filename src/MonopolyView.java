@@ -37,7 +37,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
         if (choice == -1) {
             System.exit(0);
         }
-        //If no saved files then prompts new game
+        //If no saved files then acts like new game
         else if (choice == 0 || savedFiles.length == 0) {
             String opponent = this.opponentTypePrompt();
             int numberOfPlayers = this.gamePrompt(opponent);
