@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -5,7 +6,7 @@ import java.util.*;
  *
  * @author Noah Hammoud
  */
-public class Player {
+public class Player implements Serializable {
     private final String IDENTIFIER;
     private int money;
     private int position;

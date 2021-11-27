@@ -5,6 +5,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.Objects;
  *
  * @author Connor Marcus
  */
-public class BoardPanel extends JPanel {
+public class BoardPanel extends JPanel implements Serializable {
     private final int PANEL_WIDTH = 693;
     private final int PANEL_HEIGHT = 693;
     private MonopolyBoard board;

@@ -1,21 +1,27 @@
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.*;
+import java.nio.file.Files;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
-import java.util.Set;
 import java.util.stream.IntStream;
 
 /**
  * MonopolyView class which handles the GUI.
  * @author Connor Marcus
  */
-public class MonopolyView extends JFrame implements MonopolyObserver {
+public class MonopolyView extends JFrame implements MonopolyObserver, Serializable {
     private BoardPanel boardPanel;
     private SidePanel sidePanel;
     private GameLogPanel gameLogPanel;
     private MonopolyModel model;
     static final String MULTIPLAYER_STRING = "Multiplayer";
     static final String AI_STRING = "AI";
+    static final String NEW_GAME = "New Game";
+    static final String IMPORT_GAME = "Import Game";
 
     /**
      * Constructor for MonopolyView class.
@@ -23,6 +29,115 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
      */
     public MonopolyView(String title) {
         super(title);
+        String[] savedFiles = this.getSavedFiles();
+        String[] options = {NEW_GAME, IMPORT_GAME};
+        int choice = JOptionPane.showOptionDialog(null, "Welcome to SYSC 3110 Monopoly",
+                "Monopoly",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, 0);
+        if (choice == -1) {
+            System.exit(0);
+        }
+        //If no saved files then prompts new game
+        else if (choice == 0 || savedFiles.length == 0) {
+            String opponent = this.opponentTypePrompt();
+            int numberOfPlayers = this.gamePrompt(opponent);
+            this.model = new MonopolyModel(opponent, numberOfPlayers);
+            this.model.addMonopolyObserver(this);
+            this.boardPanel = new BoardPanel(this.model.getBoard(), this.model.getPlayerList());
+            this.sidePanel = new SidePanel(this.model);
+            this.gameLogPanel = new GameLogPanel();
+        }
+        else {
+            int fileIndex = JOptionPane.showOptionDialog(null, "Select the file to import",
+                    "Import Game",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, savedFiles, 0);
+            if (fileIndex == -1) {
+                System.exit(0);
+            }
+            importGame(savedFiles[fileIndex]);
+        }
+        JPanel mainPanel = new JPanel(); //Container panel with flow layout
+        mainPanel.add(boardPanel);
+        mainPanel.add(sidePanel);
+        this.add(this.gameLogPanel, BorderLayout.NORTH);
+        this.add(mainPanel, BorderLayout.CENTER);
+        this.addSaveFeature();
+        this.setResizable(false);
+        this.pack();
+        this.setVisible(true);
+    }
+
+    /**
+     * Adds the save game feature. Prompts user to select if they would like to
+     * save their game. If so user must enter a filename.
+     */
+    private void addSaveFeature() {
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                int answer = JOptionPane.showConfirmDialog(null, "Would you like to save your game?", "Save Game", JOptionPane.YES_NO_OPTION);
+                if (answer == JOptionPane.YES_OPTION) {
+                    try {
+                        String filename = null;
+                        while (filename == null) {
+                            filename = JOptionPane.showInputDialog(null,"Enter a filename:");
+                        }
+                        FileOutputStream fileOutputStream = new FileOutputStream(".\\savedGames\\" + filename + ".ser");
+                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+                        objectOutputStream.writeObject(model);
+                        objectOutputStream.writeObject(boardPanel);
+                        objectOutputStream.writeObject(sidePanel);
+                        objectOutputStream.writeObject(gameLogPanel);
+                        objectOutputStream.close();
+                        fileOutputStream.close();
+                    }
+                    catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+                }
+                System.exit(0);
+            }
+        });
+    }
+
+    /**
+     * Gets String array of the filenames in the savedGames folder.
+     * @return The String array of filenames
+     */
+    private String[] getSavedFiles() {
+        File savedGames = new File(".\\savedGames");
+        File[] files = savedGames.listFiles();
+        String[] filenames = new String[files.length];
+        for (int i = 0; i < files.length; i++) {
+            filenames[i] = files[i].getName().split(".ser")[0];
+        }
+        return filenames;
+    }
+
+    /**
+     * Allows users to import previous games stored in the savedGames directory.
+     */
+    private void importGame(String fileName) {
+        try {
+            FileInputStream fileInputStream = new FileInputStream(".\\savedGames\\" + fileName + ".ser");
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            this.model = (MonopolyModel) objectInputStream.readObject();
+            this.boardPanel = (BoardPanel) objectInputStream.readObject();
+            this.sidePanel = (SidePanel) objectInputStream.readObject();
+            this.gameLogPanel = (GameLogPanel) objectInputStream.readObject();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
+    }
+
+    /**
+     * Option Dialog that Appears at beginning of the game.
+     * @return The string opponent type selected by the user.
+     */
+    private String opponentTypePrompt() {
         String[] options = {MULTIPLAYER_STRING, AI_STRING};
         int choice = JOptionPane.showOptionDialog(null, "Select type of opponents:",
                 "Game type",
@@ -30,25 +145,11 @@ public class MonopolyView extends JFrame implements MonopolyObserver {
         if (choice == -1) {
             System.exit(0);
         }
-        int numberOfPlayers = this.gamePrompt(options[choice]);
-        this.model = new MonopolyModel(options[choice], numberOfPlayers);
-        this.model.addMonopolyObserver(this);
-        this.boardPanel = new BoardPanel(this.model.getBoard(), this.model.getPlayerList());
-        this.sidePanel = new SidePanel(this.model);
-        this.gameLogPanel = new GameLogPanel();
-        JPanel mainPanel = new JPanel(); //Container panel with flow layout
-        mainPanel.add(boardPanel);
-        mainPanel.add(sidePanel);
-        this.add(this.gameLogPanel, BorderLayout.NORTH);
-        this.add(mainPanel, BorderLayout.CENTER);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setResizable(false);
-        this.pack();
-        this.setVisible(true);
+        return options[choice];
     }
 
     /**
-     * Option Dialog that Appears at th beginning of the game
+     * Option Dialog that Appears if the user selected a new game
      * @param gameType The type of game that is being player
      * @return The integer corresponding to the user's choice
      */

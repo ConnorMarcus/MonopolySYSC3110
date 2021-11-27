@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -6,7 +7,7 @@ import java.util.stream.IntStream;
  * The model part of the MVC; handles the game logic.
  * @author Connor Marcus
  */
-public class MonopolyModel {
+public class MonopolyModel implements Serializable {
     private MonopolyBoard board;
     private List<Player> playerList;
     private Dice dice;

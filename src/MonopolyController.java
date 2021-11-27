@@ -1,13 +1,14 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Controller for the MVC
  * @author Connor Marcus
  */
-public class MonopolyController implements ActionListener {
+public class MonopolyController implements ActionListener, Serializable {
     private MonopolyModel model;
 
     /**

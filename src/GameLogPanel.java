@@ -1,12 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * The GameLogPanel class used to display text to the users.
  * @author Noah Hammoud
  */
-public class GameLogPanel extends JPanel {
+public class GameLogPanel extends JPanel implements Serializable {
     private final int PANEL_WIDTH = 1043;
     private final int PANEL_HEIGHT = 80;
     private JTextArea gameLog;
@@ -32,6 +33,10 @@ public class GameLogPanel extends JPanel {
 
     }
 
+    public int getPANEL_WIDTH() {
+        return PANEL_WIDTH;
+    }
+
     /**
      * Updates the GameLog Jlabel text.
      *
@@ -44,4 +49,5 @@ public class GameLogPanel extends JPanel {
         this.listOfStrings.add(text);
         gameLog.setText(String.join("\n", this.listOfStrings));
     }
+
 }

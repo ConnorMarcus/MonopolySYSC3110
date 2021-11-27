@@ -1,9 +1,11 @@
+import java.io.Serializable;
+
 /**
  * The Property object for monopoly.
  *
  * @author Vahid Foroughi
  */
-public abstract class Property {
+public abstract class Property implements Serializable {
     private String name;
 
     /**

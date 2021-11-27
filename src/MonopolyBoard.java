@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
  * @author Connor Marcus
  * @author George Pantazopoulos
  */
-public class MonopolyBoard {
+public class MonopolyBoard implements Serializable {
     private List<Property> properties;
 
     /**
