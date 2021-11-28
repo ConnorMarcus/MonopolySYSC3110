@@ -67,7 +67,7 @@ public class BoardPanel extends JPanel implements Serializable {
                 //All the bottom images do not need to be rotated
                 BufferedImage image2 = ImageIO.read(Objects.requireNonNull(this.getClass().getClassLoader().getResource(String.format("images/%s.png", board.getProperty(30-i).getName()))));
                 spaces[30-i].setIcon(new ImageIcon(image2));
-                spaces[30-i].setBounds(x, y+ PANEL_HEIGHT -HEIGHT, spaces[30-i].getPreferredSize().width, spaces[30-i].getPreferredSize().height);
+                spaces[30-i].setBounds(x, y+PANEL_HEIGHT-HEIGHT, spaces[30-i].getPreferredSize().width, spaces[30-i].getPreferredSize().height);
                 this.add(spaces[30-i]);
             }
             catch (Exception e) {
@@ -92,7 +92,7 @@ public class BoardPanel extends JPanel implements Serializable {
                 //All the left images are rotated by 90 degrees
                 BufferedImage image2 = rotateImage(ImageIO.read(Objects.requireNonNull(this.getClass().getClassLoader().getResource(String.format("images/%s.png", board.getProperty(50-i).getName())))), Math.PI/2);
                 spaces[50-i].setIcon(new ImageIcon(image2));
-                spaces[50-i].setBounds(x- PANEL_WIDTH +WIDTH, y, spaces[50-i].getPreferredSize().width, spaces[50-i].getPreferredSize().height);
+                spaces[50-i].setBounds(x-PANEL_WIDTH+WIDTH, y, spaces[50-i].getPreferredSize().width, spaces[50-i].getPreferredSize().height);
                 this.add(spaces[50-i]);
             }
             catch (Exception e) {

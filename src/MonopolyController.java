@@ -10,9 +10,6 @@ import java.util.ArrayList;
  */
 public class MonopolyController implements ActionListener, Serializable {
     private MonopolyModel model;
-    private final static String ROLL = "Roll";
-    private final static String PASS = "Pass";
-    private final static String BUY = "Buy";
 
     /**
      * Constructor for the class
@@ -29,15 +26,15 @@ public class MonopolyController implements ActionListener, Serializable {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof JButton) {
-            if (((JButton)e.getSource()).getText().equals(ROLL)) {
+            if (((JButton)e.getSource()).getText().equals(MonopolyView.ROLL)) {
                 ((JButton)e.getSource()).setEnabled(false);
                 this.model.takeTurn();
             }
-            else if (((JButton)e.getSource()).getText().equals(PASS)) {
+            else if (((JButton)e.getSource()).getText().equals(MonopolyView.PASS)) {
                 ((JButton)e.getSource()).setEnabled(false);
                 this.model.passTurn();
             }
-            else if (((JButton)e.getSource()).getText().equals(BUY)) {
+            else if (((JButton)e.getSource()).getText().equals(MonopolyView.BUY)) {
                 ArrayList<PropertyStreet> properties = new ArrayList<>();
                 Player turnPlayer = this.model.getPlayerList().get(model.getTurn());
                 turnPlayer.getPropertyGroups(model.getBoard()).forEach((colour) -> {
@@ -48,7 +45,7 @@ public class MonopolyController implements ActionListener, Serializable {
                     });
                 });
                 JList list = new JList(properties.toArray());
-                int choice = JOptionPane.showOptionDialog(null, new JScrollPane(list), BUY, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, new String[]{"Buy", "Cancel"}, 0);
+                int choice = JOptionPane.showOptionDialog(null, new JScrollPane(list), MonopolyView.BUY, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, new String[]{"Buy", "Cancel"}, 0);
                 if (choice == 0 && list.getSelectedValue() != null) {
                     model.buyHouse((PropertyStreet) list.getSelectedValue());
                 }

@@ -98,24 +98,23 @@ public class SidePanel extends JPanel {
         Dimension buttonSize = new Dimension(100, 40);
         controller = new MonopolyController(model);
 
-        JButton roll = new JButton("Roll");
+        JButton roll = new JButton(MonopolyView.ROLL);
         roll.setFont(buttonFont);
         roll.setFocusPainted(false);
         roll.setPreferredSize(buttonSize);
         roll.addActionListener(controller);
 
-        JButton pass = new JButton("Pass");
+        JButton pass = new JButton(MonopolyView.PASS);
         pass.setFont(buttonFont);
         pass.setFocusPainted(false);
         pass.setPreferredSize(buttonSize);
         pass.setEnabled(false);
         pass.addActionListener(controller);
 
-        JButton buy = new JButton("Buy");
+        JButton buy = new JButton(MonopolyView.BUY);
         buy.setFont(buttonFont);
         buy.setFocusPainted(false);
         buy.setPreferredSize(buttonSize);
-        //buy.setEnabled(false);
         buy.addActionListener(controller);
 
         this.add(roll);

@@ -1,10 +1,10 @@
 import javax.swing.*;
 import javax.swing.Timer;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -22,6 +22,9 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
     static final String AI_STRING = "AI";
     static final String NEW_GAME = "New Game";
     static final String IMPORT_GAME = "Import Game";
+    static final String ROLL = "Roll";
+    static final String PASS = "Pass";
+    static final String BUY = "Buy";
 
     /**
      * Constructor for MonopolyView class.
@@ -29,33 +32,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
      */
     public MonopolyView(String title) {
         super(title);
-        String[] savedFiles = this.getSavedFiles();
-        String[] options = {NEW_GAME, IMPORT_GAME};
-        int choice = JOptionPane.showOptionDialog(null, "Welcome to SYSC 3110 Monopoly",
-                "Monopoly",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, 0);
-        if (choice == -1) {
-            System.exit(0);
-        }
-        //If no saved files then acts like new game
-        else if (choice == 0 || savedFiles.length == 0) {
-            String opponent = this.opponentTypePrompt();
-            int numberOfPlayers = this.gamePrompt(opponent);
-            this.model = new MonopolyModel(opponent, numberOfPlayers);
-            this.model.addMonopolyObserver(this);
-            this.boardPanel = new BoardPanel(this.model.getBoard(), this.model.getPlayerList());
-            this.sidePanel = new SidePanel(this.model);
-            this.gameLogPanel = new GameLogPanel();
-        }
-        else {
-            int fileIndex = JOptionPane.showOptionDialog(null, "Select the file to import",
-                    "Import Game",
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, savedFiles, 0);
-            if (fileIndex == -1) {
-                System.exit(0);
-            }
-            importGame(savedFiles[fileIndex]);
-        }
+        this.importGamePrompt();
         JPanel mainPanel = new JPanel(); //Container panel with flow layout
         mainPanel.add(boardPanel);
         mainPanel.add(sidePanel);
@@ -65,6 +42,40 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
         this.setResizable(false);
         this.pack();
         this.setVisible(true);
+    }
+
+    /**
+     * Prompts the user if they would like to import a saved game
+     */
+    private void importGamePrompt() {
+        String[] options = {NEW_GAME, IMPORT_GAME};
+        int choice = JOptionPane.showOptionDialog(null, "Welcome to SYSC 3110 Monopoly",
+                "Monopoly",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, 0);
+        if (choice == -1) {
+            System.exit(0);
+        }
+        else if (choice == 0) {
+            String opponent = this.opponentTypePrompt();
+            int numberOfPlayers = this.gamePrompt(opponent);
+            this.model = new MonopolyModel(opponent, numberOfPlayers);
+            this.model.addMonopolyObserver(this);
+            this.boardPanel = new BoardPanel(this.model.getBoard(), this.model.getPlayerList());
+            this.sidePanel = new SidePanel(this.model);
+            this.gameLogPanel = new GameLogPanel();
+        }
+        else {
+            JFileChooser chooser = new JFileChooser(this.getClass().getClassLoader().getResource("savedGames").getPath());
+            FileNameExtensionFilter filter = new FileNameExtensionFilter(".ser files","ser");
+            chooser.setFileFilter(filter);
+            int returnVal = chooser.showOpenDialog(null);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                importGame(chooser.getSelectedFile().getAbsolutePath());
+            }
+            else if (returnVal == JFileChooser.CANCEL_OPTION) {
+                this.importGamePrompt();
+            }
+        }
     }
 
     /**
@@ -79,21 +90,25 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
                 int answer = JOptionPane.showConfirmDialog(null, "Would you like to save your game?", "Save Game", JOptionPane.YES_NO_OPTION);
                 if (answer == JOptionPane.YES_OPTION) {
                     try {
-                        String filename = null;
-                        while (filename == null) {
-                            filename = JOptionPane.showInputDialog(null,"Enter a filename:");
+                        JFileChooser chooser = new JFileChooser(this.getClass().getClassLoader().getResource("savedGames").getPath());
+                        FileNameExtensionFilter filter = new FileNameExtensionFilter(".ser files","ser");
+                        chooser.setFileFilter(filter);
+                        int returnVal = chooser.showSaveDialog(null);
+                        if (returnVal == JFileChooser.APPROVE_OPTION) {
+                            String filename = chooser.getSelectedFile().getAbsolutePath();
+                            if (!filename.endsWith(".ser")) filename = filename.concat(".ser");
+                            FileOutputStream fileOutputStream = new FileOutputStream(filename);
+                            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+                            objectOutputStream.writeObject(model);
+                            objectOutputStream.writeObject(boardPanel);
+                            objectOutputStream.writeObject(sidePanel);
+                            objectOutputStream.writeObject(gameLogPanel);
+                            objectOutputStream.close();
+                            fileOutputStream.close();
                         }
-                        FileOutputStream fileOutputStream = new FileOutputStream(".\\savedGames\\" + filename + ".ser");
-                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-                        objectOutputStream.writeObject(model);
-                        objectOutputStream.writeObject(boardPanel);
-                        objectOutputStream.writeObject(sidePanel);
-                        objectOutputStream.writeObject(gameLogPanel);
-                        objectOutputStream.close();
-                        fileOutputStream.close();
                     }
                     catch (Exception e1) {
-                        e1.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Error saving file!");
                     }
                 }
                 System.exit(0);
@@ -102,25 +117,11 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
     }
 
     /**
-     * Gets String array of the filenames in the savedGames folder.
-     * @return The String array of filenames
-     */
-    private String[] getSavedFiles() {
-        File savedGames = new File(".\\savedGames");
-        File[] files = savedGames.listFiles();
-        String[] filenames = new String[files.length];
-        for (int i = 0; i < files.length; i++) {
-            filenames[i] = files[i].getName().split(".ser")[0];
-        }
-        return filenames;
-    }
-
-    /**
      * Allows users to import previous games stored in the savedGames directory.
      */
     private void importGame(String fileName) {
         try {
-            FileInputStream fileInputStream = new FileInputStream(".\\savedGames\\" + fileName + ".ser");
+            FileInputStream fileInputStream = new FileInputStream(fileName);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             this.model = (MonopolyModel) objectInputStream.readObject();
             this.boardPanel = (BoardPanel) objectInputStream.readObject();
@@ -128,8 +129,8 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
             this.gameLogPanel = (GameLogPanel) objectInputStream.readObject();
         }
         catch (Exception e) {
-            e.printStackTrace();
-            System.exit(0);
+            JOptionPane.showMessageDialog(null, "Invalid file!");
+            this.importGamePrompt();
         }
     }
 
@@ -195,7 +196,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
         this.gameLogPanel.updateGameLog(gameLogString);
         if (propertyLandedOn.getName().equals("Go To Jail")) this.boardPanel.updatePlayerLabelPosition(player);
 
-        this.sidePanel.enableButton("Pass", true);
+        this.sidePanel.enableButton(PASS, true);
     }
 
     /**
@@ -205,8 +206,8 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
     @Override
     public void handlePassTurn(Player player) {
         this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has finished their turn.");
-        this.sidePanel.enableButton("Roll", true);
-        this.sidePanel.enableButton("Buy", true);
+        this.sidePanel.enableButton(ROLL, true);
+        this.sidePanel.enableButton(BUY, true);
     }
 
     /**
@@ -218,8 +219,8 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
         this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has gone bankrupt! They are out of the game.");
         this.boardPanel.removePlayerLabel(player);
         this.sidePanel.removePlayerInfo(player);
-        this.sidePanel.enableButton("Roll", true);
-        this.sidePanel.enableButton("Pass", false);
+        this.sidePanel.enableButton(ROLL, true);
+        this.sidePanel.enableButton(PASS, false);
     }
 
     /**
@@ -288,7 +289,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
     @Override
     public void handleStuckInJail(Player player, int[] roll) {
         this.boardPanel.updateDice(roll[0], roll[1]);
-        this.sidePanel.enableButton("Pass", true);
+        this.sidePanel.enableButton(PASS, true);
         this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " did not roll doubles, they are stuck in jail!");
     }
 
@@ -299,8 +300,8 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
     @Override
     public void handleAITurn(Player player) {
         if (!this.model.getFoundWinner()) {
-            this.sidePanel.enableButton("Buy", false); //disable button so cannot be clicked by user
-            this.sidePanel.enableButton("Roll", false);
+            this.sidePanel.enableButton(BUY, false); //disable button so cannot be clicked by user
+            this.sidePanel.enableButton(ROLL, false);
             Set<String> sets = player.getPropertyGroups(this.model.getBoard());
             String[] propertyGroups = sets.toArray(new String[sets.size()]);
             if (propertyGroups.length > 0 && player.getMoney() > 400) {
@@ -311,13 +312,13 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
                 if (houseProperty.getNumHouses() < 5) this.model.buyHouse(houseProperty);
             }
             Timer rollTimer = new Timer(2000, (e) -> {
-                this.sidePanel.enableButton("Roll", true);
-                this.sidePanel.clickButton("Roll");
-                this.sidePanel.enableButton("Pass", false);
+                this.sidePanel.enableButton(ROLL, true);
+                this.sidePanel.clickButton(ROLL);
+                this.sidePanel.enableButton(PASS, false);
                 Timer passTimer = new Timer(3000, (e2) -> {
                     if ((!(player.getNumConsecutiveDoubles() > 0) || (player.isJailed())) && !player.getIsBankrupt()) {
-                        this.sidePanel.enableButton("Pass", true);
-                        this.sidePanel.clickButton("Pass");
+                        this.sidePanel.enableButton(PASS, true);
+                        this.sidePanel.clickButton(PASS);
                     }
                     else if (!player.getIsBankrupt()) handleAITurn(player); //AI rolled doubles
                 });
@@ -336,9 +337,9 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
     @Override
     public void handleRolledDoubles(Player player) {
             this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " rolled doubles and gets another turn!");
-            this.sidePanel.enableButton("Pass", false);
+            this.sidePanel.enableButton(PASS, false);
             if (!(player.getIsAI())) {
-                this.sidePanel.enableButton("Roll", true);
+                this.sidePanel.enableButton(ROLL, true);
             }
     }
 
@@ -352,7 +353,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
         this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " rolled doubles three times in a row and is going to jail!");
         this.boardPanel.updateDice(roll[0], roll[1]);
         this.boardPanel.updatePlayerLabelPosition(player);
-        this.sidePanel.enableButton("Pass", true);
+        this.sidePanel.enableButton(PASS, true);
     }
 
     /**
