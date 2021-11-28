@@ -188,7 +188,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
         this.boardPanel.updateDice(roll[0], roll[1]);
         String gameLogString = "Player " + player.getIdentifier() + " has rolled a " + rollSum + ". They are now on " + propertyLandedOn.getName() + ".";
         if (player.isPassingGo()) {
-            gameLogString += " Player " + player.getIdentifier() + " has passed GO to collect $200. ";
+            gameLogString += " Player " + player.getIdentifier() + " has passed GO to collect $" + MonopolyModel.GO_MONEY + ". ";
         }
 
         if (propertyLandedOn instanceof PropertyUtility) ((PropertyUtility) propertyLandedOn).setDiceRoll(rollSum);
@@ -249,25 +249,25 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
     @Override
     public void handleJailChoice(Player player) {
         String jailString = "";
-        if (player.getMoney() >= 50) {
+        if (player.getMoney() >= MonopolyModel.JAIL_PRICE) {
             String[] options = {"no", "yes"};
             int choice = -1;
             if (!player.getIsAI()) {
-                choice=JOptionPane.showOptionDialog(null, "Would you like to pay $50 to get out of jail this turn?", "Player " + player.getIdentifier(),
+                choice=JOptionPane.showOptionDialog(null, "Would you like to pay $" + MonopolyModel.JAIL_PRICE + "to get out of jail this turn?", "Player " + player.getIdentifier(),
                             JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
                 }
-            else if (player.getTimeInJail()==2) choice=1;
+            else if (player.getTimeInJail()==MonopolyModel.MAX_JAIL_TURNS-1) choice=1;
 
             if (choice == 1) {
                 player.setJailed(false);
-                jailString = "Player " + player.getIdentifier() + " has spent $50 to get out of jail!";
+                jailString = "Player " + player.getIdentifier() + " has spent $" + MonopolyModel.JAIL_PRICE +  "to get out of jail!";
             }
             else {
                 jailString = "Player " + player.getIdentifier() + " has not paid the fine to get out of jail!";
             }
         }
         else {
-            jailString = "Player " + player.getIdentifier() + " cannot currently afford to pay the fine of $50, they must roll doubles!";
+            jailString = "Player " + player.getIdentifier() + " cannot currently afford to pay the fine of $" + MonopolyModel.JAIL_PRICE + ", they must roll doubles!";
         }
 
         this.gameLogPanel.updateGameLog(jailString);
@@ -279,7 +279,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
      */
     @Override
     public void handleThreeTurnsInJail(Player player) {
-        this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has spent three turns in jail and paid the $50 fine!");
+        this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has spent three turns in jail and paid the $" + MonopolyModel.JAIL_PRICE + "fine!");
     }
 
     /**

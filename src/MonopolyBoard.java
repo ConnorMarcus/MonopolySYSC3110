@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class MonopolyBoard implements Serializable {
     private List<Property> properties;
+    private int jailIndex;
 
     /**
      * Enum for each different PropertyGroup.
@@ -85,6 +86,7 @@ public class MonopolyBoard implements Serializable {
         this.properties.add(PropertyGroups.DARK_BLUE_PROPERTIES.propertySet.get(0)); //Park Place
         this.properties.add(new PropertyTax("Luxury Tax", 100));
         this.properties.add(PropertyGroups.DARK_BLUE_PROPERTIES.propertySet.get(1)); //BoardWalk
+        this.jailIndex = 10;
     }
 
 
@@ -131,6 +133,13 @@ public class MonopolyBoard implements Serializable {
             count++;
         }
         return -1; //invalid property
+    }
+
+    /**
+     * @return the index that is the jail space on the Monopoly board
+     */
+    public int getJailIndex() {
+        return this.jailIndex;
     }
 
 }

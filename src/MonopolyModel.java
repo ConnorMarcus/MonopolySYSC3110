@@ -14,6 +14,10 @@ public class MonopolyModel implements Serializable {
     private int turn;
     private List<MonopolyObserver> observers;
     private boolean foundWinner;
+    private final int MAX_CONSECUTIVE_DOUBLES = 3;
+    static final int MAX_JAIL_TURNS = 3;
+    static final int JAIL_PRICE = 50;
+    static final int GO_MONEY = 200;
 
     /**
      * Constructor of the class; initializes the class attributes.
@@ -80,9 +84,9 @@ public class MonopolyModel implements Serializable {
         }
         else turnPlayer.resetNumConsecutiveDoubles();
 
-        if (turnPlayer.getNumConsecutiveDoubles() == 3) {
+        if (turnPlayer.getNumConsecutiveDoubles() == MAX_CONSECUTIVE_DOUBLES) {
             turnPlayer.setJailed(true);
-            turnPlayer.setPosition(10);
+            turnPlayer.setPosition(board.getJailIndex());
             turnPlayer.resetNumConsecutiveDoubles();
             for (MonopolyObserver o : this.observers) {
                 o.handleThreeDoubles(turnPlayer, roll);
@@ -99,7 +103,7 @@ public class MonopolyModel implements Serializable {
             int rollSum = IntStream.of(roll).sum();
             if ((turnPlayer.getPosition() + rollSum) > (this.board.getNumProperties()-1)) {
                 turnPlayer.setPassingGo(true);
-                turnPlayer.addMoney(200);
+                turnPlayer.addMoney(GO_MONEY);
                 for (MonopolyObserver o : this.observers) {
                     o.handlePlayerUpdate(this.playerList);
                 }
@@ -116,7 +120,6 @@ public class MonopolyModel implements Serializable {
             else if (isDouble && !turnPlayer.isJailed() && rollAgain) {
                 for (MonopolyObserver o : this.observers) {
                     o.handleRolledDoubles(turnPlayer);
-                    //if (turnPlayer.getIsAI()) o.handleAITurn(turnPlayer);
                 }
             }
             else if (isDouble) turnPlayer.resetNumConsecutiveDoubles(); //reset counter while in jail
@@ -130,8 +133,8 @@ public class MonopolyModel implements Serializable {
     private void jailCheck(Player turnPlayer) {
         if (turnPlayer.isJailed()) {
             turnPlayer.incrementTimeInJail();
-            if (turnPlayer.getTimeInJail() == 3) {
-                turnPlayer.payMoney(50);
+            if (turnPlayer.getTimeInJail() == MAX_JAIL_TURNS) {
+                turnPlayer.payMoney(JAIL_PRICE);
                 turnPlayer.setJailed(false);
                 turnPlayer.resetTimeInJail();
                 for (MonopolyObserver o : this.observers) {
@@ -149,7 +152,7 @@ public class MonopolyModel implements Serializable {
                     o.handlePlayerUpdate(this.playerList);
                 }
                 if (!turnPlayer.isJailed())  {
-                    turnPlayer.payMoney(50);
+                    turnPlayer.payMoney(JAIL_PRICE);
                     turnPlayer.resetTimeInJail();
                 }
             }
