@@ -177,18 +177,6 @@ public class Player implements Serializable {
         }
     }
 
-
-    /**
-     * Checks if Player owns property.
-     *
-     * @param p the Property object that is being checked
-     * @return boolean true if Player owns property
-     */
-    public boolean ownsProperty(Property p) {
-        return this.properties.contains(p);
-    }
-
-
     /**
      * Gets a set of all the colours that player owns a full group of.
      *
@@ -219,11 +207,11 @@ public class Player implements Serializable {
      * @return a String containing the players properties separated by a comma
      */
     public String getPropertyString() {
-        String propertyString = "";
+        StringBuilder propertyString = new StringBuilder();
         for (OwnableProperty p : this.properties) {
-            propertyString += p + ", ";
+            propertyString.append(p).append(", ");
         }
-        return propertyString.replaceAll(", $", ""); //removes trailing comma
+        return propertyString.toString().replaceAll(", $", ""); //removes trailing comma
     }
 
     /**

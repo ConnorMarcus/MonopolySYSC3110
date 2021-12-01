@@ -7,6 +7,7 @@ import javax.swing.*;
 public abstract class OwnableProperty extends Property {
     private final int PRICE;
     private Player owner;
+    private String currencySymbol;
 
     abstract int calculateCost();
 
@@ -17,6 +18,7 @@ public abstract class OwnableProperty extends Property {
      */
     public OwnableProperty(String name, int price) {
         super(name);
+        this.currencySymbol = "$"; //default currency symbol
         this.PRICE = price;
     }
 
@@ -44,6 +46,14 @@ public abstract class OwnableProperty extends Property {
     }
 
     /**
+     * Sets the currency symbol for this property
+     * @param currencySymbol The currency symbol of the property
+     */
+    public void setCurrencySymbol(String currencySymbol) {
+        this.currencySymbol = currencySymbol;
+    }
+
+    /**
      * Handles player that landed on the property (Player can buy if available or must pay money to owner).
      *
      * @param landedPlayer the Player object that landed on the property
@@ -56,9 +66,9 @@ public abstract class OwnableProperty extends Property {
             cost = landedPlayer.payMoney(cost);
             owner.addMoney(cost);
             if (!landedPlayer.getIsAI()) {
-                JOptionPane.showMessageDialog( null,"Player " + owner.getIdentifier() + " owns this property you must pay them $" + cost);
+                JOptionPane.showMessageDialog( null,"Player " + owner.getIdentifier() + " owns this property you must pay them " + currencySymbol + cost);
             }
-            return "Player " + landedPlayer.getIdentifier() + " payed $" + cost + " to Player " + owner.getIdentifier() + ".";
+            return "Player " + landedPlayer.getIdentifier() + " payed " + currencySymbol + cost + " to Player " + owner.getIdentifier() + ".";
         }
         else if (owner != null) { //landed player owns the property
             if (!landedPlayer.getIsAI()) JOptionPane.showMessageDialog(null, "You already own this property!");
@@ -81,7 +91,7 @@ public abstract class OwnableProperty extends Property {
         if (landedPlayer.getMoney() >= this.PRICE) {
             String[] options = {"no", "yes"};
             if (!landedPlayer.getIsAI()) {
-                int choice = JOptionPane.showOptionDialog(null, "Would you like to buy this property for $" + this.PRICE + "?",
+                int choice = JOptionPane.showOptionDialog(null, "Would you like to buy this property for " + currencySymbol + this.PRICE + "?",
                         "Buy Property",
                         JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
 

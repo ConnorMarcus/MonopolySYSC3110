@@ -36,6 +36,13 @@ public abstract class Property implements Serializable {
         return name;
     }
 
+    /**
+     * Sets a property's name
+     * @param name The name to be set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
     /**
      * String representation of Property object.

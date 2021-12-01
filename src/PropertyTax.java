@@ -5,6 +5,7 @@ import javax.swing.*;
  */
 public class PropertyTax extends Property {
     private final int TAX_PRICE;
+    private String currencySymbol;
 
     /**
      * Constructor of the class
@@ -13,7 +14,16 @@ public class PropertyTax extends Property {
      */
     public PropertyTax(String name, int taxPrice) {
         super(name);
+        this.currencySymbol = "$"; //default currency symbol
         this.TAX_PRICE = taxPrice;
+    }
+
+    /**
+     * Sets the currency symbol for this property
+     * @param currencySymbol The currency symbol of the property
+     */
+    public void setCurrencySymbol(String currencySymbol) {
+        this.currencySymbol = currencySymbol;
     }
 
     /**
@@ -24,7 +34,7 @@ public class PropertyTax extends Property {
     @Override
     public String landed(Player landedPlayer) {
         int cost = landedPlayer.payMoney(TAX_PRICE);
-        if (!landedPlayer.getIsAI()) JOptionPane.showMessageDialog(null, "You must pay $" + cost + " in tax!");
-        return "Player " + landedPlayer.getIdentifier() + " payed $" + cost + " in tax!";
+        if (!landedPlayer.getIsAI()) JOptionPane.showMessageDialog(null, "You must pay " + currencySymbol + cost + " in tax!");
+        return "Player " + landedPlayer.getIdentifier() + " payed " + currencySymbol + cost + " in tax!";
     }
 }

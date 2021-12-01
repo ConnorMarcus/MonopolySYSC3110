@@ -5,9 +5,11 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.List;
 import java.util.stream.IntStream;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * MonopolyView class which handles the GUI.
@@ -18,6 +20,8 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
     private SidePanel sidePanel;
     private GameLogPanel gameLogPanel;
     private MonopolyModel model;
+    private HashMap<String, Object> customization;
+    private String currencySymbol;
     static final String MULTIPLAYER_STRING = "Multiplayer";
     static final String AI_STRING = "AI";
     static final String NEW_GAME = "New Game";
@@ -32,6 +36,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
      */
     public MonopolyView(String title) {
         super(title);
+        this.currencySymbol = "$";
         this.importGamePrompt();
         JPanel mainPanel = new JPanel(); //Container panel with flow layout
         mainPanel.add(boardPanel);
@@ -61,18 +66,33 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
             this.model = new MonopolyModel(opponent, numberOfPlayers);
             this.model.addMonopolyObserver(this);
             this.boardPanel = new BoardPanel(this.model.getBoard(), this.model.getPlayerList());
-            this.sidePanel = new SidePanel(this.model);
+            if (this.customizationPrompt()) {
+                List<Integer> changed = this.model.getBoard().updatePropertyNames((HashMap) customization.get("propertyNames"));
+                if (!customization.get("currency").equals("")) {
+                    this.currencySymbol = (String) customization.get("currency");
+                }
+                for (int i=0; i<this.model.getBoard().getNumProperties(); i++) {
+                    Property p = this.model.getBoard().getProperty(i);
+                    if (changed.contains(i)) this.boardPanel.updatePropertyName(i);
+                    if (p instanceof OwnableProperty) ((OwnableProperty) p).setCurrencySymbol(this.currencySymbol);
+                    else if (p instanceof PropertyTax) ((PropertyTax) p).setCurrencySymbol(this.currencySymbol);
+                }
+            }
+            this.sidePanel = new SidePanel(this.model, this.currencySymbol);
             this.gameLogPanel = new GameLogPanel();
         }
         else {
-            JFileChooser chooser = new JFileChooser(this.getClass().getClassLoader().getResource("savedGames").getPath());
-            FileNameExtensionFilter filter = new FileNameExtensionFilter(".ser files","ser");
-            chooser.setFileFilter(filter);
-            int returnVal = chooser.showOpenDialog(null);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                importGame(chooser.getSelectedFile().getAbsolutePath());
+            FileSelector selector = new FileSelector(FileSelector.OPEN, new FileNameExtensionFilter(".ser files","ser"));
+            try {
+                EventQueue.invokeAndWait(selector);
             }
-            else if (returnVal == JFileChooser.CANCEL_OPTION) {
+            catch (InvocationTargetException | InterruptedException e) {
+                JOptionPane.showMessageDialog(null, "Could not open file selector!");
+            }
+            if (selector.fileSelected()) {
+                importGame(selector.getAbsoluteFilePath());
+            }
+            else {
                 this.importGamePrompt();
             }
         }
@@ -90,12 +110,10 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
                 int answer = JOptionPane.showConfirmDialog(null, "Would you like to save your game?", "Save Game", JOptionPane.YES_NO_OPTION);
                 if (answer == JOptionPane.YES_OPTION) {
                     try {
-                        JFileChooser chooser = new JFileChooser(this.getClass().getClassLoader().getResource("savedGames").getPath());
-                        FileNameExtensionFilter filter = new FileNameExtensionFilter(".ser files","ser");
-                        chooser.setFileFilter(filter);
-                        int returnVal = chooser.showSaveDialog(null);
-                        if (returnVal == JFileChooser.APPROVE_OPTION) {
-                            String filename = chooser.getSelectedFile().getAbsolutePath();
+                        FileSelector selector = new FileSelector(FileSelector.SAVE, new FileNameExtensionFilter(".ser files","ser"));
+                        selector.run();
+                        if (selector.fileSelected()) {
+                            String filename = selector.getAbsoluteFilePath();
                             if (!filename.endsWith(".ser")) filename = filename.concat(".ser");
                             FileOutputStream fileOutputStream = new FileOutputStream(filename);
                             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -103,6 +121,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
                             objectOutputStream.writeObject(boardPanel);
                             objectOutputStream.writeObject(sidePanel);
                             objectOutputStream.writeObject(gameLogPanel);
+                            objectOutputStream.writeObject(currencySymbol);
                             objectOutputStream.close();
                             fileOutputStream.close();
                         }
@@ -127,6 +146,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
             this.boardPanel = (BoardPanel) objectInputStream.readObject();
             this.sidePanel = (SidePanel) objectInputStream.readObject();
             this.gameLogPanel = (GameLogPanel) objectInputStream.readObject();
+            this.currencySymbol = (String) objectInputStream.readObject();
         }
         catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Invalid file!");
@@ -176,6 +196,46 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
     }
 
     /**
+     * Displays the customization prompt
+     * @return true if customization is selected and false otherwise
+     */
+    private boolean customizationPrompt() {
+        int choice = JOptionPane.showOptionDialog(null, "Would you like to import customization options?",
+                "Customization",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"no", "yes"}, 0);
+        if (choice == -1) {
+            System.exit(0);
+        }
+        else if (choice == 1) {
+            FileSelector selector = new FileSelector(FileSelector.OPEN, new FileNameExtensionFilter(".json files","json"));
+            try {
+                EventQueue.invokeAndWait(selector);
+            }
+            catch (InterruptedException | InvocationTargetException e) {
+                JOptionPane.showMessageDialog(null, "Could not open file selector!");
+            }
+            if (selector.fileSelected()) {
+                try {
+                    InputStream in = new FileInputStream(selector.getAbsoluteFilePath());
+                    customization = new ObjectMapper().readValue(in, HashMap.class);
+                    if (customization.get("propertyNames") == null || customization.get("currency") == null || !(customization.get("propertyNames") instanceof LinkedHashMap) || !(customization.get("currency") instanceof String)) {
+                        throw new RuntimeException("JSON file does not match the expected format");
+                    }
+                    return true;
+                }
+                catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Invalid file selected (doesn't match expected JSON format)!");
+                    this.customizationPrompt();
+                }
+            }
+            else {
+                this.customizationPrompt();
+            }
+        }
+        return false;
+    }
+
+    /**
      * Handles what happens when a player takes their turn.
      * @param player The Player who took their turn
      * @param roll The list of the players roll
@@ -188,7 +248,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
         this.boardPanel.updateDice(roll[0], roll[1]);
         String gameLogString = "Player " + player.getIdentifier() + " has rolled a " + rollSum + ". They are now on " + propertyLandedOn.getName() + ".";
         if (player.isPassingGo()) {
-            gameLogString += " Player " + player.getIdentifier() + " has passed GO to collect $" + MonopolyModel.GO_MONEY + ". ";
+            gameLogString += " Player " + player.getIdentifier() + " has passed GO to collect " + this.currencySymbol + MonopolyModel.GO_MONEY + ". ";
         }
 
         if (propertyLandedOn instanceof PropertyUtility) ((PropertyUtility) propertyLandedOn).setDiceRoll(rollSum);
@@ -253,21 +313,21 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
             String[] options = {"no", "yes"};
             int choice = -1;
             if (!player.getIsAI()) {
-                choice=JOptionPane.showOptionDialog(null, "Would you like to pay $" + MonopolyModel.JAIL_PRICE + "to get out of jail this turn?", "Player " + player.getIdentifier(),
+                choice=JOptionPane.showOptionDialog(null, "Would you like to pay " + this.currencySymbol + MonopolyModel.JAIL_PRICE + "to get out of jail this turn?", "Player " + player.getIdentifier(),
                             JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
                 }
             else if (player.getTimeInJail()==MonopolyModel.MAX_JAIL_TURNS-1) choice=1;
 
             if (choice == 1) {
                 player.setJailed(false);
-                jailString = "Player " + player.getIdentifier() + " has spent $" + MonopolyModel.JAIL_PRICE +  "to get out of jail!";
+                jailString = "Player " + player.getIdentifier() + " has spent " + this.currencySymbol + MonopolyModel.JAIL_PRICE +  "to get out of jail!";
             }
             else {
                 jailString = "Player " + player.getIdentifier() + " has not paid the fine to get out of jail!";
             }
         }
         else {
-            jailString = "Player " + player.getIdentifier() + " cannot currently afford to pay the fine of $" + MonopolyModel.JAIL_PRICE + ", they must roll doubles!";
+            jailString = "Player " + player.getIdentifier() + " cannot currently afford to pay the fine of " + this.currencySymbol + MonopolyModel.JAIL_PRICE + ", they must roll doubles!";
         }
 
         this.gameLogPanel.updateGameLog(jailString);
@@ -279,7 +339,7 @@ public class MonopolyView extends JFrame implements MonopolyObserver, Serializab
      */
     @Override
     public void handleThreeTurnsInJail(Player player) {
-        this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has spent three turns in jail and paid the $" + MonopolyModel.JAIL_PRICE + "fine!");
+        this.gameLogPanel.updateGameLog("Player " + player.getIdentifier() + " has spent three turns in jail and paid the " + this.currencySymbol + MonopolyModel.JAIL_PRICE + "fine!");
     }
 
     /**

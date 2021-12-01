@@ -27,5 +27,8 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="com.fasterxml.jackson.databind" level="project" />
+    <orderEntry type="library" name="jackson-core" level="project" />
+    <orderEntry type="library" name="jackson-annotations-2.13.0" level="project" />
   </component>
 </module>

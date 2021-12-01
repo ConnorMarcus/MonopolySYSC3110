@@ -1,7 +1,5 @@
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Class to represent a class Monopoly Board with all the colour groups.
@@ -111,6 +109,19 @@ public class MonopolyBoard implements Serializable {
         return this.properties.get(index);
     }
 
+    /**
+     * @param name The name of the property to get
+     * @return The property object with the given name, or null otherwise
+     */
+    private Property getProperty(String name) {
+        for (Property p : this.properties) {
+            if (p.getName().equals(name)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
 
     /**
      * Gets the number of Properties.
@@ -140,6 +151,26 @@ public class MonopolyBoard implements Serializable {
      */
     public int getJailIndex() {
         return this.jailIndex;
+    }
+
+    /**
+     * Updates the names of the properties on the Monopoly board
+     * @param propertyNames A map where the keys are the original property names and the values are the new property names
+     * @return A List of the indices of the properties that were changed
+     */
+    public List<Integer> updatePropertyNames(HashMap<String, String> propertyNames) {
+        List<Integer> changed = new ArrayList<>();
+        for (String originalName : propertyNames.keySet()) {
+            String newName = propertyNames.get(originalName);
+            if (newName != null && !newName.equals("")) {
+                Property p = getProperty(originalName);
+                if (p != null) {
+                    p.setName(newName);
+                    changed.add(getPropertyIndex(p));
+                }
+            }
+        }
+        return changed;
     }
 
 }

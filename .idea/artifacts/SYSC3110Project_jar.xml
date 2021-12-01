@@ -5,6 +5,9 @@
       <element id="module-output" name="SYSC3110Project" />
       <element id="module-source" name="SYSC3110Project" />
       <element id="library" level="module" name="JUnit4" module-name="SYSC3110Project" />
+      <element id="artifact" artifact-name="com_fasterxml_jackson_databind" />
+      <element id="artifact" artifact-name="jackson-annotations-2_13_0" />
+      <element id="artifact" artifact-name="jackson-core" />
     </root>
   </artifact>
 </component>

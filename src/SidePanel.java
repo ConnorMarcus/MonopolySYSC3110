@@ -16,6 +16,7 @@ public class SidePanel extends JPanel {
     private final int INFO_AREA_HEIGHT = 620;
     private Map<String, JLabel> playerInfoMap;
     private MonopolyController controller;
+    private String currencySymbol;
 
 
     /**
@@ -23,7 +24,8 @@ public class SidePanel extends JPanel {
      *
      * @param model The MonopolyModel that corresponds with the object.
      */
-    public SidePanel(MonopolyModel model) {
+    public SidePanel(MonopolyModel model, String currency) {
+        this.currencySymbol = currency;
         this.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
         this.setBackground(new Color(211, 236, 211));
         this.playerInfoMap = new HashMap<>();
@@ -37,7 +39,7 @@ public class SidePanel extends JPanel {
     private void addPlayersInfo(MonopolyModel model) {
         int numberOfPlayer = model.getPlayerList().size();
         for (Player p: model.getPlayerList()) {
-            String text = "<html><br>Money: $" + p.getMoney() + "<br>Properties: " +  p.getPropertyString() + "</html>";
+            String text = "<html><br>Money: " + currencySymbol + p.getMoney() + "<br>Properties: " +  p.getPropertyString() + "</html>";
             JLabel info = new JLabel(text);
             info.setName(p.getIdentifier());
 
@@ -68,7 +70,7 @@ public class SidePanel extends JPanel {
             throw new IllegalArgumentException("The Player object that was passed does not correspond with a player info label!");
         }
         else {
-            playerLabel.setText("<html><br>Money: $" + player.getMoney() + "<br>Properties: " +  player.getPropertyString() + "</html>");
+            playerLabel.setText("<html><br>Money: " + currencySymbol + player.getMoney() + "<br>Properties: " +  player.getPropertyString() + "</html>");
         }
     }
 
