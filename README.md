@@ -20,9 +20,9 @@ Steps to run the project executable:
 3. Navigate to the directory containing the extracted zip file using the command line.
 4. Execute the JAR file on the command line (e.g.: java -jar SYSC3110Project.jar).
 
--Note 1: The steps assume that Java is already installed on the system and that the system can run jar files on the command line.
--Note 2: More details about how to play the game can be found in the user manual.
--Note 3: The Monopoly game can be customized with custom property names and currency. International customization options of the game can be imported with the JSON files found at: https://github.com/ConnorMarcus/MonopolySYSC3110/tree/main/out/production/SYSC3110Project/customization 
+- Note 1: The steps assume that Java is already installed on the system and that the system can run jar files on the command line.
+- Note 2: More details about how to play the game can be found in the user manual.
+- Note 3: The Monopoly game can be customized with custom property names and currency. International customization options of the game can be imported with the JSON files found at: https://github.com/ConnorMarcus/MonopolySYSC3110/tree/main/out/production/SYSC3110Project/customization 
 ------------------------------------
 Roadmap Ahead:
 N/A
